@@ -1,5 +1,6 @@
 ﻿using Avalonia;
 using System;
+using Avalonia.Diagnostics;
 
 namespace Percuro;
 
@@ -18,4 +19,6 @@ sealed class Program
             .UsePlatformDetect()
             .WithInterFont()
             .LogToTrace();
+  
+            
 }

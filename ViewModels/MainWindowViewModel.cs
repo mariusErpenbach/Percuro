@@ -12,4 +12,6 @@ public partial class MainWindowViewModel : ViewModelBase
         // WelcomeView as starting View
         CurrentViewModel = new WelcomeViewModel{Parent = this};
     }
+     
+     
 }

@@ -7,14 +7,19 @@
 
     <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="20">
 
-       
+       <!--username-->
         <TextBox Watermark="Benutzername" Text="{Binding Username}"/>
+        <!--password-->
         <TextBox Watermark="Passwort" Text="{Binding Password}" PasswordChar="*"/>
-         <ComboBox ItemSource="{Binding AvailableRoles}"
-                  SelectedItem="{Binding SelectedRole}"
+         <!--role select-->
+        <ComboBox ItemsSource="{Binding AvailableRoles}"
+                   SelectedItem="{Binding SelectedRole}"
         
         />
+          <!--login button-->
         <Button Content="Anmelden" Command="{Binding LoginCommand}"/>
+         <!--create account button--> 
+         <Button Content="Create Account" Command="{Binding CreateAccountCommand}"/>
     </StackPanel>
 
     
