@@ -18,9 +18,6 @@ namespace Percuro.Services
             // 📦 Hole Connection String aus Umgebungsvariable
             _connectionString = Environment.GetEnvironmentVariable("MYSQL_CONNECTION")
                                 ?? throw new Exception("MYSQL_CONNECTION ist nicht gesetzt.");
-
-            Console.WriteLine("👉 Geladener Connection String:");
-            Console.WriteLine(_connectionString);
         }
 
         public async Task<bool> TestConnectionAsync()

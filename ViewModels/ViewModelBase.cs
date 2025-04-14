@@ -2,6 +2,7 @@
 
 namespace Percuro.ViewModels;
 
-public class ViewModelBase : ObservableObject
+public abstract class ViewModelBase : ObservableObject
 {
+    public MainWindowViewModel? Parent { get; set; }
 }

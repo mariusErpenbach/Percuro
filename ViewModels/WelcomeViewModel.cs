@@ -12,14 +12,14 @@ public partial class WelcomeViewModel : ViewModelBase
     private string _welcomeMessage = "Herzlich willkommen";
      [ObservableProperty]
     private string _appName = "Percuro - ERP/CMS System";
-    
+    public DatabaseService? DatabaseService { get; set; }
     [RelayCommand]
     private void toLogin()
     {
-        if (Parent is MainWindowViewModel mainVm){
-            var databaseService = new DatabaseService();
-            mainVm.CurrentViewModel = new LoginViewModel(databaseService);
+        if (Parent is MainWindowViewModel mainVm && DatabaseService != null)
+        {
+            mainVm.CurrentViewModel = new LoginViewModel(DatabaseService);
         }
     }
-    public MainWindowViewModel?Parent{get;set;}
+   
 }

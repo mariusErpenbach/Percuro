@@ -4,7 +4,8 @@ using CommunityToolkit.Mvvm.Input;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Percuro.Services;
-using BCrypt.Net; 
+using BCrypt.Net;
+using Percuro.Views;
 
 
 namespace Percuro.ViewModels;
@@ -33,14 +34,12 @@ private async Task Login()
 {
     Console.WriteLine($"Login attempt as {Username} with role {SelectedRole}");
 
-    // Validierung der Eingaben
     if (string.IsNullOrEmpty(Username) || string.IsNullOrEmpty(Password))
     {
         Console.WriteLine("Fehler: Benutzername oder Passwort ist leer.");
         return;
     }
 
-    // Benutzer aus der DB abfragen (wir gehen davon aus, dass du die Logik zum Abfragen der DB hast)
     var user = await _databaseService.GetUserByUsernameAsync(Username);
 
     if (user == null)
@@ -49,17 +48,21 @@ private async Task Login()
         return;
     }
 
-    // Prüfen, ob das Passwort korrekt ist
     if (BCrypt.Net.BCrypt.Verify(Password, user.PasswordHash))
     {
         Console.WriteLine("Login erfolgreich!");
-        // Weiteren Code für erfolgreiche Anmeldung hier hinzufügen
+          // UI-Thread erzwingen und Parent nutzen
+        await Avalonia.Threading.Dispatcher.UIThread.InvokeAsync(() =>
+        {
+            (Parent as MainWindowViewModel)!.CurrentViewModel = new DashboardViewModel();
+        });
     }
     else
     {
         Console.WriteLine("Fehler: Falsches Passwort.");
     }
 }
+ 
         [RelayCommand]
         private async Task CreateAccount()
         {
@@ -69,7 +72,7 @@ private async Task Login()
             if (success)
             {
                 Console.WriteLine($"Account für {Username} erfolgreich erstellt!");
-                // Du kannst hier auch eine Bestätigungsmeldung im UI anzeigen
+                // Du kannst hier auch eine Bestätigungsmeldung im UI anzeigenc
             }
             else
             {
