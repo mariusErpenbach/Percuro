@@ -51,7 +51,11 @@ private async Task Login()
     if (BCrypt.Net.BCrypt.Verify(Password, user.PasswordHash))
     {
         Console.WriteLine("Login erfolgreich!");
+           var session = UserSession.Current;
+        session.Username = Username;
+        session.Role = SelectedRole;
           // UI-Thread erzwingen und Parent nutzen
+          
         await Avalonia.Threading.Dispatcher.UIThread.InvokeAsync(() =>
         {
             (Parent as MainWindowViewModel)!.CurrentViewModel = new DashboardViewModel();

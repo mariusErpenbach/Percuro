@@ -99,3 +99,6 @@
 /home/dci/Desktop/Github/Percuro/bin/Debug/net9.0/BCrypt.Net-Next.dll
 /home/dci/Desktop/Github/Percuro/obj/Debug/net9.0/Percuro.csproj.Fody.CopyLocal.cache
 /home/dci/Desktop/Github/Percuro/obj/Debug/net9.0/Percuro.csproj.Fody.RuntimeCopyLocal.cache
+/home/dci/Desktop/Github/Percuro/obj/Debug/net9.0/Percuro.dll
+/home/dci/Desktop/Github/Percuro/obj/Debug/net9.0/refint/Percuro.dll
+/home/dci/Desktop/Github/Percuro/obj/Debug/net9.0/Percuro.pdb
