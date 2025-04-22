@@ -58,7 +58,10 @@ Ein datengetriebenes System zur Verwaltung und Organisation sensibler sowie öff
 ### 🔧 Grundgerüst
 
 - Einrichtung der Projektstruktur in C#
-- UI-Layout für Dashboard & Datenverwaltung
+- UI-Layout für Dashboard & Datenverwaltung:
+
+Dies ist ein Grundgerüst für die EnterpriseView die als Knotenpunkt für die ERP Spezifischen Bereiche dient.
+![Enterprise drawio](https://github.com/user-attachments/assets/fedf9129-2e60-4fa6-8af8-0b9b79493760)
 
 ### 🔗 Datenbankanbindung
 
