@@ -1,0 +1,13 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:Percuro.ViewModels"
+             x:Class="Percuro.Views.EnterpriseView"
+             x:DataType="vm:EnterpriseViewModel">
+
+
+        <Grid>
+        <TextBlock Text="hello Enterprise"/>  
+    </Grid>
+
+    
+</UserControl>

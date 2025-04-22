@@ -5,9 +5,18 @@
              x:DataType="vm:DashboardViewModel">
 
 
-    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="20">
-         <TextBlock Text="{Binding WelcomeMessage}" />
-    </StackPanel>
+        <Grid>
+        <!-- Centered StackPanel for navigation buttons -->
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="20">
+            <!-- Welcome message -->
+            <TextBlock Text="{Binding WelcomeMessage}" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" />
+
+            <!-- Navigation buttons -->
+            <Button Content="Go to Enterprise View" Width="200" Height="50" Command="{Binding NavigateToEnterpriseViewCommand}" />
+            <Button Content="Go to Content Manager View" Width="200" Height="50" />
+            <Button Content="Go to Email Client View" Width="200" Height="50"/>
+        </StackPanel>
+    </Grid>
 
     
 </UserControl>
