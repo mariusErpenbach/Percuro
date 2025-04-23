@@ -1,11 +1,10 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             x:Class="Percuro.Views.EnterpriseViews.BudgetPlanningView">
+             x:Class="Percuro.Views.EnterpriseViews.Finance.BuchhaltungView">
     <Grid>
-        <!-- Add your UI components here -->
-        <TextBlock Text="Budget Planning View" 
+        <TextBlock Text="Buchhaltung View" 
                    HorizontalAlignment="Center" 
                    VerticalAlignment="Center" 
-                   FontSize="20"/>
+                   FontSize="24"/>
     </Grid>
 </UserControl>

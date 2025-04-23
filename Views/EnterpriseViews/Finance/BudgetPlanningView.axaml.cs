@@ -1,6 +1,6 @@
 using Avalonia.Controls;
 
-namespace Percuro.Views.EnterpriseViews
+namespace Percuro.Views.EnterpriseViews.Finance
 {
     public partial class BudgetPlanningView : UserControl
     {

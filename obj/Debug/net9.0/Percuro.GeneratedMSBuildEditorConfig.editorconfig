@@ -30,13 +30,28 @@ build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 [/home/dci/Desktop/Github/Percuro/Views/EnterpriseView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[/home/dci/Desktop/Github/Percuro/Views/EnterpriseViews/BuchhaltungView.axaml]
+[/home/dci/Desktop/Github/Percuro/Views/EnterpriseViews/Finance/BilanzView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[/home/dci/Desktop/Github/Percuro/Views/EnterpriseViews/BudgetPlanningView.axaml]
+[/home/dci/Desktop/Github/Percuro/Views/EnterpriseViews/Finance/BuchhaltungView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[/home/dci/Desktop/Github/Percuro/Views/EnterpriseViews/FinanceAndAccountingView.axaml]
+[/home/dci/Desktop/Github/Percuro/Views/EnterpriseViews/Finance/BudgetPlanningView.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[/home/dci/Desktop/Github/Percuro/Views/EnterpriseViews/Finance/RechnungenView.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[/home/dci/Desktop/Github/Percuro/Views/EnterpriseViews/HR/ArbeitszeitView.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[/home/dci/Desktop/Github/Percuro/Views/EnterpriseViews/HR/GehaltsabrechnungView.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[/home/dci/Desktop/Github/Percuro/Views/EnterpriseViews/HR/MitarbeiterView.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[/home/dci/Desktop/Github/Percuro/Views/EnterpriseViews/HR/RecruitingView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
 [/home/dci/Desktop/Github/Percuro/Views/LoginView.axaml]
