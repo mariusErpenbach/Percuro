@@ -2,7 +2,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Percuro.ViewModels.EnterpriseViewModels
 {
-    public partial class ProductionViewModel : ObservableObject
+    public partial class ProductionViewModel : ViewModelBase
     {
         // Blank ViewModel
     }
