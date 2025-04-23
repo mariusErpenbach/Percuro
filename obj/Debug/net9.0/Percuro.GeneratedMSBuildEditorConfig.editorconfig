@@ -30,6 +30,9 @@ build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 [/home/dci/Desktop/Github/Percuro/Views/EnterpriseView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
+[/home/dci/Desktop/Github/Percuro/Views/EnterpriseViews/AnalyticsView.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
 [/home/dci/Desktop/Github/Percuro/Views/EnterpriseViews/Finance/BilanzView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
@@ -42,6 +45,9 @@ build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 [/home/dci/Desktop/Github/Percuro/Views/EnterpriseViews/Finance/RechnungenView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
+[/home/dci/Desktop/Github/Percuro/Views/EnterpriseViews/FinanceView.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
 [/home/dci/Desktop/Github/Percuro/Views/EnterpriseViews/HR/ArbeitszeitView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
@@ -52,6 +58,21 @@ build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
 [/home/dci/Desktop/Github/Percuro/Views/EnterpriseViews/HR/RecruitingView.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[/home/dci/Desktop/Github/Percuro/Views/EnterpriseViews/HRView.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[/home/dci/Desktop/Github/Percuro/Views/EnterpriseViews/ProductionView.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[/home/dci/Desktop/Github/Percuro/Views/EnterpriseViews/SalesAndCRM/CustomerManagementView.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[/home/dci/Desktop/Github/Percuro/Views/EnterpriseViews/SalesAndCRM/SalesManagementView.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[/home/dci/Desktop/Github/Percuro/Views/EnterpriseViews/SalesAndCRMView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
 [/home/dci/Desktop/Github/Percuro/Views/LoginView.axaml]
