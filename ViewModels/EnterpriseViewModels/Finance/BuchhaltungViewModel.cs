@@ -1,7 +1,16 @@
+using CommunityToolkit.Mvvm.Input;
+
 namespace Percuro.ViewModels.EnterpriseViewModels.Finance
 {
-    public class BuchhaltungViewModel : ViewModelBase
+    public partial class BuchhaltungViewModel : ViewModelBase
     {
-
+    [RelayCommand]
+    public void ToFinanceView()
+    {
+        if (Parent is MainWindowViewModel mainVm)
+        {
+            mainVm.CurrentViewModel = new FinanceViewModel();
+        }
+    }
     }
 }
