@@ -55,4 +55,13 @@ public partial class EnterpriseViewModel : ViewModelBase
             mainVm.CurrentViewModel = new AnalyticsViewModel();
         }
     }
+        [RelayCommand]
+    
+    public void ToDashboardView()
+    {
+        if (Parent is MainWindowViewModel mainVm)
+        {
+            mainVm.CurrentViewModel = new DashboardViewModel();
+        }
+    }
 }
