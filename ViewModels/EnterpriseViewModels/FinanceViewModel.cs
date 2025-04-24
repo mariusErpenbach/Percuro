@@ -1,7 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Percuro.ViewModels.EnterpriseViewModels.FinanceVMs;
-using Percuro.Views.EnterpriseViews.Finance;
+using Percuro.ViewModels.EnterpriseViewModels.Finance;
+using Percuro.Views.EnterpriseViews;
 
 namespace Percuro.ViewModels.EnterpriseViewModels
 {

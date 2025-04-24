@@ -1,4 +1,4 @@
-namespace Percuro.ViewModels.EnterpriseViewModels.FinanceVMs
+namespace Percuro.ViewModels.EnterpriseViewModels.Finance
 {
     public class BudgetPlanningViewModel : ViewModelBase
     {
