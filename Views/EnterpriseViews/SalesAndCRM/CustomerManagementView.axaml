@@ -1,6 +1,14 @@
-<UserControl xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
-x:Class="Percuro.Views.EnterpriseViews.SalesAndCRM.CustomerManagementView">
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:Percuro.ViewModels.EnterpriseViewModels.SalesAndCRM"
+             x:Class="Percuro.Views.EnterpriseViews.SalesAndCRM.CustomerManagementView"
+             x:DataType="vm:CustomerManagementViewModel">
     <Grid>
        <TextBlock Text="Customer Management View" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="24"/>
+<!-- To SalesAndCRM Button -->
+        <Button Content="To SalesAndCRM" Command="{Binding ToSalesAndCRMView}" 
+                Width="150" Height="50" Margin="10" 
+                HorizontalAlignment="Left" VerticalAlignment="Top" 
+                HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
     </Grid>
 </UserControl>

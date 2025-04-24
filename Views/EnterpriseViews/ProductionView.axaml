@@ -30,6 +30,7 @@
             </Grid>
 
             <!-- Placeholder Content -->
+            <!-- Überschrift -->
             <TextBlock Text="Production" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,20,0,0" FontSize="24"/>
         </Grid>
     </Grid>

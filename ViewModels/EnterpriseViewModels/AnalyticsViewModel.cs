@@ -32,5 +32,14 @@ namespace Percuro.ViewModels.EnterpriseViewModels
                 mainVm.CurrentViewModel = new StatistikenViewModel();
             }
         }
+
+        [RelayCommand]
+        public void ToEnterpriseView()
+        {
+            if (Parent is MainWindowViewModel mainVm)
+            {
+                mainVm.CurrentViewModel = new EnterpriseViewModel();
+            }
+        }
     }
 }

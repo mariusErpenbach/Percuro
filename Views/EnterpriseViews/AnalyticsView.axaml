@@ -3,12 +3,29 @@
              xmlns:vm="clr-namespace:Percuro.ViewModels.EnterpriseViewModels"
              x:Class="Percuro.Views.EnterpriseViews.AnalyticsView"
              x:DataType="vm:AnalyticsViewModel">
-
     <Grid>
         <StackPanel>
-            <Button Content="To Analysen View" Command="{Binding ToAnalysenViewCommand}" />
-            <Button Content="To Reports View" Command="{Binding ToReportsViewCommand}" />
-            <Button Content="To Statistiken View" Command="{Binding ToStatistikenViewCommand}" />
+            <!-- To Enterprise Button -->
+            <Button Content="To Enterprise" Command="{Binding ToEnterpriseView}" 
+                    Width="150" Height="50" Margin="10" 
+                    HorizontalAlignment="Left" VerticalAlignment="Top" 
+                    HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+
+            <!-- Buttons in a Grid -->
+            <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Button Content="Analysen" Command="{Binding ToAnalysenView}" Grid.Row="0" Grid.Column="0" Width="150" Height="50" Margin="10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                <Button Content="Reports" Command="{Binding ToReportsView}" Grid.Row="0" Grid.Column="1" Width="150" Height="50" Margin="10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                <Button Content="Statistiken" Command="{Binding ToStatistikenView}" Grid.Row="1" Grid.Column="0" Width="150" Height="50" Margin="10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+            </Grid>
         </StackPanel>
     </Grid>
 </UserControl>

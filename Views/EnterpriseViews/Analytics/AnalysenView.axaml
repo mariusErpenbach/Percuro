@@ -5,6 +5,11 @@
              x:DataType="vm:AnalysenViewModel">
 
     <Grid>
+        <!-- To Analytics Button -->
+        <Button Content="To Analytics" Command="{Binding ToAnalyticsView}" 
+                Width="150" Height="50" Margin="10" 
+                HorizontalAlignment="Left" VerticalAlignment="Top" 
+                HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
         <TextBlock Text="This is the Analysen View" HorizontalAlignment="Center" VerticalAlignment="Center" />
     </Grid>
 </UserControl>
