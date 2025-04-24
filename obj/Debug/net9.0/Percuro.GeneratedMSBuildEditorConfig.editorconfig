@@ -63,6 +63,15 @@ build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 [/home/dci/Desktop/Github/Percuro/Views/EnterpriseViews/HRView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
+[/home/dci/Desktop/Github/Percuro/Views/EnterpriseViews/Production/EinkaufView.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[/home/dci/Desktop/Github/Percuro/Views/EnterpriseViews/Production/InventoryView.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[/home/dci/Desktop/Github/Percuro/Views/EnterpriseViews/Production/ProduktionsPlanungView.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
 [/home/dci/Desktop/Github/Percuro/Views/EnterpriseViews/ProductionView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
