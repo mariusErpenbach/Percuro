@@ -1,9 +1,20 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             x:Class="Percuro.Views.EnterpriseViews.Production.EinkaufView">
+             xmlns:vm="using:Percuro.ViewModels.EnterpriseViewModels.Production"
+             x:Class="Percuro.Views.EnterpriseViews.Production.EinkaufView"
+             x:DataType="vm:EinkaufViewModel">
 
     <Grid>
-        <!-- UI for EinkaufView -->
-        <TextBlock Text="This is the Einkauf View" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        <!-- Überschrift -->
+        <TextBlock Text="Einkauf" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,20,0,0" FontSize="24"/>
+
+        <!-- To Production Button -->
+        <Button Content="To Production" Command="{Binding ToProductionView}"
+                Width="150" Height="50" Margin="10"
+                HorizontalAlignment="Left" VerticalAlignment="Top"
+                HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+
+        <!-- Placeholder Content -->
+        <TextBlock Text="Einkauf View" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20"/>
     </Grid>
 </UserControl>

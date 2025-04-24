@@ -7,15 +7,6 @@ namespace Percuro.ViewModels.EnterpriseViewModels
     public partial class ProductionViewModel : ViewModelBase
     {
         [RelayCommand]
-        public void ToInventoryView()
-        {
-            if (Parent is MainWindowViewModel mainVm)
-            {
-                mainVm.CurrentViewModel = new InventoryViewModel();
-            }
-        }
-
-        [RelayCommand]
         public void ToEinkaufView()
         {
             if (Parent is MainWindowViewModel mainVm)
@@ -25,11 +16,29 @@ namespace Percuro.ViewModels.EnterpriseViewModels
         }
 
         [RelayCommand]
+        public void ToInventoryView()
+        {
+            if (Parent is MainWindowViewModel mainVm)
+            {
+                mainVm.CurrentViewModel = new InventoryViewModel();
+            }
+        }
+
+        [RelayCommand]
         public void ToProduktionsPlanungView()
         {
             if (Parent is MainWindowViewModel mainVm)
             {
                 mainVm.CurrentViewModel = new ProduktionsPlanungViewModel();
+            }
+        }
+
+        [RelayCommand]
+        public void ToEnterpriseView()
+        {
+            if (Parent is MainWindowViewModel mainVm)
+            {
+                mainVm.CurrentViewModel = new EnterpriseViewModel();
             }
         }
     }

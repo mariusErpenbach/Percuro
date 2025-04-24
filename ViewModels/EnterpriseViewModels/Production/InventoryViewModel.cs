@@ -1,7 +1,16 @@
+using CommunityToolkit.Mvvm.Input;
+
 namespace Percuro.ViewModels.EnterpriseViewModels.Production
 {
-    public class InventoryViewModel : ViewModelBase
+    public partial class InventoryViewModel : ViewModelBase
     {
-        // No logic yet
+[RelayCommand]
+        public void ToProductionView()
+        {
+            if (Parent is MainWindowViewModel mainVm)
+            {
+                mainVm.CurrentViewModel = new ProductionViewModel();
+            }
+        }
     }
 }

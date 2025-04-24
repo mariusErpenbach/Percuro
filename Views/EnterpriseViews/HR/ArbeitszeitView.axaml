@@ -1,7 +1,17 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             x:Class="Percuro.Views.EnterpriseViews.HR.ArbeitszeitView">
+             xmlns:vm="using:Percuro.ViewModels.EnterpriseViewModels.HR"
+             x:Class="Percuro.Views.EnterpriseViews.HR.ArbeitszeitView"
+             x:DataType="vm:ArbeitszeitViewModel">
+
     <Grid>
-        <TextBlock Text="Arbeitszeit View" />
+        <!-- To HR Button -->
+        <Button Content="To HR" Command="{Binding ToHRView}"
+                Width="150" Height="50" Margin="10"
+                HorizontalAlignment="Left" VerticalAlignment="Top"
+                HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+
+        <!-- Placeholder Content -->
+        <TextBlock Text="Arbeitszeit View" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20"/>
     </Grid>
 </UserControl>

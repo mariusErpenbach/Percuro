@@ -4,6 +4,6 @@
 
     <Grid>
         <!-- UI for ProduktionsPlanungView -->
-        <TextBlock Text="This is the ProduktionsPlanung View" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        <TextBlock Text="ProduktionsPlanung" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,20,0,0" FontSize="24"/>
     </Grid>
 </UserControl>
