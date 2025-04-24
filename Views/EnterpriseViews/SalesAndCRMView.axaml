@@ -3,7 +3,6 @@
             xmlns:vm="clr-namespace:Percuro.ViewModels.EnterpriseViewModels"                 
              x:Class="Percuro.Views.EnterpriseViews.SalesAndCRMView"
              x:DataType="vm:SalesAndCRMViewModel">
-
     <Grid>
         <StackPanel>
             <Button Content="Customer Management" Command="{Binding ToCustomerManagementView}" />

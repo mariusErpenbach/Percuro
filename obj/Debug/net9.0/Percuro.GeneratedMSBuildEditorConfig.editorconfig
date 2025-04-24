@@ -30,6 +30,15 @@ build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 [/home/dci/Desktop/Github/Percuro/Views/EnterpriseView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
+[/home/dci/Desktop/Github/Percuro/Views/EnterpriseViews/Analytics/AnalysenView.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[/home/dci/Desktop/Github/Percuro/Views/EnterpriseViews/Analytics/ReportsView.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[/home/dci/Desktop/Github/Percuro/Views/EnterpriseViews/Analytics/StatistikenView.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
 [/home/dci/Desktop/Github/Percuro/Views/EnterpriseViews/AnalyticsView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
