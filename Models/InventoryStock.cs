@@ -12,5 +12,6 @@ namespace Percuro.Models
         public string? Platzbezeichnung { get; set; }
         public DateTime? LetzteAenderung { get; set; } = DateTime.Now;
         public string? LagerName { get; set; }
+        public string? ArtikelBezeichnung { get; set; }
     }
 }

@@ -29,7 +29,7 @@ namespace Percuro.Services
                 using var connection = new MySqlConnection(_connectionString);
                 await connection.OpenAsync();
 
-                string query = "SELECT id, artikel_id, bestand, mindestbestand, platzbezeichnung, letzte_aenderung, lager_name FROM lagerbestaende";
+                string query = "SELECT id, artikel_id, artikel_bezeichnung, bestand, mindestbestand, platzbezeichnung, letzte_aenderung, lager_name FROM lagerbestaende";
                 using var cmd = new MySqlCommand(query, connection);
                 using var reader = await cmd.ExecuteReaderAsync();
 
@@ -43,7 +43,8 @@ namespace Percuro.Services
                         Mindestbestand = reader.IsDBNull("mindestbestand") ? null : reader.GetInt32("mindestbestand"),
                         Platzbezeichnung = reader.IsDBNull("platzbezeichnung") ? null : reader.GetString("platzbezeichnung"),
                         LetzteAenderung = reader.IsDBNull("letzte_aenderung") ? null : reader.GetDateTime("letzte_aenderung"),
-                        LagerName = reader.IsDBNull("lager_name") ? null : reader.GetString("lager_name")
+                        LagerName = reader.IsDBNull("lager_name") ? null : reader.GetString("lager_name"),
+                        ArtikelBezeichnung = reader.IsDBNull("artikel_bezeichnung") ? null : reader.GetString("artikel_bezeichnung")
                     });
                 }
             }

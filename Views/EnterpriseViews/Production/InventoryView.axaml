@@ -58,6 +58,10 @@
                                                 <Run Text="Letzte Änderung: "/>
                                                 <Run Text="{Binding LetzteAenderung}"/>
                                             </TextBlock>
+                                            <TextBlock>
+                                                <Run Text="Artikel Bezeichnung: "/>
+                                                <Run Text="{Binding ArtikelBezeichnung}"/>
+                                            </TextBlock>
                                         </StackPanel>
                                     </DataTemplate>
                                 </ListBox.ItemTemplate>
