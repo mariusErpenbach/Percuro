@@ -9,67 +9,84 @@
         <local:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     </UserControl.Resources>
 
-    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
-            <!-- Überschrift -->
-            <TextBlock Text="Inventory" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,20,0,0" FontSize="24" Grid.Row="0"/>
+        <!-- Überschrift und To Production Button -->
+        <Grid Grid.Row="0" Margin="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
 
-            <!-- To Production Button -->
             <Button Content="To Production" Command="{Binding ToProductionView}"
-                    Width="150" Height="50" Margin="10"
+                    Width="150" Height="50" Margin="0,0,10,0"
                     HorizontalAlignment="Left" VerticalAlignment="Top"
-                    HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Row="0"/>
+                    HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Column="0"/>
 
-            <!-- Lazy Loader Text -->
-            <TextBlock Text="Daten werden geladen..." HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16" FontStyle="Italic" Grid.Row="1"/>
-
-            <!-- ListBox for Grouped Inventory Stocks -->
-            <ItemsControl ItemsSource="{Binding GroupedInventoryStocks}" Grid.Row="1" Margin="10">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel Orientation="Vertical" Margin="5">
-                            <TextBlock Text="{Binding LagerName}" FontWeight="Bold" FontSize="16"/>
-                            <ListBox ItemsSource="{Binding Items}" Margin="10">
-                                <ListBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <StackPanel Orientation="Vertical" Margin="5">
-                                            <TextBlock>
-                                                <Run Text="Artikel ID: "/>
-                                                <Run Text="{Binding ArtikelId}"/>
-                                            </TextBlock>
-                                            <TextBlock>
-                                                <Run Text="Bestand: "/>
-                                                <Run Text="{Binding Bestand}"/>
-                                            </TextBlock>
-                                            <TextBlock>
-                                                <Run Text="Mindestbestand: "/>
-                                                <Run Text="{Binding Mindestbestand}"/>
-                                            </TextBlock>
-                                            <TextBlock>
-                                                <Run Text="Platzbezeichnung: "/>
-                                                <Run Text="{Binding Platzbezeichnung}"/>
-                                            </TextBlock>
-                                            <TextBlock>
-                                                <Run Text="Letzte Änderung: "/>
-                                                <Run Text="{Binding LetzteAenderung}"/>
-                                            </TextBlock>
-                                            <TextBlock>
-                                                <Run Text="Artikel Bezeichnung: "/>
-                                                <Run Text="{Binding ArtikelBezeichnung}"/>
-                                            </TextBlock>
-                                        </StackPanel>
-                                    </DataTemplate>
-                                </ListBox.ItemTemplate>
-                            </ListBox>
-                        </StackPanel>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
+            <TextBlock Text="Inventory" FontSize="24" VerticalAlignment="Top" HorizontalAlignment="Center"
+                       Grid.ColumnSpan="2"/> <!-- Absolute centering by spanning columns -->
         </Grid>
-    </ScrollViewer>
+
+        <!-- Search Bar -->
+        <StackPanel Orientation="Horizontal" Margin="10" Grid.Row="1">
+            <TextBox Width="300" Watermark="Artikel suchen..." Text="{Binding SearchQuery}"/>
+            <Button Content="Suchen" Command="{Binding FilterGroupedInventoryStocksCommand}" Margin="10,0,0,0"/>
+        </StackPanel>
+
+        <!-- Scrollable Content -->
+        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Grid.Row="2">
+            <Grid>
+                <!-- Lazy Loader Text -->
+                <TextBlock Text="Daten werden geladen..." HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16" FontStyle="Italic"/>
+
+                <!-- ListBox for Grouped Inventory Stocks -->
+                <ItemsControl ItemsSource="{Binding GroupedInventoryStocks}" Margin="10">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Vertical" Margin="5">
+                                <TextBlock Text="{Binding LagerName}" FontWeight="Bold" FontSize="16"/>
+                                <ListBox ItemsSource="{Binding Items}" Margin="10">
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Vertical" Margin="5">
+                                                <TextBlock>
+                                                    <Run Text="Artikel ID: "/>
+                                                    <Run Text="{Binding ArtikelId}"/>
+                                                </TextBlock>
+                                                <TextBlock>
+                                                    <Run Text="Bestand: "/>
+                                                    <Run Text="{Binding Bestand}"/>
+                                                </TextBlock>
+                                                <TextBlock>
+                                                    <Run Text="Mindestbestand: "/>
+                                                    <Run Text="{Binding Mindestbestand}"/>
+                                                </TextBlock>
+                                                <TextBlock>
+                                                    <Run Text="Platzbezeichnung: "/>
+                                                    <Run Text="{Binding Platzbezeichnung}"/>
+                                                </TextBlock>
+                                                <TextBlock>
+                                                    <Run Text="Letzte Änderung: "/>
+                                                    <Run Text="{Binding LetzteAenderung}"/>
+                                                </TextBlock>
+                                                <TextBlock>
+                                                    <Run Text="Artikel Bezeichnung: "/>
+                                                    <Run Text="{Binding ArtikelBezeichnung}"/>
+                                                </TextBlock>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </Grid>
+        </ScrollViewer>
+    </Grid>
 </UserControl>

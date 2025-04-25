@@ -78,5 +78,56 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
                 mainVm.CurrentViewModel = new ProductionViewModel();
             }
         }
+
+        private string _searchQuery = string.Empty;
+
+        public string SearchQuery
+        {
+            get => _searchQuery;
+            set
+            {
+                SetProperty(ref _searchQuery, value);
+                if (!string.IsNullOrEmpty(value))
+                {
+                    FilterGroupedInventoryStocks();
+                }
+            }
+        }
+
+        [RelayCommand]
+        public void FilterGroupedInventoryStocksCommand()
+        {
+            FilterGroupedInventoryStocks();
+        }
+
+        private void FilterGroupedInventoryStocks()
+        {
+            if (string.IsNullOrWhiteSpace(_searchQuery))
+            {
+                // Reset to original grouped stocks if no search query
+                LoadInventoryStocks();
+                return;
+            }
+
+            var filteredStocks = GroupedInventoryStocks
+                .Select(group => new InventoryStockGroup
+                {
+                    LagerName = group.LagerName,
+                    Items = new ObservableCollection<InventoryStock>(
+                        group.Items.Where(item =>
+                            (int.TryParse(_searchQuery, out var artikelId) && item.ArtikelId == artikelId) ||
+                            (!int.TryParse(_searchQuery, out _) && item.ArtikelBezeichnung?.Contains(_searchQuery, StringComparison.OrdinalIgnoreCase) == true)
+                        )
+                    )
+                })
+                .Where(group => group.Items.Any())
+                .ToList();
+
+            GroupedInventoryStocks.Clear();
+            foreach (var group in filteredStocks)
+            {
+                GroupedInventoryStocks.Add(group);
+            }
+        }
     }
 }
