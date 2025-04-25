@@ -94,6 +94,8 @@
 /home/dci/Desktop/Github/Percuro/obj/Debug/net9.0/Avalonia/Percuro.dll
 /home/dci/Desktop/Github/Percuro/obj/Debug/net9.0/Avalonia/Percuro.pdb
 /home/dci/Desktop/Github/Percuro/obj/Debug/net9.0/refint/Avalonia/Percuro.dll
+/home/dci/Desktop/Github/Percuro/obj/Debug/net9.0/Percuro.csproj.Fody.CopyLocal.cache
+/home/dci/Desktop/Github/Percuro/obj/Debug/net9.0/Percuro.csproj.Fody.RuntimeCopyLocal.cache
 /home/dci/Desktop/Github/Percuro/obj/Debug/net9.0/Percuro.csproj.Up2Date
 /home/dci/Desktop/Github/Percuro/obj/Debug/net9.0/Percuro.genruntimeconfig.cache
 /home/dci/Desktop/Github/Percuro/obj/Debug/net9.0/ref/Percuro.dll

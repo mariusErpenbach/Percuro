@@ -1,42 +1,71 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:vm="using:Percuro.ViewModels.EnterpriseViewModels.Production"
+             xmlns:local="clr-namespace:Percuro.Services"
+             xmlns:vm="clr-namespace:Percuro.ViewModels.EnterpriseViewModels.Production"
              x:Class="Percuro.Views.EnterpriseViews.Production.InventoryView"
              x:DataType="vm:InventoryViewModel">
 
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
+    <UserControl.Resources>
+        <local:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+    </UserControl.Resources>
 
-        <!-- Überschrift -->
-        <TextBlock Text="Inventory" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,20,0,0" FontSize="24" Grid.Row="0"/>
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
 
-        <!-- To Production Button -->
-        <Button Content="To Production" Command="{Binding ToProductionView}"
-                Width="150" Height="50" Margin="10"
-                HorizontalAlignment="Left" VerticalAlignment="Top"
-                HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Row="0"/>
+            <!-- Überschrift -->
+            <TextBlock Text="Inventory" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,20,0,0" FontSize="24" Grid.Row="0"/>
 
-        <!-- ListBox for Storage Locations -->
-        <ListBox ItemsSource="{Binding StorageLocations}" Grid.Row="1" Margin="10">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel Orientation="Vertical" Margin="5">
-                        <TextBlock Text="{Binding Name}" FontWeight="Bold"/>
-                        <TextBlock Text="{Binding Standort}"/>
-                        <TextBlock>
-                            <Run Text="Kapazität: "/>
-                            <Run Text="{Binding Kapazitaet}"/>
-                        </TextBlock>
-                        <TextBlock>
-                            <Run Text="Status: "/>
-                            <Run Text="{Binding AktiverStatus}"/>
-                        </TextBlock>
-                    </StackPanel>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
-    </Grid>
+            <!-- To Production Button -->
+            <Button Content="To Production" Command="{Binding ToProductionView}"
+                    Width="150" Height="50" Margin="10"
+                    HorizontalAlignment="Left" VerticalAlignment="Top"
+                    HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Row="0"/>
+
+            <!-- Lazy Loader Text -->
+            <TextBlock Text="Daten werden geladen..." HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16" FontStyle="Italic" Grid.Row="1"/>
+
+            <!-- ListBox for Grouped Inventory Stocks -->
+            <ItemsControl ItemsSource="{Binding GroupedInventoryStocks}" Grid.Row="1" Margin="10">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Vertical" Margin="5">
+                            <TextBlock Text="{Binding LagerName}" FontWeight="Bold" FontSize="16"/>
+                            <ListBox ItemsSource="{Binding Items}" Margin="10">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Vertical" Margin="5">
+                                            <TextBlock>
+                                                <Run Text="Artikel ID: "/>
+                                                <Run Text="{Binding ArtikelId}"/>
+                                            </TextBlock>
+                                            <TextBlock>
+                                                <Run Text="Bestand: "/>
+                                                <Run Text="{Binding Bestand}"/>
+                                            </TextBlock>
+                                            <TextBlock>
+                                                <Run Text="Mindestbestand: "/>
+                                                <Run Text="{Binding Mindestbestand}"/>
+                                            </TextBlock>
+                                            <TextBlock>
+                                                <Run Text="Platzbezeichnung: "/>
+                                                <Run Text="{Binding Platzbezeichnung}"/>
+                                            </TextBlock>
+                                            <TextBlock>
+                                                <Run Text="Letzte Änderung: "/>
+                                                <Run Text="{Binding LetzteAenderung}"/>
+                                            </TextBlock>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </Grid>
+    </ScrollViewer>
 </UserControl>

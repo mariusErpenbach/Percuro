@@ -1,21 +1,41 @@
 using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Input;
 using Percuro.Models;
 using Percuro.Services;
+using Avalonia.Threading;
 
 namespace Percuro.ViewModels.EnterpriseViewModels.Production
 {
     public partial class InventoryViewModel : ViewModelBase
     {
         private readonly StorageLocationService _storageLocationService = new();
+        private readonly InventoryStockService _inventoryStockService = new();
 
         public ObservableCollection<StorageLocation> StorageLocations { get; set; } = new();
+        public ObservableCollection<InventoryStock> InventoryStocks { get; set; } = new ObservableCollection<InventoryStock>();
+
+        public class InventoryStockGroup
+        {
+            public string LagerName { get; set; } = string.Empty;
+            public ObservableCollection<InventoryStock> Items { get; set; } = new();
+        }
+
+        public ObservableCollection<InventoryStockGroup> GroupedInventoryStocks { get; set; } = new();
+
+        private bool _isLoading;
+        public bool IsLoading
+        {
+            get => _isLoading;
+            set => SetProperty(ref _isLoading, value);
+        }
 
         public InventoryViewModel()
         {
-            LoadStorageLocations();
+            LoadInventoryStocks();
+            Console.WriteLine("InventoryViewModel initialized. InventoryStocks count: " + InventoryStocks.Count);
         }
 
         private async void LoadStorageLocations()
@@ -24,8 +44,31 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
             foreach (var location in locations)
             {
                 StorageLocations.Add(location);
-                Console.WriteLine($"ID: {location.Id}, Name: {location.Name}, Standort: {location.Standort}, Kapazität: {location.Kapazitaet}, Aktiv: {location.AktiverStatus}");
             }
+        }
+
+        private async void LoadInventoryStocks()
+        {
+            IsLoading = true;
+
+            var inventoryStocks = await _inventoryStockService.GetInventoryStocksAsync();
+
+            var groupedStocks = inventoryStocks
+                .GroupBy(stock => stock.LagerName ?? "Unbekannt")
+                .OrderBy(group => group.Key)
+                .Select(group => new InventoryStockGroup
+                {
+                    LagerName = group.Key,
+                    Items = new ObservableCollection<InventoryStock>(group)
+                });
+
+            GroupedInventoryStocks.Clear();
+            foreach (var group in groupedStocks)
+            {
+                GroupedInventoryStocks.Add(group);
+            }
+
+            IsLoading = false;
         }
         [RelayCommand]
         public void ToProductionView()

@@ -7,6 +7,7 @@ namespace Percuro.Views.EnterpriseViews.Production
         public InventoryView()
         {
             InitializeComponent();
+   
         }
     }
 }
