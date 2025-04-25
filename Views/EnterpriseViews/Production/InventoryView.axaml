@@ -5,13 +5,38 @@
              x:DataType="vm:InventoryViewModel">
 
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Überschrift -->
+        <TextBlock Text="Inventory" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,20,0,0" FontSize="24" Grid.Row="0"/>
+
         <!-- To Production Button -->
         <Button Content="To Production" Command="{Binding ToProductionView}"
                 Width="150" Height="50" Margin="10"
                 HorizontalAlignment="Left" VerticalAlignment="Top"
-                HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Row="0"/>
 
-        <!-- Überschrift -->
-        <TextBlock Text="Inventory" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,20,0,0" FontSize="24"/>
+        <!-- ListBox for Storage Locations -->
+        <ListBox ItemsSource="{Binding StorageLocations}" Grid.Row="1" Margin="10">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Vertical" Margin="5">
+                        <TextBlock Text="{Binding Name}" FontWeight="Bold"/>
+                        <TextBlock Text="{Binding Standort}"/>
+                        <TextBlock>
+                            <Run Text="Kapazität: "/>
+                            <Run Text="{Binding Kapazitaet}"/>
+                        </TextBlock>
+                        <TextBlock>
+                            <Run Text="Status: "/>
+                            <Run Text="{Binding AktiverStatus}"/>
+                        </TextBlock>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
     </Grid>
 </UserControl>

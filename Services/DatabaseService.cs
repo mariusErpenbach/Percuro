@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
 using MySqlConnector;
@@ -118,6 +119,5 @@ public async Task<bool> CreateAccountAsync(string username, string password, str
                 return false;
             }
         }
-
     }
 }
