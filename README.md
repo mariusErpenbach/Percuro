@@ -7,6 +7,24 @@ Ein datengetriebenes System zur Verwaltung und Organisation sensibler sowie öff
 Als Example arbeiten wir mit den Daten eines imaginären Maschinenbau-Unternehmens
 
 ---
+<h3>Aktueller Entwicklungsschritt</h3>  
+Lagerbestandsverwaltung (InventoryView)
+Derzeit arbeite ich an der Implementierung der InventoryView-Seite, die dazu dient, die Lagerbestände in Echtzeit darzustellen. Diese View zieht ihre Daten aus den Tabellen Artikel und Lagerorte und bietet eine detaillierte Übersicht der Bestände für jedes Lager und jeden Artikel.
+Wichtige Funktionen, die gerade entwickelt werden:
+
+Filter- und Suchfunktionen für eine gezielte Bestandsanzeige.
+
+Sortieroptionen nach Menge, Artikelname und Lagerort.
+
+Direktaktionen wie Bestandkorrekturen und Umbuchungen zwischen Lagerorten.
+
+Visualisierung von Bestandsmengen mit Warnungen bei niedrigem Bestand.
+
+Verknüpfung zu Artikeldetails für detaillierte Infos zu jedem Artikel.
+
+Der nächste Schritt wird die Verfeinerung der Filteroptionen und die Einführung von Reporting-Funktionen (z. B. CSV-Export) sein.
+
+---
 
 ## 📌 Phase 1: Planung und Konzeptualisierung
 
