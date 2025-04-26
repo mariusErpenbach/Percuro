@@ -50,12 +50,24 @@
                                 <ListBox.ItemTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Vertical" Margin="5">
-                                            <TextBox IsReadOnly="True" BorderThickness="0" Background="Transparent" Text="{Binding ArtikelIdDescription}"/>
-                                            <TextBox IsReadOnly="True" BorderThickness="0" Background="Transparent" Text="{Binding ArtikelBezeichnungDescription}"/>
-                                            <TextBox IsReadOnly="True" BorderThickness="0" Background="Transparent" Text="{Binding BestandDescription}"/>
-                                            <TextBox IsReadOnly="True" BorderThickness="0" Background="Transparent" Text="{Binding MindestbestandDescription}"/>
-                                            <TextBox IsReadOnly="True" BorderThickness="0" Background="Transparent" Text="{Binding PlatzbezeichnungDescription}"/>
-                                            <TextBox IsReadOnly="True" BorderThickness="0" Background="Transparent" Text="{Binding LetzteAenderungDescription}"/>
+                                            <Border BorderBrush="Gray" BorderThickness="1" Background="{Binding AlternatingRowColor}" Margin="2">
+                                                <TextBox Text="{Binding ArtikelIdDescription}" Padding="5" IsReadOnly="True" BorderThickness="0" Background="Transparent"/>
+                                            </Border>
+                                            <Border BorderBrush="Gray" BorderThickness="1" Background="{Binding AlternatingRowColor}" Margin="2">
+                                                <TextBox Text="{Binding ArtikelBezeichnungDescription}" Padding="5" IsReadOnly="True" BorderThickness="0" Background="Transparent"/>
+                                            </Border>
+                                            <Border BorderBrush="Gray" BorderThickness="1" Background="{Binding AlternatingRowColor}" Margin="2">
+                                                <TextBox Text="{Binding BestandDescription}" Padding="5" IsReadOnly="True" BorderThickness="0" Background="Transparent"/>
+                                            </Border>
+                                            <Border BorderBrush="Gray" BorderThickness="1" Background="{Binding AlternatingRowColor}" Margin="2">
+                                                <TextBox Text="{Binding MindestbestandDescription}" Padding="5" IsReadOnly="True" BorderThickness="0" Background="Transparent"/>
+                                            </Border>
+                                            <Border BorderBrush="Gray" BorderThickness="1" Background="{Binding AlternatingRowColor}" Margin="2">
+                                                <TextBox Text="{Binding PlatzbezeichnungDescription}" Padding="5" IsReadOnly="True" BorderThickness="0" Background="Transparent"/>
+                                            </Border>
+                                            <Border BorderBrush="Gray" BorderThickness="1" Background="{Binding AlternatingRowColor}" Margin="2">
+                                                <TextBox Text="{Binding LetzteAenderungDescription}" Padding="5" IsReadOnly="True" BorderThickness="0" Background="Transparent"/>
+                                            </Border>
                                         </StackPanel>
                                     </DataTemplate>
                                 </ListBox.ItemTemplate>
