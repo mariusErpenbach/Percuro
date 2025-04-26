@@ -42,9 +42,6 @@
         <!-- Scrollable Content -->
         <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Grid.Row="2">
             <Grid>
-                <!-- Lazy Loader Text -->
-                <TextBlock Text="Daten werden geladen..." HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16" FontStyle="Italic"/>
-
                 <!-- ListBox for Grouped Inventory Stocks -->
                 <ItemsControl ItemsSource="{Binding GroupedInventoryStocks}" Margin="10">
                     <ItemsControl.ItemTemplate>

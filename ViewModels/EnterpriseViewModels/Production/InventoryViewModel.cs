@@ -54,39 +54,50 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
 
         private async void LoadStorageLocations()
         {
-            var locations = await _storageLocationService.GetStorageLocationsAsync();
-            foreach (var location in locations)
+            try
             {
-                StorageLocations.Add(location);
-                if (!LagerOptions.Contains(location.Name))
+                var locations = await _storageLocationService.GetStorageLocationsAsync();
+                foreach (var location in locations)
                 {
-                    LagerOptions.Add(location.Name);
+                    StorageLocations.Add(location);
                 }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error loading storage locations: {ex.Message}");
             }
         }
 
         private async void LoadInventoryStocks()
         {
-            IsLoading = true;
-
-            var inventoryStocks = await _inventoryStockService.GetInventoryStocksAsync();
-
-            var groupedStocks = inventoryStocks
-                .GroupBy(stock => stock.LagerName ?? "Unbekannt")
-                .OrderBy(group => group.Key)
-                .Select(group => new InventoryStockGroup
-                {
-                    LagerName = group.Key,
-                    Items = new ObservableCollection<InventoryStock>(group)
-                });
-
-            GroupedInventoryStocks.Clear();
-            foreach (var group in groupedStocks)
+            try
             {
-                GroupedInventoryStocks.Add(group);
-            }
+                IsLoading = true;
 
-            IsLoading = false;
+                var inventoryStocks = await _inventoryStockService.GetInventoryStocksAsync();
+                var groupedStocks = inventoryStocks
+                    .GroupBy(stock => stock.LagerName ?? "Unbekannt")
+                    .OrderBy(group => group.Key)
+                    .Select(group => new InventoryStockGroup
+                    {
+                        LagerName = group.Key,
+                        Items = new ObservableCollection<InventoryStock>(group)
+                    });
+
+                GroupedInventoryStocks.Clear();
+                foreach (var group in groupedStocks)
+                {
+                    GroupedInventoryStocks.Add(group);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error loading inventory stocks: {ex.Message}");
+            }
+            finally
+            {
+                IsLoading = false;
+            }
         }
         [RelayCommand]
         public void ToProductionView()
