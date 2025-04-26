@@ -60,6 +60,10 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
                 foreach (var location in locations)
                 {
                     StorageLocations.Add(location);
+                    if (!LagerOptions.Contains(location.Name))
+                    {
+                        LagerOptions.Add(location.Name);
+                    }
                 }
             }
             catch (Exception ex)
