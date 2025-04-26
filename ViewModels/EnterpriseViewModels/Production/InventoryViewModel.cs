@@ -34,9 +34,23 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
 
         public InventoryViewModel()
         {
+            LoadStorageLocations();
             LoadInventoryStocks();
             Console.WriteLine("InventoryViewModel initialized. InventoryStocks count: " + InventoryStocks.Count);
         }
+
+        private string _selectedLager = "Alle";
+        public string SelectedLager
+        {
+            get => _selectedLager;
+            set
+            {
+                SetProperty(ref _selectedLager, value);
+                FilterGroupedInventoryStocks(); // Reapply filter when the selected Lager changes
+            }
+        }
+
+        public ObservableCollection<string> LagerOptions { get; set; } = new ObservableCollection<string> { "Alle" };
 
         private async void LoadStorageLocations()
         {
@@ -44,6 +58,10 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
             foreach (var location in locations)
             {
                 StorageLocations.Add(location);
+                if (!LagerOptions.Contains(location.Name))
+                {
+                    LagerOptions.Add(location.Name);
+                }
             }
         }
 
@@ -87,10 +105,7 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
             set
             {
                 SetProperty(ref _searchQuery, value);
-                if (!string.IsNullOrEmpty(value))
-                {
-                    FilterGroupedInventoryStocks();
-                }
+                FilterGroupedInventoryStocks(); // Always filter the list, even if the query is empty
             }
         }
 
@@ -100,28 +115,42 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
             FilterGroupedInventoryStocks();
         }
 
-        private void FilterGroupedInventoryStocks()
+        private async void FilterGroupedInventoryStocks()
         {
-            if (string.IsNullOrWhiteSpace(_searchQuery))
+            var inventoryStocks = await _inventoryStockService.GetInventoryStocksAsync();
+
+            if (string.IsNullOrWhiteSpace(_searchQuery) && SelectedLager == "Alle")
             {
-                // Reset to original grouped stocks if no search query
-                LoadInventoryStocks();
+                // Reset to original grouped stocks if no search query and no specific Lager selected
+                var groupedStocks = inventoryStocks
+                    .GroupBy(stock => stock.LagerName ?? "Unbekannt")
+                    .OrderBy(group => group.Key)
+                    .Select(group => new InventoryStockGroup
+                    {
+                        LagerName = group.Key,
+                        Items = new ObservableCollection<InventoryStock>(group)
+                    });
+
+                GroupedInventoryStocks.Clear();
+                foreach (var group in groupedStocks)
+                {
+                    GroupedInventoryStocks.Add(group);
+                }
                 return;
             }
 
-            var filteredStocks = GroupedInventoryStocks
+            var filteredStocks = inventoryStocks
+                .Where(item =>
+                    (SelectedLager == "Alle" || item.LagerName == SelectedLager) &&
+                    ((int.TryParse(_searchQuery, out var artikelId) && item.ArtikelId == artikelId) ||
+                    (!int.TryParse(_searchQuery, out _) && item.ArtikelBezeichnung?.Contains(_searchQuery, StringComparison.OrdinalIgnoreCase) == true)))
+                .GroupBy(stock => stock.LagerName ?? "Unbekannt")
+                .OrderBy(group => group.Key)
                 .Select(group => new InventoryStockGroup
                 {
-                    LagerName = group.LagerName,
-                    Items = new ObservableCollection<InventoryStock>(
-                        group.Items.Where(item =>
-                            (int.TryParse(_searchQuery, out var artikelId) && item.ArtikelId == artikelId) ||
-                            (!int.TryParse(_searchQuery, out _) && item.ArtikelBezeichnung?.Contains(_searchQuery, StringComparison.OrdinalIgnoreCase) == true)
-                        )
-                    )
-                })
-                .Where(group => group.Items.Any())
-                .ToList();
+                    LagerName = group.Key,
+                    Items = new ObservableCollection<InventoryStock>(group)
+                });
 
             GroupedInventoryStocks.Clear();
             foreach (var group in filteredStocks)

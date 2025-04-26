@@ -2,11 +2,11 @@
   "version": 3,
   "targets": {
     "net9.0": {
-      "Avalonia/11.2.1": {
+      "Avalonia/11.2.8": {
         "type": "package",
         "dependencies": {
-          "Avalonia.BuildServices": "0.0.29",
-          "Avalonia.Remote.Protocol": "11.2.1",
+          "Avalonia.BuildServices": "0.0.31",
+          "Avalonia.Remote.Protocol": "11.2.8",
           "MicroCom.Runtime": "0.11.0"
         },
         "compile": {
@@ -101,7 +101,7 @@
           }
         }
       },
-      "Avalonia.BuildServices/0.0.29": {
+      "Avalonia.BuildServices/0.0.31": {
         "type": "package",
         "build": {
           "buildTransitive/Avalonia.BuildServices.targets": {}
@@ -252,7 +252,7 @@
           }
         }
       },
-      "Avalonia.Remote.Protocol/11.2.1": {
+      "Avalonia.Remote.Protocol/11.2.8": {
         "type": "package",
         "compile": {
           "lib/net8.0/Avalonia.Remote.Protocol.dll": {
@@ -2407,10 +2407,10 @@
     }
   },
   "libraries": {
-    "Avalonia/11.2.1": {
-      "sha512": "AyYhIN2A7bRwxp6BFHrIbXAHUFPXegzSMYwDrUnw1BzZs9ctwYTiCPCM5wbE2PXsEBwFDVJ/a2YHTOp56fSYAw==",
+    "Avalonia/11.2.8": {
+      "sha512": "zvrffaxj4Jl8yhJ74jrHRTJG2EJM2j9LyXbw2FVk3jhU35Zq7JP+NIBHNW6FCMS1L+bCsrt750wNVjqWPFAYaQ==",
       "type": "package",
-      "path": "avalonia/11.2.1",
+      "path": "avalonia/11.2.8",
       "hasTools": true,
       "files": [
         ".nupkg.metadata",
@@ -2418,7 +2418,7 @@
         "Icon.png",
         "analyzers/dotnet/cs/Avalonia.Analyzers.dll",
         "analyzers/dotnet/cs/Avalonia.Generators.dll",
-        "avalonia.11.2.1.nupkg.sha512",
+        "avalonia.11.2.8.nupkg.sha512",
         "avalonia.nuspec",
         "build/Avalonia.Generators.props",
         "build/Avalonia.props",
@@ -2592,15 +2592,16 @@
         "runtimes/win-x86/native/av_libglesv2.dll"
       ]
     },
-    "Avalonia.BuildServices/0.0.29": {
-      "sha512": "U4eJLQdoDNHXtEba7MZUCwrBErBTxFp6sUewXBOdAhU0Kwzwaa/EKFcYm8kpcysjzKtfB4S0S9n0uxKZFz/ikw==",
+    "Avalonia.BuildServices/0.0.31": {
+      "sha512": "KmCN6Hc+45q4OnF10ge450yVUvWuxU6bdQiyKqiSvrHKpahNrEdk0kG6Ip6GHk2SKOCttGQuA206JVdkldEENg==",
       "type": "package",
-      "path": "avalonia.buildservices/0.0.29",
+      "path": "avalonia.buildservices/0.0.31",
       "hasTools": true,
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
-        "avalonia.buildservices.0.0.29.nupkg.sha512",
+        "Icon.png",
+        "avalonia.buildservices.0.0.31.nupkg.sha512",
         "avalonia.buildservices.nuspec",
         "build/Avalonia.BuildServices.targets",
         "buildTransitive/Avalonia.BuildServices.targets",
@@ -2752,15 +2753,15 @@
         "runtimes/osx/native/libAvaloniaNative.dylib"
       ]
     },
-    "Avalonia.Remote.Protocol/11.2.1": {
-      "sha512": "aqEialxjir7DO/dOFf7BGN/yQ4/adSC5UuVfqBr/RUHOENSH6CqoHj8kmtmJxnuz7ESQFSB2+h1kLVnk5csiDw==",
+    "Avalonia.Remote.Protocol/11.2.8": {
+      "sha512": "fAa9bIHct0X7roDO0hIp41t6VRAeNWMkmTV8T3sqdG88IukJBKmeWPLXMlOZ86kIU5V8M3KKtMmb1HNysdDACA==",
       "type": "package",
-      "path": "avalonia.remote.protocol/11.2.1",
+      "path": "avalonia.remote.protocol/11.2.8",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "Icon.png",
-        "avalonia.remote.protocol.11.2.1.nupkg.sha512",
+        "avalonia.remote.protocol.11.2.8.nupkg.sha512",
         "avalonia.remote.protocol.nuspec",
         "lib/net6.0/Avalonia.Remote.Protocol.dll",
         "lib/net6.0/Avalonia.Remote.Protocol.xml",
@@ -7450,7 +7451,7 @@
   },
   "projectFileDependencyGroups": {
     "net9.0": [
-      "Avalonia >= 11.2.1",
+      "Avalonia >= 11.2.8",
       "Avalonia.Desktop >= 11.2.1",
       "Avalonia.Diagnostics >= 11.2.1",
       "Avalonia.Fonts.Inter >= 11.2.1",
@@ -7508,7 +7509,7 @@
         "dependencies": {
           "Avalonia": {
             "target": "Package",
-            "version": "[11.2.1, )"
+            "version": "[11.2.8, )"
           },
           "Avalonia.Desktop": {
             "target": "Package",
