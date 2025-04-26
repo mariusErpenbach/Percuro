@@ -10,19 +10,19 @@ Als Example arbeiten wir mit den Daten eines imaginären Maschinenbau-Unternehme
 <h3>Aktueller Entwicklungsschritt</h3>  
 Lagerbestandsverwaltung (InventoryView)
 Derzeit arbeite ich an der Implementierung der InventoryView-Seite, die dazu dient, die Lagerbestände in Echtzeit darzustellen. Diese View zieht ihre Daten aus den Tabellen Artikel und Lagerorte und bietet eine detaillierte Übersicht der Bestände für jedes Lager und jeden Artikel.
-Wichtige Funktionen, die gerade entwickelt werden:
+Wichtige Funktionen, die gerade entwickelt werden: </br> </br>
 
-Filter- und Suchfunktionen für eine gezielte Bestandsanzeige.
+~~Filter- und Suchfunktionen für eine gezielte Bestandsanzeige. </br>~~
 
-Sortieroptionen nach Menge, Artikelname und Lagerort.
+Sortieroptionen nach Menge, Artikelname und Lagerort. </br>
 
-Direktaktionen wie Bestandkorrekturen und Umbuchungen zwischen Lagerorten.
+Direktaktionen wie Bestandkorrekturen und Umbuchungen zwischen Lagerorten. </br>
 
-Visualisierung von Bestandsmengen mit Warnungen bei niedrigem Bestand.
+Visualisierung von Bestandsmengen mit Warnungen bei niedrigem Bestand. </br>
 
-Verknüpfung zu Artikeldetails für detaillierte Infos zu jedem Artikel.
+Verknüpfung zu Artikeldetails für detaillierte Infos zu jedem Artikel. </br>
 
-Der nächste Schritt wird die Verfeinerung der Filteroptionen und die Einführung von Reporting-Funktionen (z. B. CSV-Export) sein.
+Der nächste Schritt wird die Verfeinerung der Filteroptionen und die Einführung von Reporting-Funktionen (z. B. CSV-Export) sein. </br>
 
 ---
 
