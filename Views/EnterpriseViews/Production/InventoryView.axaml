@@ -9,82 +9,61 @@
         <local:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     </UserControl.Resources>
 
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
+    <DockPanel>
+        <!-- Header Section -->
+        <DockPanel DockPanel.Dock="Top">
+            <Grid Margin="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
 
-        <!-- Überschrift und To Production Button -->
-        <Grid Grid.Row="0" Margin="10">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
+                <Button Content="To Production" Command="{Binding ToProductionView}"
+                        Width="150" Height="50" Margin="0,0,10,0"
+                        HorizontalAlignment="Left" VerticalAlignment="Top"
+                        HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Column="0"/>
 
-            <Button Content="To Production" Command="{Binding ToProductionView}"
-                    Width="150" Height="50" Margin="0,0,10,0"
-                    HorizontalAlignment="Left" VerticalAlignment="Top"
-                    HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Column="0"/>
-
-            <TextBlock Text="Inventory" FontSize="24" VerticalAlignment="Top" HorizontalAlignment="Center"
-                       Grid.ColumnSpan="2"/> <!-- Absolute centering by spanning columns -->
-        </Grid>
-
-        <!-- Search Bar -->
-        <StackPanel Orientation="Vertical" Margin="10" Grid.Row="1" HorizontalAlignment="Left">
-            <TextBlock Text="(Filter: Geben Sie einen Artikelbegriff ein)" Margin="0,0,0,10" FontStyle="Italic" Foreground="Gray"/>
-            <TextBox Width="300" Watermark="Artikel suchen..." Text="{Binding SearchQuery}"/>
-            <ComboBox Width="300" ItemsSource="{Binding LagerOptions}" SelectedItem="{Binding SelectedLager}" Margin="0,10,0,0"/>
-        </StackPanel>
-
-        <!-- Scrollable Content -->
-        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Grid.Row="2">
-            <Grid>
-                <!-- ListBox for Grouped Inventory Stocks -->
-                <ItemsControl ItemsSource="{Binding GroupedInventoryStocks}" Margin="10">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel Orientation="Vertical" Margin="5">
-                                <TextBlock Text="{Binding LagerName}" FontWeight="Bold" FontSize="16"/>
-                                <ListBox ItemsSource="{Binding Items}" Margin="10">
-                                    <ListBox.ItemTemplate>
-                                        <DataTemplate>
-                                            <StackPanel Orientation="Vertical" Margin="5">
-                                                <TextBlock>
-                                                    <Run Text="Artikel ID: "/>
-                                                    <Run Text="{Binding ArtikelId}"/>
-                                                </TextBlock>
-                                                <TextBlock>
-                                                    <Run Text="Bestand: "/>
-                                                    <Run Text="{Binding Bestand}"/>
-                                                </TextBlock>
-                                                <TextBlock>
-                                                    <Run Text="Mindestbestand: "/>
-                                                    <Run Text="{Binding Mindestbestand}"/>
-                                                </TextBlock>
-                                                <TextBlock>
-                                                    <Run Text="Platzbezeichnung: "/>
-                                                    <Run Text="{Binding Platzbezeichnung}"/>
-                                                </TextBlock>
-                                                <TextBlock>
-                                                    <Run Text="Letzte Änderung: "/>
-                                                    <Run Text="{Binding LetzteAenderung}"/>
-                                                </TextBlock>
-                                                <TextBlock>
-                                                    <Run Text="Artikel Bezeichnung: "/>
-                                                    <Run Text="{Binding ArtikelBezeichnung}"/>
-                                                </TextBlock>
-                                            </StackPanel>
-                                        </DataTemplate>
-                                    </ListBox.ItemTemplate>
-                                </ListBox>
-                            </StackPanel>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
+                <TextBlock Text="Inventory" FontSize="24" VerticalAlignment="Top" HorizontalAlignment="Center"
+                           Grid.ColumnSpan="2"/> <!-- Absolute centering by spanning columns -->
             </Grid>
+        </DockPanel>
+
+        <!-- Search Bar Section -->
+        <DockPanel DockPanel.Dock="Top" Margin="10">
+            <StackPanel Orientation="Vertical" HorizontalAlignment="Left">
+                <TextBlock Text="(Filter: Geben Sie einen Artikelbegriff ein)" Margin="0,0,0,10" FontStyle="Italic" Foreground="Gray"/>
+                <TextBox Width="310" Watermark="Artikel suchen..." Text="{Binding SearchQuery, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left"/>
+                <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                    <ComboBox Width="150" ItemsSource="{Binding LagerOptions}" SelectedItem="{Binding SelectedLager}" Margin="0,0,10,0"/>
+                    <ComboBox Width="150" ItemsSource="{Binding SortOptions}" SelectedItem="{Binding SelectedSortOption}"/>
+                </StackPanel>
+            </StackPanel>
+        </DockPanel>
+
+        <!-- Scrollable Content Section -->
+        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+            <ItemsControl ItemsSource="{Binding GroupedInventoryStocks}" Margin="10">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Expander Header="{Binding LagerName}" IsExpanded="False" Margin="5" Background="#F0F0F0" MinHeight="30">
+                            <ListBox ItemsSource="{Binding Items}" Margin="10">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Vertical" Margin="5">
+                                            <TextBox IsReadOnly="True" BorderThickness="0" Background="Transparent" Text="{Binding ArtikelIdDescription}"/>
+                                            <TextBox IsReadOnly="True" BorderThickness="0" Background="Transparent" Text="{Binding ArtikelBezeichnungDescription}"/>
+                                            <TextBox IsReadOnly="True" BorderThickness="0" Background="Transparent" Text="{Binding BestandDescription}"/>
+                                            <TextBox IsReadOnly="True" BorderThickness="0" Background="Transparent" Text="{Binding MindestbestandDescription}"/>
+                                            <TextBox IsReadOnly="True" BorderThickness="0" Background="Transparent" Text="{Binding PlatzbezeichnungDescription}"/>
+                                            <TextBox IsReadOnly="True" BorderThickness="0" Background="Transparent" Text="{Binding LetzteAenderungDescription}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </Expander>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
         </ScrollViewer>
-    </Grid>
+    </DockPanel>
 </UserControl>

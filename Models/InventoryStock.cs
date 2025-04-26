@@ -13,5 +13,12 @@ namespace Percuro.Models
         public DateTime? LetzteAenderung { get; set; } = DateTime.Now;
         public string? LagerName { get; set; }
         public string? ArtikelBezeichnung { get; set; }
+        public string ArtikelIdDescription => $"Artikel ID: {ArtikelId}";
+        public string ArtikelBezeichnungDescription => $"Artikel Bezeichnung: {ArtikelBezeichnung}";
+        public string BestandDescription => $"Bestand: {Bestand}";
+        public string MindestbestandDescription => $"Mindestbestand: {Mindestbestand}";
+        public string PlatzbezeichnungDescription => $"Platzbezeichnung: {Platzbezeichnung}";
+        public string LetzteAenderungDescription => $"Letzte Änderung: {LetzteAenderung}";
+        public string ArtikelShortInfo => $"{ArtikelId}, {ArtikelBezeichnung}, {Bestand}";
     }
 }

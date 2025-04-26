@@ -36,10 +36,9 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
         {
             LoadStorageLocations();
             LoadInventoryStocks();
-            Console.WriteLine("InventoryViewModel initialized. InventoryStocks count: " + InventoryStocks.Count);
         }
 
-        private string _selectedLager = "Alle";
+        private string _selectedLager = "Alle (Lager)";
         public string SelectedLager
         {
             get => _selectedLager;
@@ -50,7 +49,7 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
             }
         }
 
-        public ObservableCollection<string> LagerOptions { get; set; } = new ObservableCollection<string> { "Alle" };
+        public ObservableCollection<string> LagerOptions { get; set; } = new ObservableCollection<string> { "Alle (Lager)" };
 
         private async void LoadStorageLocations()
         {
@@ -134,31 +133,12 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
         {
             var inventoryStocks = await _inventoryStockService.GetInventoryStocksAsync();
 
-            if (string.IsNullOrWhiteSpace(_searchQuery) && SelectedLager == "Alle")
-            {
-                // Reset to original grouped stocks if no search query and no specific Lager selected
-                var groupedStocks = inventoryStocks
-                    .GroupBy(stock => stock.LagerName ?? "Unbekannt")
-                    .OrderBy(group => group.Key)
-                    .Select(group => new InventoryStockGroup
-                    {
-                        LagerName = group.Key,
-                        Items = new ObservableCollection<InventoryStock>(group)
-                    });
-
-                GroupedInventoryStocks.Clear();
-                foreach (var group in groupedStocks)
-                {
-                    GroupedInventoryStocks.Add(group);
-                }
-                return;
-            }
-
             var filteredStocks = inventoryStocks
                 .Where(item =>
-                    (SelectedLager == "Alle" || item.LagerName == SelectedLager) &&
-                    ((int.TryParse(_searchQuery, out var artikelId) && item.ArtikelId == artikelId) ||
-                    (!int.TryParse(_searchQuery, out _) && item.ArtikelBezeichnung?.Contains(_searchQuery, StringComparison.OrdinalIgnoreCase) == true)))
+                    (SelectedLager == "Alle (Lager)" || item.LagerName == SelectedLager) &&
+                    (string.IsNullOrWhiteSpace(_searchQuery) ||
+                     (int.TryParse(_searchQuery, out var artikelId) && item.ArtikelId.ToString().StartsWith(_searchQuery)) ||
+                     (!int.TryParse(_searchQuery, out _) && item.ArtikelBezeichnung?.Contains(_searchQuery, StringComparison.OrdinalIgnoreCase) == true)))
                 .GroupBy(stock => stock.LagerName ?? "Unbekannt")
                 .OrderBy(group => group.Key)
                 .Select(group => new InventoryStockGroup
@@ -169,6 +149,65 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
 
             GroupedInventoryStocks.Clear();
             foreach (var group in filteredStocks)
+            {
+                GroupedInventoryStocks.Add(group);
+            }
+        }
+
+        public static ObservableCollection<string> SortOptions { get; set; } = new ObservableCollection<string>
+        {
+            "Sortieren nach...",
+            "Menge ▲",
+            "Menge ▼",
+            "Letzte Änderung ▲",
+            "Letzte Änderung ▼"
+        };
+
+        private string selectedSortOption = "Sortieren nach...";
+        public string SelectedSortOption
+        {
+            get => selectedSortOption;
+            set
+            {
+                SetProperty(ref selectedSortOption, value);
+                ApplySorting(); // Apply sorting whenever the sort option changes
+            }
+        }
+
+        private void ApplySorting()
+        {
+            var sortedStocks = GroupedInventoryStocks.SelectMany(group => group.Items).ToList();
+
+            switch (selectedSortOption)
+            {
+                case "Menge ▲":
+                    sortedStocks = sortedStocks.OrderBy(stock => stock.Bestand).ToList();
+                    break;
+                case "Menge ▼":
+                    sortedStocks = sortedStocks.OrderByDescending(stock => stock.Bestand).ToList();
+                    break;
+                case "Letzte Änderung ▲":
+                    sortedStocks = sortedStocks.OrderBy(stock => stock.LetzteAenderung).ToList();
+                    break;
+                case "Letzte Änderung ▼":
+                    sortedStocks = sortedStocks.OrderByDescending(stock => stock.LetzteAenderung).ToList();
+                    break;
+                default:
+                    return; // No sorting applied
+            }
+
+            // Re-group the sorted stocks
+            var groupedStocks = sortedStocks
+                .GroupBy(stock => stock.LagerName ?? "Unbekannt")
+                .OrderBy(group => group.Key)
+                .Select(group => new InventoryStockGroup
+                {
+                    LagerName = group.Key,
+                    Items = new ObservableCollection<InventoryStock>(group)
+                });
+
+            GroupedInventoryStocks.Clear();
+            foreach (var group in groupedStocks)
             {
                 GroupedInventoryStocks.Add(group);
             }
