@@ -14,7 +14,7 @@ Wichtige Funktionen, die gerade entwickelt werden: </br> </br>
 
 ~~Filter- und Suchfunktionen für eine gezielte Bestandsanzeige. </br>~~
 
-Sortieroptionen nach Menge, Artikelname und Lagerort. </br>
+~~Sortieroptionen nach Menge, Artikelname und Lagerort. </br>~~
 
 Direktaktionen wie Bestandkorrekturen und Umbuchungen zwischen Lagerorten. </br>
 
