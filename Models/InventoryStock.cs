@@ -4,17 +4,6 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 public partial class InventoryStock : ObservableObject
 {
-    private static readonly string[] RowColors = { "#2E2E2E", "#3E3E3E" }; // Define dark alternating colors
-
-    public string AlternatingRowColor
-    {
-        get
-        {
-            // Use a hash of the ArtikelId to alternate colors
-            return RowColors[ArtikelId % RowColors.Length];
-        }
-    }
-
     public long Id { get; set; }
     public int ArtikelId { get; set; }
     public int LagerortId { get; set; }
@@ -31,4 +20,10 @@ public partial class InventoryStock : ObservableObject
     public string PlatzbezeichnungDescription => $"Platzbezeichnung: {Platzbezeichnung}";
     public string LetzteAenderungDescription => $"Letzte Änderung: {LetzteAenderung}";
     public string ArtikelShortInfo => $"{ArtikelId}, {ArtikelBezeichnung}, {Bestand}";
+    public string? AlternatingRowColor { get; set; }
+
+    public void SetAlternatingRowColor(int index)
+    {
+        AlternatingRowColor = index % 2 == 0 ? "LightGray" : "White";
+    }
 }

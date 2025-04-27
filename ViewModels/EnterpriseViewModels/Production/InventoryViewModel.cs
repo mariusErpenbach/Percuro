@@ -6,6 +6,7 @@ using CommunityToolkit.Mvvm.Input;
 using Percuro.Models;
 using Percuro.Services;
 using Avalonia.Threading;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Percuro.ViewModels.EnterpriseViewModels.Production
 {
@@ -36,6 +37,7 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
         {
             LoadStorageLocations();
             LoadInventoryStocks();
+            LoadRightSideLagerOptions();
         }
 
         private string _selectedLager = "Alle (Lager)";
@@ -50,6 +52,12 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
         }
 
         public ObservableCollection<string> LagerOptions { get; set; } = new ObservableCollection<string> { "Alle (Lager)" };
+        public ObservableCollection<string> RightSideLagerOptions { get; set; } = new ObservableCollection<string>();
+
+        public ObservableCollection<string> TransferTypeOptions { get; set; } = new ObservableCollection<string> { "Umlagern", "Verkauf" };
+
+        [ObservableProperty]
+        private string _selectedTransferTypeOption = "wähle transferart";
 
         private async void LoadStorageLocations()
         {
@@ -211,6 +219,68 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
             {
                 GroupedInventoryStocks.Add(group);
             }
+        }
+
+        private InventoryStockGroup? _selectedRightSideLagerGroup;
+        public InventoryStockGroup? SelectedRightSideLagerGroup
+        {
+            get => _selectedRightSideLagerGroup;
+            set => SetProperty(ref _selectedRightSideLagerGroup, value);
+        }
+
+        private string _selectedRightSideLager = string.Empty;
+        public string SelectedRightSideLager
+        {
+            get => _selectedRightSideLager;
+            set
+            {
+                SetProperty(ref _selectedRightSideLager, value);
+                UpdateRightSideLagerGroup();
+            }
+        }
+
+        private void UpdateRightSideLagerGroup()
+        {
+            if (!string.IsNullOrEmpty(SelectedRightSideLager))
+            {
+                SelectedRightSideLagerGroup = GroupedInventoryStocks.FirstOrDefault(group => group.LagerName?.Equals(SelectedRightSideLager, StringComparison.OrdinalIgnoreCase) == true);
+            }
+            else
+            {
+                SelectedRightSideLagerGroup = null;
+            }
+        }
+
+        private async void LoadRightSideLagerOptions()
+        {
+            try
+            {
+                var locations = await _storageLocationService.GetStorageLocationsAsync();
+                RightSideLagerOptions.Clear();
+                RightSideLagerOptions.Insert(0, "Kein ziel");
+                foreach (var location in locations)
+                {
+                    if (!RightSideLagerOptions.Contains(location.Name))
+                    {
+                        RightSideLagerOptions.Add(location.Name);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error loading right-side storage locations: {ex.Message}");
+            }
+        }
+
+        public bool IsRightSideLagerOptionsVisible
+        {
+            get => SelectedTransferTypeOption == "Umlagern";
+        }
+
+        partial void OnSelectedTransferTypeOptionChanged(string value)
+        {
+            // Notify the view about the visibility change of the RightSideLagerOptions
+            OnPropertyChanged(nameof(IsRightSideLagerOptionsVisible));
         }
     }
 }
