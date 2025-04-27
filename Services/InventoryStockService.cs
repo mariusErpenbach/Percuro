@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using MySqlConnector;
 using Percuro.Models;
@@ -54,6 +56,40 @@ namespace Percuro.Services
             }
 
             return inventoryStocks;
+        }
+
+        public async Task<List<InventoryStockGroup>> FilterAndGroupInventoryStocksAsync(string selectedLager, string searchQuery)
+        {
+            var inventoryStocks = await GetInventoryStocksAsync();
+
+            var filteredStocks = inventoryStocks
+                .Where(item =>
+                    (selectedLager == "Alle (Lager)" || item.LagerName == selectedLager) &&
+                    (string.IsNullOrWhiteSpace(searchQuery) ||
+                     (int.TryParse(searchQuery, out var artikelId) && item.ArtikelId.ToString().StartsWith(searchQuery)) ||
+                     (!int.TryParse(searchQuery, out _) && item.ArtikelBezeichnung?.Contains(searchQuery, StringComparison.OrdinalIgnoreCase) == true)))
+                .GroupBy(stock => stock.LagerName ?? "Unbekannt")
+                .OrderBy(group => group.Key)
+                .Select(group => new InventoryStockGroup
+                {
+                    LagerName = group.Key,
+                    Items = new ObservableCollection<InventoryStock>(group)
+                })
+                .ToList();
+
+            return filteredStocks;
+        }
+
+        public List<InventoryStock> SortInventoryStocks(List<InventoryStock> stocks, string sortOption)
+        {
+            return sortOption switch
+            {
+                "Menge \\u25b2" => stocks.OrderBy(stock => stock.Bestand).ToList(),
+                "Menge \\u25bc" => stocks.OrderByDescending(stock => stock.Bestand).ToList(),
+                "Letzte \\u00c4nderung \\u25b2" => stocks.OrderBy(stock => stock.LetzteAenderung).ToList(),
+                "Letzte \\u00c4nderung \\u25bc" => stocks.OrderByDescending(stock => stock.LetzteAenderung).ToList(),
+                _ => stocks
+            };
         }
     }
 }

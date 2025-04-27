@@ -12,27 +12,80 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
 {
     public partial class InventoryViewModel : ViewModelBase
     {
+        // Fields and Constants
         private readonly StorageLocationService _storageLocationService = new();
         private readonly InventoryStockService _inventoryStockService = new();
+        private bool _isLoading;
+        private string _selectedLager = "Alle (Lager)";
+        private string _searchQuery = string.Empty;
+        private string _selectedRightSideLager = string.Empty;
 
+        // Properties
         public ObservableCollection<StorageLocation> StorageLocations { get; set; } = new();
         public ObservableCollection<InventoryStock> InventoryStocks { get; set; } = new ObservableCollection<InventoryStock>();
-
-        public class InventoryStockGroup
-        {
-            public string LagerName { get; set; } = string.Empty;
-            public ObservableCollection<InventoryStock> Items { get; set; } = new();
-        }
-
         public ObservableCollection<InventoryStockGroup> GroupedInventoryStocks { get; set; } = new();
+        public ObservableCollection<string> LagerOptions { get; set; } = new ObservableCollection<string> { "Alle (Lager)" };
+        public ObservableCollection<string> RightSideLagerOptions { get; set; } = new ObservableCollection<string>();
+        public ObservableCollection<string> TransferTypeOptions { get; set; } = new ObservableCollection<string> { "Umlagern", "Verkauf" };
+        public static ObservableCollection<string> SortOptions { get; set; } = new ObservableCollection<string>
+        {
+            "Sortieren nach...",
+            "Menge ▲",
+            "Menge ▼",
+            "Letzte Änderung ▲",
+            "Letzte Änderung ▼"
+        };
 
-        private bool _isLoading;
         public bool IsLoading
         {
             get => _isLoading;
             set => SetProperty(ref _isLoading, value);
         }
 
+        public string SelectedLager
+        {
+            get => _selectedLager;
+            set
+            {
+                SetProperty(ref _selectedLager, value);
+                FilterGroupedInventoryStocks();
+            }
+        }
+
+        public string SearchQuery
+        {
+            get => _searchQuery;
+            set
+            {
+                SetProperty(ref _searchQuery, value);
+                FilterGroupedInventoryStocks();
+            }
+        }
+
+        public string SelectedRightSideLager
+        {
+            get => _selectedRightSideLager;
+            set
+            {
+                SetProperty(ref _selectedRightSideLager, value);
+                UpdateRightSideLagerGroup();
+            }
+        }
+
+        public InventoryStockGroup? SelectedRightSideLagerGroup { get; set; }
+
+        private string selectedSortOption = "Sortieren nach...";
+        public string SelectedSortOption
+        {
+            get => selectedSortOption;
+            set
+            {
+                SetProperty(ref selectedSortOption, value);
+                ApplySorting();
+            }
+        }
+
+        // Constructor
         public InventoryViewModel()
         {
             LoadStorageLocations();
@@ -40,25 +93,23 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
             LoadRightSideLagerOptions();
         }
 
-        private string _selectedLager = "Alle (Lager)";
-        public string SelectedLager
+        // Commands
+        [RelayCommand]
+        public void ToProductionView()
         {
-            get => _selectedLager;
-            set
+            if (Parent is MainWindowViewModel mainVm)
             {
-                SetProperty(ref _selectedLager, value);
-                FilterGroupedInventoryStocks(); // Reapply filter when the selected Lager changes
+                mainVm.CurrentViewModel = new ProductionViewModel();
             }
         }
 
-        public ObservableCollection<string> LagerOptions { get; set; } = new ObservableCollection<string> { "Alle (Lager)" };
-        public ObservableCollection<string> RightSideLagerOptions { get; set; } = new ObservableCollection<string>();
+        [RelayCommand]
+        public void FilterGroupedInventoryStocksCommand()
+        {
+            FilterGroupedInventoryStocks();
+        }
 
-        public ObservableCollection<string> TransferTypeOptions { get; set; } = new ObservableCollection<string> { "Umlagern", "Verkauf" };
-
-        [ObservableProperty]
-        private string _selectedTransferTypeOption = "wähle transferart";
-
+        // Methods
         private async void LoadStorageLocations()
         {
             try
@@ -110,132 +161,56 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
                 IsLoading = false;
             }
         }
-        [RelayCommand]
-        public void ToProductionView()
-        {
-            if (Parent is MainWindowViewModel mainVm)
-            {
-                mainVm.CurrentViewModel = new ProductionViewModel();
-            }
-        }
-
-        private string _searchQuery = string.Empty;
-
-        public string SearchQuery
-        {
-            get => _searchQuery;
-            set
-            {
-                SetProperty(ref _searchQuery, value);
-                FilterGroupedInventoryStocks(); // Always filter the list, even if the query is empty
-            }
-        }
-
-        [RelayCommand]
-        public void FilterGroupedInventoryStocksCommand()
-        {
-            FilterGroupedInventoryStocks();
-        }
 
         private async void FilterGroupedInventoryStocks()
         {
-            var inventoryStocks = await _inventoryStockService.GetInventoryStocksAsync();
+            var filteredStocks = await _inventoryStockService.FilterAndGroupInventoryStocksAsync(SelectedLager, SearchQuery);
 
-            var filteredStocks = inventoryStocks
-                .Where(item =>
-                    (SelectedLager == "Alle (Lager)" || item.LagerName == SelectedLager) &&
-                    (string.IsNullOrWhiteSpace(_searchQuery) ||
-                     (int.TryParse(_searchQuery, out var artikelId) && item.ArtikelId.ToString().StartsWith(_searchQuery)) ||
-                     (!int.TryParse(_searchQuery, out _) && item.ArtikelBezeichnung?.Contains(_searchQuery, StringComparison.OrdinalIgnoreCase) == true)))
-                .GroupBy(stock => stock.LagerName ?? "Unbekannt")
-                .OrderBy(group => group.Key)
-                .Select(group => new InventoryStockGroup
-                {
-                    LagerName = group.Key,
-                    Items = new ObservableCollection<InventoryStock>(group)
-                });
+            // Apply sorting to the filtered stocks
+            var sortedGroups = filteredStocks.Select(group => new InventoryStockGroup
+            {
+                LagerName = group.LagerName,
+                Items = new ObservableCollection<InventoryStock>(
+                    SelectedSortOption switch
+                    {
+                        "Menge ▼" => group.Items.OrderByDescending(item => item.Bestand),
+                        "Menge ▲" => group.Items.OrderBy(item => item.Bestand),
+                        "Letzte Änderung ▼" => group.Items.OrderByDescending(item => item.LetzteAenderung),
+                        "Letzte Änderung ▲" => group.Items.OrderBy(item => item.LetzteAenderung),
+                        _ => group.Items
+                    })
+            }).ToList();
 
+            // Update the GroupedInventoryStocks collection
             GroupedInventoryStocks.Clear();
-            foreach (var group in filteredStocks)
+            foreach (var group in sortedGroups)
             {
                 GroupedInventoryStocks.Add(group);
-            }
-        }
-
-        public static ObservableCollection<string> SortOptions { get; set; } = new ObservableCollection<string>
-        {
-            "Sortieren nach...",
-            "Menge ▲",
-            "Menge ▼",
-            "Letzte Änderung ▲",
-            "Letzte Änderung ▼"
-        };
-
-        private string selectedSortOption = "Sortieren nach...";
-        public string SelectedSortOption
-        {
-            get => selectedSortOption;
-            set
-            {
-                SetProperty(ref selectedSortOption, value);
-                ApplySorting(); // Apply sorting whenever the sort option changes
             }
         }
 
         private void ApplySorting()
         {
-            var sortedStocks = GroupedInventoryStocks.SelectMany(group => group.Items).ToList();
-
-            switch (selectedSortOption)
+            // Create a new collection for sorted groups
+            var sortedGroups = GroupedInventoryStocks.Select(group => new InventoryStockGroup
             {
-                case "Menge ▲":
-                    sortedStocks = sortedStocks.OrderBy(stock => stock.Bestand).ToList();
-                    break;
-                case "Menge ▼":
-                    sortedStocks = sortedStocks.OrderByDescending(stock => stock.Bestand).ToList();
-                    break;
-                case "Letzte Änderung ▲":
-                    sortedStocks = sortedStocks.OrderBy(stock => stock.LetzteAenderung).ToList();
-                    break;
-                case "Letzte Änderung ▼":
-                    sortedStocks = sortedStocks.OrderByDescending(stock => stock.LetzteAenderung).ToList();
-                    break;
-                default:
-                    return; // No sorting applied
-            }
+                LagerName = group.LagerName,
+                Items = new ObservableCollection<InventoryStock>(
+                    SelectedSortOption switch
+                    {
+                        "Menge ▼" => group.Items.OrderByDescending(item => item.Bestand),
+                        "Menge ▲" => group.Items.OrderBy(item => item.Bestand),
+                        "Letzte Änderung ▼" => group.Items.OrderByDescending(item => item.LetzteAenderung),
+                        "Letzte Änderung ▲" => group.Items.OrderBy(item => item.LetzteAenderung),
+                        _ => group.Items
+                    })
+            }).ToList();
 
-            // Re-group the sorted stocks
-            var groupedStocks = sortedStocks
-                .GroupBy(stock => stock.LagerName ?? "Unbekannt")
-                .OrderBy(group => group.Key)
-                .Select(group => new InventoryStockGroup
-                {
-                    LagerName = group.Key,
-                    Items = new ObservableCollection<InventoryStock>(group)
-                });
-
+            // Clear and re-add the sorted groups
             GroupedInventoryStocks.Clear();
-            foreach (var group in groupedStocks)
+            foreach (var group in sortedGroups)
             {
                 GroupedInventoryStocks.Add(group);
-            }
-        }
-
-        private InventoryStockGroup? _selectedRightSideLagerGroup;
-        public InventoryStockGroup? SelectedRightSideLagerGroup
-        {
-            get => _selectedRightSideLagerGroup;
-            set => SetProperty(ref _selectedRightSideLagerGroup, value);
-        }
-
-        private string _selectedRightSideLager = string.Empty;
-        public string SelectedRightSideLager
-        {
-            get => _selectedRightSideLager;
-            set
-            {
-                SetProperty(ref _selectedRightSideLager, value);
-                UpdateRightSideLagerGroup();
             }
         }
 
@@ -272,10 +247,23 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
             }
         }
 
+        private string _selectedTransferTypeOption = "Umlagern";
+        public string SelectedTransferTypeOption
+        {
+            get => _selectedTransferTypeOption;
+            set
+            {
+                SetProperty(ref _selectedTransferTypeOption, value);
+                OnSelectedTransferTypeOptionChanged(value);
+            }
+        }
+
         public bool IsRightSideLagerOptionsVisible
         {
             get => SelectedTransferTypeOption == "Umlagern";
         }
+
+        partial void OnSelectedTransferTypeOptionChanged(string value);
 
         partial void OnSelectedTransferTypeOptionChanged(string value)
         {
