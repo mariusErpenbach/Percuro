@@ -18,14 +18,12 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
         private bool _isLoading;
         private string _selectedLager = "Alle (Lager)";
         private string _searchQuery = string.Empty;
-        private string _selectedRightSideLager = string.Empty;
 
         // Properties
         public ObservableCollection<StorageLocation> StorageLocations { get; set; } = new();
         public ObservableCollection<InventoryStock> InventoryStocks { get; set; } = new ObservableCollection<InventoryStock>();
         public ObservableCollection<InventoryStockGroup> GroupedInventoryStocks { get; set; } = new();
         public ObservableCollection<string> LagerOptions { get; set; } = new ObservableCollection<string> { "Alle (Lager)" };
-        public ObservableCollection<string> RightSideLagerOptions { get; set; } = new ObservableCollection<string>();
         public ObservableCollection<string> TransferTypeOptions { get; set; } = new ObservableCollection<string> { "Umlagern", "Verkauf" };
         public static ObservableCollection<string> SortOptions { get; set; } = new ObservableCollection<string>
         {
@@ -62,18 +60,6 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
             }
         }
 
-        public string SelectedRightSideLager
-        {
-            get => _selectedRightSideLager;
-            set
-            {
-                SetProperty(ref _selectedRightSideLager, value);
-                UpdateRightSideLagerGroup();
-            }
-        }
-
-        public InventoryStockGroup? SelectedRightSideLagerGroup { get; set; }
-
         private string selectedSortOption = "Sortieren nach...";
         public string SelectedSortOption
         {
@@ -90,7 +76,6 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
         {
             LoadStorageLocations();
             LoadInventoryStocks();
-            LoadRightSideLagerOptions();
         }
 
         // Commands
@@ -136,7 +121,10 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
             {
                 IsLoading = true;
 
+                Console.WriteLine("Loading inventory stocks...");
                 var inventoryStocks = await _inventoryStockService.GetInventoryStocksAsync();
+                Console.WriteLine($"Fetched {inventoryStocks.Count} inventory stocks from the service.");
+
                 var groupedStocks = inventoryStocks
                     .GroupBy(stock => stock.LagerName ?? "Unbekannt")
                     .OrderBy(group => group.Key)
@@ -151,6 +139,7 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
                 {
                     GroupedInventoryStocks.Add(group);
                 }
+                Console.WriteLine(GroupedInventoryStocks);
             }
             catch (Exception ex)
             {
@@ -214,61 +203,41 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
             }
         }
 
-        private void UpdateRightSideLagerGroup()
+        [ObservableProperty]
+        private InventoryStockGroup? selectedRightSideLagerGroup;
+
+        [RelayCommand]
+        private void TransferStock()
         {
-            if (!string.IsNullOrEmpty(SelectedRightSideLager))
+            // Logic to transfer stock will be implemented here.
+        }
+
+        [RelayCommand]
+        private void LoadRightSideLagerOptions()
+        {
+            // Logic to load right-side lager options will be implemented here.
+        }
+
+        partial void OnSelectedRightSideLagerGroupChanged(InventoryStockGroup? value)
+        {
+            if (value != null)
             {
-                SelectedRightSideLagerGroup = GroupedInventoryStocks.FirstOrDefault(group => group.LagerName?.Equals(SelectedRightSideLager, StringComparison.OrdinalIgnoreCase) == true);
+                Console.WriteLine($"Selected LagerName: {value.LagerName}");
+                var matchingGroup = GroupedInventoryStocks.FirstOrDefault(group => group.LagerName == value.LagerName);
+                if (matchingGroup != null)
+                {
+                    Console.WriteLine($"Matching group found: {matchingGroup.LagerName} with {matchingGroup.Items.Count} items.");
+                    SelectedRightSideLagerGroup = matchingGroup;
+                }
+                else
+                {
+                    Console.WriteLine("No matching group found.");
+                }
             }
             else
             {
-                SelectedRightSideLagerGroup = null;
+                Console.WriteLine("SelectedRightSideLagerGroup is null.");
             }
-        }
-
-        private async void LoadRightSideLagerOptions()
-        {
-            try
-            {
-                var locations = await _storageLocationService.GetStorageLocationsAsync();
-                RightSideLagerOptions.Clear();
-                RightSideLagerOptions.Insert(0, "Kein ziel");
-                foreach (var location in locations)
-                {
-                    if (!RightSideLagerOptions.Contains(location.Name))
-                    {
-                        RightSideLagerOptions.Add(location.Name);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error loading right-side storage locations: {ex.Message}");
-            }
-        }
-
-        private string _selectedTransferTypeOption = "Umlagern";
-        public string SelectedTransferTypeOption
-        {
-            get => _selectedTransferTypeOption;
-            set
-            {
-                SetProperty(ref _selectedTransferTypeOption, value);
-                OnSelectedTransferTypeOptionChanged(value);
-            }
-        }
-
-        public bool IsRightSideLagerOptionsVisible
-        {
-            get => SelectedTransferTypeOption == "Umlagern";
-        }
-
-        partial void OnSelectedTransferTypeOptionChanged(string value);
-
-        partial void OnSelectedTransferTypeOptionChanged(string value)
-        {
-            // Notify the view about the visibility change of the RightSideLagerOptions
-            OnPropertyChanged(nameof(IsRightSideLagerOptionsVisible));
         }
     }
 }

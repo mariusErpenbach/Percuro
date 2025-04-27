@@ -91,5 +91,45 @@ namespace Percuro.Services
                 _ => stocks
             };
         }
+
+        public async Task TransferStockAsync(string targetLagerName, int quantity)
+        {
+            if (string.IsNullOrEmpty(targetLagerName))
+            {
+                throw new ArgumentException("Target warehouse name cannot be null or empty.", nameof(targetLagerName));
+            }
+
+            if (quantity <= 0)
+            {
+                throw new ArgumentException("Quantity must be greater than zero.", nameof(quantity));
+            }
+
+            try
+            {
+                using var connection = new MySqlConnection(_connectionString);
+                await connection.OpenAsync();
+
+                // Example query to update stock in the target warehouse
+                string query = @"UPDATE lagerbestaende 
+                                 SET bestand = bestand + @quantity 
+                                 WHERE lager_name = @targetLagerName";
+
+                using var cmd = new MySqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@quantity", quantity);
+                cmd.Parameters.AddWithValue("@targetLagerName", targetLagerName);
+
+                int rowsAffected = await cmd.ExecuteNonQueryAsync();
+
+                if (rowsAffected == 0)
+                {
+                    throw new Exception("No rows were updated. The target warehouse might not exist.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error during stock transfer: {ex.Message}");
+                throw;
+            }
+        }
     }
 }

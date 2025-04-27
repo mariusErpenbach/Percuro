@@ -28,94 +28,102 @@
             </Grid>
         </DockPanel>
 
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="7*"/> <!-- 70% der Breite -->
-                <ColumnDefinition Width="3*"/> <!-- 30% der Breite -->
-            </Grid.ColumnDefinitions>
+        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="7*"/>
+                    <ColumnDefinition Width="3*"/>
+                </Grid.ColumnDefinitions>
 
-            <!-- Linke Hälfte: Filter und Content -->
-            <DockPanel Grid.Column="0">
-                <!-- Filter Section -->
-                <DockPanel DockPanel.Dock="Top" Margin="10">
-                    <StackPanel Orientation="Vertical" HorizontalAlignment="Left">
-                        <TextBlock Text="(Filter: Geben Sie einen Artikelbegriff ein)" Margin="0,0,0,10" FontStyle="Italic" Foreground="Gray"/>
-                        <TextBox Width="310" Watermark="Artikel suchen..." Text="{Binding SearchQuery, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left"/>
-                        <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
-                            <ComboBox Width="150" ItemsSource="{Binding LagerOptions}" SelectedItem="{Binding SelectedLager}" Margin="0,0,10,0"/>
-                            <ComboBox Width="150" ItemsSource="{Binding SortOptions}" SelectedItem="{Binding SelectedSortOption}"/>
+                <!-- Linke Hälfte: Filter und Content -->
+                <DockPanel Grid.Column="0">
+                    <!-- Filter Section -->
+                    <DockPanel DockPanel.Dock="Top" Margin="10">
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Left">
+                            <TextBlock Text="(Filter: Geben Sie einen Artikelbegriff ein)" Margin="0,0,0,10" FontStyle="Italic" Foreground="Gray"/>
+                            <TextBox Width="310" Watermark="Artikel suchen..." Text="{Binding SearchQuery, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left"/>
+                            <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                                <ComboBox Width="150" ItemsSource="{Binding LagerOptions}" SelectedItem="{Binding SelectedLager}" Margin="0,0,10,0"/>
+                                <ComboBox Width="150" ItemsSource="{Binding SortOptions}" SelectedItem="{Binding SelectedSortOption}"/>
+                            </StackPanel>
                         </StackPanel>
-                    </StackPanel>
+                    </DockPanel>
+
+                    <!-- Scrollable Content Section -->
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+                        <ItemsControl ItemsSource="{Binding GroupedInventoryStocks}" Margin="10">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Expander Header="{Binding LagerName}" IsExpanded="False" Margin="5" MinHeight="30" HorizontalAlignment="Stretch">
+                                        <ListBox ItemsSource="{Binding Items}" >
+                                            <ListBox.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Expander>
+                                                        <Expander.Header>
+                                                            <StackPanel Orientation="Horizontal">
+                                                                <TextBlock Width="200" Text="{Binding ArtikelBezeichnung}" Margin="5"/>
+                                                                <TextBlock Width="100" Text="{Binding Bestand}" Margin="5"/>
+                                                            </StackPanel>
+                                                        </Expander.Header>
+                                                        <Expander.Content>
+                                                            <StackPanel Orientation="Vertical">
+                                                                <Border BorderBrush="Gray" BorderThickness="1" Background="Black" Margin="2">
+                                                                    <TextBlock Text="{Binding ArtikelIdDescription}" Padding="5" Foreground="White"/>
+                                                                </Border>
+                                                                <Border BorderBrush="Gray" BorderThickness="1" Background="Black" Margin="2">
+                                                                    <TextBlock Text="{Binding ArtikelBezeichnungDescription}" Padding="5" Foreground="White"/>
+                                                                </Border>
+                                                                <Border BorderBrush="Gray" BorderThickness="1" Background="Black" Margin="2">
+                                                                    <TextBlock Text="{Binding BestandDescription}" Padding="5" Foreground="White"/>
+                                                                </Border>
+                                                                <Border BorderBrush="Gray" BorderThickness="1" Background="Black" Margin="2">
+                                                                    <TextBlock Text="{Binding MindestbestandDescription}" Padding="5" Foreground="White"/>
+                                                                </Border>
+                                                                <Border BorderBrush="Gray" BorderThickness="1" Background="Black" Margin="2">
+                                                                    <TextBlock Text="{Binding PlatzbezeichnungDescription}" Padding="5" Foreground="White"/>
+                                                                </Border>
+                                                                <Border BorderBrush="Gray" BorderThickness="1" Background="Black" Margin="2">
+                                                                    <TextBlock Text="{Binding LetzteAenderungDescription}" Padding="5" Foreground="White"/>
+                                                                </Border>
+                                                            </StackPanel>
+                                                        </Expander.Content>
+                                                    </Expander>
+                                                </DataTemplate>
+                                            </ListBox.ItemTemplate>
+                                        </ListBox>
+                                    </Expander>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
                 </DockPanel>
 
-                <!-- Scrollable Content Section -->
-                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-                    <ItemsControl ItemsSource="{Binding GroupedInventoryStocks}" Margin="10">
-                        <ItemsControl.ItemTemplate>
+                <!-- Rechte Hälfte: Dropdown-Menü -->
+                <StackPanel Grid.Column="1" Margin="10" HorizontalAlignment="Left" VerticalAlignment="Top" Orientation="Vertical">
+                    <ComboBox ItemsSource="{Binding GroupedInventoryStocks}" SelectedItem="{Binding SelectedRightSideLagerGroup}" Width="200" Margin="0,0,0,10">
+                        <ComboBox.ItemTemplate>
                             <DataTemplate>
-                                <Expander Header="{Binding LagerName}" IsExpanded="False" Margin="5" MinHeight="30" HorizontalAlignment="Stretch">
-                                    <ListBox ItemsSource="{Binding Items}" >
-                                        <ListBox.ItemTemplate>
-                                            <DataTemplate>
-                                                <Expander>
-                                                    <Expander.Header>
-                                                        <StackPanel Orientation="Horizontal">
-                                                            <TextBlock Width="200" Text="{Binding ArtikelBezeichnung}" Margin="5"/>
-                                                            <TextBlock Width="100" Text="{Binding Bestand}" Margin="5"/>
-                                                        </StackPanel>
-                                                    </Expander.Header>
-                                                    <Expander.Content>
-                                                        <StackPanel Orientation="Vertical">
-                                                            <Border BorderBrush="Gray" BorderThickness="1" Background="Black" Margin="2">
-                                                                <TextBlock Text="{Binding ArtikelIdDescription}" Padding="5" Foreground="White"/>
-                                                            </Border>
-                                                            <Border BorderBrush="Gray" BorderThickness="1" Background="Black" Margin="2">
-                                                                <TextBlock Text="{Binding ArtikelBezeichnungDescription}" Padding="5" Foreground="White"/>
-                                                            </Border>
-                                                            <Border BorderBrush="Gray" BorderThickness="1" Background="Black" Margin="2">
-                                                                <TextBlock Text="{Binding BestandDescription}" Padding="5" Foreground="White"/>
-                                                            </Border>
-                                                            <Border BorderBrush="Gray" BorderThickness="1" Background="Black" Margin="2">
-                                                                <TextBlock Text="{Binding MindestbestandDescription}" Padding="5" Foreground="White"/>
-                                                            </Border>
-                                                            <Border BorderBrush="Gray" BorderThickness="1" Background="Black" Margin="2">
-                                                                <TextBlock Text="{Binding PlatzbezeichnungDescription}" Padding="5" Foreground="White"/>
-                                                            </Border>
-                                                            <Border BorderBrush="Gray" BorderThickness="1" Background="Black" Margin="2">
-                                                                <TextBlock Text="{Binding LetzteAenderungDescription}" Padding="5" Foreground="White"/>
-                                                            </Border>
-                                                        </StackPanel>
-                                                    </Expander.Content>
-                                                </Expander>
-                                            </DataTemplate>
-                                        </ListBox.ItemTemplate>
-                                    </ListBox>
-                                </Expander>
+                                <TextBlock Text="{Binding LagerName}"/>
                             </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </ScrollViewer>
-            </DockPanel>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
 
-            <!-- Rechte Hälfte: Lager erneut einbinden -->
-            <StackPanel Grid.Column="1" Margin="10" HorizontalAlignment="Left" VerticalAlignment="Top" Orientation="Vertical">
-                <ComboBox ItemsSource="{Binding TransferTypeOptions}" SelectedItem="{Binding SelectedTransferTypeOption}" Width="200" Margin="0,0,0,10"/>
-                <ComboBox ItemsSource="{Binding RightSideLagerOptions}" SelectedItem="{Binding SelectedRightSideLager}" Width="200" IsVisible="{Binding IsRightSideLagerOptionsVisible}"/>
-                <ListBox ItemsSource="{Binding SelectedRightSideLagerGroup.Items}" Margin="5">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel Orientation="Vertical">
-                                <TextBlock Text="{Binding ArtikelIdDescription}" Margin="5"/>
-                                <TextBlock Text="{Binding ArtikelBezeichnungDescription}" Margin="5"/>
-                                <TextBlock Text="{Binding BestandDescription}" Margin="5"/>
-                                <TextBlock Text="{Binding MindestbestandDescription}" Margin="5"/>
-                                <TextBlock Text="{Binding PlatzbezeichnungDescription}" Margin="5"/>
-                                <TextBlock Text="{Binding LetzteAenderungDescription}" Margin="5"/>
-                            </StackPanel>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
-            </StackPanel>
-        </Grid>
+                    <ListBox ItemsSource="{Binding SelectedRightSideLagerGroup.Items}" Margin="10">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Vertical">
+                                    <TextBlock Text="{Binding ArtikelIdDescription}" Margin="5"/>
+                                    <TextBlock Text="{Binding ArtikelBezeichnungDescription}" Margin="5"/>
+                                    <TextBlock Text="{Binding BestandDescription}" Margin="5"/>
+                                    <TextBlock Text="{Binding MindestbestandDescription}" Margin="5"/>
+                                    <TextBlock Text="{Binding PlatzbezeichnungDescription}" Margin="5"/>
+                                    <TextBlock Text="{Binding LetzteAenderungDescription}" Margin="5"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </StackPanel>
+            </Grid>
+        </ScrollViewer>
     </DockPanel>
 </UserControl>
