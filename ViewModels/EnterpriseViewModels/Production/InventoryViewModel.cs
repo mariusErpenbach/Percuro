@@ -9,6 +9,9 @@ using Percuro.Services.InventoryServices;
 
 namespace Percuro.ViewModels.EnterpriseViewModels.Production
 {
+    /// <summary>
+    /// ViewModel for managing inventory-related operations and UI interactions.
+    /// </summary>
     public partial class InventoryViewModel : ViewModelBase
     {
         private readonly InventoryDatabaseService _inventoryDatabaseService = new();
@@ -137,6 +140,8 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
             IsRightPanelVisible = true;
         }
 
+        // Executes a stock transfer operation and updates the database.
+        /// <returns>A task that represents the asynchronous operation.</returns>
         [RelayCommand]
         private async Task ExecuteTransferAsync()
         {
@@ -177,6 +182,8 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
             }
         }
 
+        // Loads inventory stocks and groups them for display.
+        /// <returns>A task that represents the asynchronous operation.</returns>
         private async Task LoadInventoryStocks()
         {
             try
@@ -212,6 +219,7 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
             }
         }
 
+        // Filters and sorts grouped inventory stocks based on user input.
         private async void FilterGroupedInventoryStocks()
         {
             try
@@ -238,6 +246,7 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
             }
         }
 
+        // Subscribes to property changes in inventory stocks to update the UI.
         private void SubscribeToInventoryStockChanges()
         {
             foreach (var group in GroupedInventoryStocks)
@@ -283,6 +292,7 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
             }
         }
 
+        // Initializes target inventory stocks for transfer operations.
         private async Task InitializeTargetInventoryStocksAsync()
         {
             try

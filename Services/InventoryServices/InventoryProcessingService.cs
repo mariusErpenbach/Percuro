@@ -7,8 +7,10 @@ using Percuro.Models.InventoryModels;
 
 namespace Percuro.Services.InventoryServices
 {
+    // Handles processing of inventory data, such as filtering, sorting, and grouping.
     public class InventoryProcessingService
     {
+        // Filters, sorts, and groups inventory stocks based on the provided criteria.
         public async Task<List<InventoryStockGroup>> FilterSortAndGroupInventoryStocksAsync(
             List<InventoryStock> inventoryStocks,
             string selectedLager,
@@ -42,6 +44,7 @@ namespace Percuro.Services.InventoryServices
             return await Task.FromResult(filteredAndSortedStocks);
         }
 
+        // Groups inventory stocks by their warehouse name.
         public async Task<List<InventoryStockGroup>> GroupInventoryStocksAsync(List<InventoryStock> inventoryStocks)
         {
             return await Task.Run(() =>

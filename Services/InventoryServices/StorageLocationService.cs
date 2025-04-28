@@ -7,6 +7,7 @@ using Percuro.Models.InventoryModels;
 
 namespace Percuro.Services.InventoryServices
 {
+    // Manages storage location data, including retrieval from the database.
     public class StorageLocationService
     {
         private readonly string _connectionString;
@@ -19,6 +20,7 @@ namespace Percuro.Services.InventoryServices
                                 ?? throw new Exception("MYSQL_CONNECTION is not set.");
         }
 
+        // Retrieves all storage locations from the database.
         public async Task<List<StorageLocation>> GetStorageLocationsAsync()
         {
             var storageLocations = new List<StorageLocation>();

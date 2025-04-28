@@ -8,6 +8,7 @@ using System.Data;
 
 namespace Percuro.Services.InventoryServices
 {
+    // Handles database operations related to inventory, such as fetching stocks and creating stock movements.
     public class InventoryDatabaseService
     {
         private readonly string _connectionString;
@@ -20,6 +21,7 @@ namespace Percuro.Services.InventoryServices
                                 ?? throw new Exception("MYSQL_CONNECTION is not set.");
         }
 
+        // Retrieves all inventory stocks from the database.
         public async Task<List<InventoryStock>> GetInventoryStocksAsync()
         {
             var inventoryStocks = new List<InventoryStock>();
@@ -56,6 +58,7 @@ namespace Percuro.Services.InventoryServices
             return inventoryStocks;
         }
 
+        // Transfers stock to a target warehouse by updating the database.
         public async Task TransferStockAsync(string targetLagerName, int quantity)
         {
             if (string.IsNullOrEmpty(targetLagerName))
@@ -95,6 +98,7 @@ namespace Percuro.Services.InventoryServices
             }
         }
 
+        // Creates a stock movement record in the database and updates stock quantities.
         public async Task CreateLagerbewegungAsync(string ausgangslager, string ziellager, int artikelId, string artikelBezeichnung, int menge, string beweggrund)
         {
             if (string.IsNullOrEmpty(ausgangslager) || string.IsNullOrEmpty(ziellager))
