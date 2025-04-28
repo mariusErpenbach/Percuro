@@ -16,7 +16,7 @@ Wichtige Funktionen, die gerade entwickelt werden: </br> </br>
 
 ~~Sortieroptionen nach Menge, Artikelname und Lagerort. </br>~~
 
-Direktaktionen wie Bestandkorrekturen und Umbuchungen zwischen Lagerorten. </br>
+Direktaktionen wie Bestandkorrekturen und ~~Umbuchungen zwischen Lagerorten. </br>~~
 
 Visualisierung von Bestandsmengen mit Warnungen bei niedrigem Bestand. </br>
 
