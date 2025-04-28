@@ -1,11 +1,8 @@
-using System.Collections.ObjectModel;
-
 namespace Percuro.Models
 {
-    public class InventoryStockGroup
+    public class InventoryStockGroup : BaseInventoryGroup
     {
-        public string LagerName { get; set; } = string.Empty;
-        public ObservableCollection<InventoryStock> Items { get; set; } = new();
+        // Additional properties or methods specific to InventoryStockGroup can go here
     }
 
     // Spezielle Klasse für "Kein Lager" Option

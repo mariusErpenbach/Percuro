@@ -1,6 +1,6 @@
 using System;
 
-namespace Percuro.Models
+namespace Percuro.Models.InventoryModels
 {
     public class StorageLocation
     {

@@ -5,8 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Percuro.Models;
-using Percuro.Services;
+using Percuro.Services.InventoryServices;
 
 namespace Percuro.ViewModels.EnterpriseViewModels.Production
 {
@@ -14,11 +13,12 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
     {
         private readonly InventoryService _inventoryService = new();
         private readonly InventoryStockService _inventoryStockService = new();
+        private readonly InventoryProcessingService _inventoryProcessingService = new();
+
         private bool _isLoading;
         private string _selectedLager = "Alle (Lager)";
         private string _searchQuery = string.Empty;
         private string selectedSortOption = "Sortieren nach...";
-
 
         public ObservableCollection<InventoryStockGroup> GroupedInventoryStocks { get; set; } = new();
         public ObservableCollection<string> LagerOptions { get; set; } = new ObservableCollection<string> { "Alle (Lager)" };
@@ -80,6 +80,21 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
         private InventoryStock? transferCandidate;
 
         [ObservableProperty]
+        private int transferAmount;
+
+        [ObservableProperty]
+        private string? transferReason;
+
+        [ObservableProperty]
+        private TargetInventoryStock? selectedTargetStock;
+
+        [ObservableProperty]
+        private ObservableCollection<TargetInventoryStock> targetInventoryStocks = new();
+
+        [ObservableProperty]
+        private long? selectedItemId;
+
+        [ObservableProperty]
         private int? selectedItemBestand;
 
         [ObservableProperty]
@@ -88,29 +103,12 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
         [ObservableProperty]
         private string? selectedItemArtikelBezeichnung;
 
-        [ObservableProperty]
-        private long? selectedItemId;
-
-        [ObservableProperty]
-        private ObservableCollection<TargetInventoryStock> targetInventoryStocks = new();
-
-        [ObservableProperty]
-        private TargetInventoryStock? selectedTargetStock;
-
-        [ObservableProperty]
-        private int transferAmount;
-
-        [ObservableProperty]
-        private string? transferReason;
-
-        // Constructor
         public InventoryViewModel()
         {
             _ = InitializeTargetInventoryStocksAsync();
             _ = LoadInventoryStocks();
         }
 
-        // Commands
         [RelayCommand]
         public void ToProductionView()
         {
@@ -162,6 +160,15 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
 
                 Console.WriteLine($"Lagerbewegung erfolgreich erstellt: {TransferAmount} Einheiten von {SelectedItemLagerName} nach {SelectedTargetStock.LagerName}.");
 
+                IsRightPanelVisible = false;
+                SelectedItemId = null;
+                SelectedItemBestand = null;
+                SelectedItemLagerName = null;
+                SelectedItemArtikelBezeichnung = null;
+                SelectedTargetStock = null;
+                TransferAmount = 0;
+                TransferReason = string.Empty;
+
                 await InitializeTargetInventoryStocksAsync();
                 await LoadInventoryStocks();
             }
@@ -171,14 +178,13 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
             }
         }
 
-        // Methods
         private async Task LoadInventoryStocks()
         {
             try
             {
                 IsLoading = true;
                 var inventoryStocks = await _inventoryStockService.GetInventoryStocksAsync();
-                var groupedStocks = await _inventoryService.GroupInventoryStocksAsync(inventoryStocks);
+                var groupedStocks = await _inventoryProcessingService.GroupInventoryStocksAsync(inventoryStocks);
 
                 GroupedInventoryStocks.Clear();
                 foreach (var group in groupedStocks)
@@ -186,7 +192,6 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
                     GroupedInventoryStocks.Add(group);
                 }
 
-                // Update LagerOptions
                 LagerOptions.Clear();
                 LagerOptions.Add("Alle (Lager)");
                 foreach (var group in groupedStocks)
@@ -194,7 +199,6 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
                     LagerOptions.Add(group.LagerName);
                 }
 
-                // Ensure SelectedLager is set to default
                 SelectedLager = "Alle (Lager)";
 
                 SubscribeToInventoryStockChanges();
@@ -215,7 +219,7 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
             {
                 IsLoading = true;
                 var inventoryStocks = await _inventoryStockService.GetInventoryStocksAsync();
-                var filteredStocks = await _inventoryStockService.FilterSortAndGroupInventoryStocksAsync(inventoryStocks, SelectedLager, SearchQuery, SelectedSortOption);
+                var filteredStocks = await _inventoryProcessingService.FilterSortAndGroupInventoryStocksAsync(inventoryStocks, SelectedLager, SearchQuery, SelectedSortOption);
 
                 GroupedInventoryStocks.Clear();
                 foreach (var group in filteredStocks)
@@ -237,25 +241,10 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
 
         private void SubscribeToInventoryStockChanges()
         {
-            Console.WriteLine($"SubscribeToInventoryStockChanges: Registriere PropertyChanged-Events für {GroupedInventoryStocks.Sum(g => g.Items.Count)} Items");
-            foreach (var group in GroupedInventoryStocks)
+            _inventoryService.SubscribeToInventoryStockChanges(GroupedInventoryStocks, (stock, propertyName) =>
             {
-                foreach (var stock in group.Items)
-                {
-                    stock.PropertyChanged -= InventoryStock_PropertyChanged;
-                    stock.PropertyChanged += (sender, e) =>
-                    {
-                        if (e.PropertyName == nameof(InventoryStock.IsTransferCandidate) ||
-                            e.PropertyName == nameof(InventoryStock.Bestand) ||
-                            e.PropertyName == nameof(InventoryStock.LagerName) ||
-                            e.PropertyName == nameof(InventoryStock.ArtikelBezeichnung) ||
-                            e.PropertyName == nameof(InventoryStock.Id))
-                        {
-                            InventoryStock_PropertyChanged(sender, e);
-                        }
-                    };
-                }
-            }
+                InventoryStock_PropertyChanged(stock, new PropertyChangedEventArgs(propertyName));
+            });
         }
 
         private void InventoryStock_PropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -265,33 +254,29 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
 
             if (e.PropertyName == nameof(InventoryStock.IsTransferCandidate))
             {
-                if (stock != null && stock.IsTransferCandidate)
-                {
-                    TransferCandidate = stock;
+                UpdateRightPanelVisibility(stock?.IsTransferCandidate == true ? stock : null);
+            }
+        }
 
-                    SelectedItemId = stock.Id;
-                    SelectedItemBestand = stock.Bestand;
-                    SelectedItemLagerName = stock.LagerName;
-                    SelectedItemArtikelBezeichnung = stock.ArtikelBezeichnung;
-
-                    IsRightPanelVisible = true;
-
-                    Console.WriteLine($"Transfer-Kandidat gesetzt: Artikel {stock.ArtikelId} ({stock.ArtikelBezeichnung})");
-                    Console.WriteLine($"Zwischengespeicherte Daten: ID={SelectedItemId}, Bestand={SelectedItemBestand}, Lager={SelectedItemLagerName}");
-                }
-                else if (stock != null && !stock.IsTransferCandidate)
-                {
-                    if (TransferCandidate == stock)
-                    {
-                        TransferCandidate = null;
-                        SelectedItemId = null;
-                        SelectedItemBestand = null;
-                        SelectedItemLagerName = null;
-                        SelectedItemArtikelBezeichnung = null;
-
-                        Console.WriteLine($"Transfer-Kandidat zurückgesetzt von Artikel {stock.ArtikelId}");
-                    }
-                }
+        private void UpdateRightPanelVisibility(InventoryStock? transferCandidate)
+        {
+            if (transferCandidate != null)
+            {
+                TransferCandidate = transferCandidate;
+                SelectedItemId = transferCandidate.Id;
+                SelectedItemBestand = transferCandidate.Bestand;
+                SelectedItemLagerName = transferCandidate.LagerName;
+                SelectedItemArtikelBezeichnung = transferCandidate.ArtikelBezeichnung;
+                IsRightPanelVisible = true;
+            }
+            else
+            {
+                TransferCandidate = null;
+                SelectedItemId = null;
+                SelectedItemBestand = null;
+                SelectedItemLagerName = null;
+                SelectedItemArtikelBezeichnung = null;
+                IsRightPanelVisible = false;
             }
         }
 

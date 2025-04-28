@@ -5,8 +5,9 @@ using MySqlConnector;
 using Percuro.Models;
 using DotNetEnv;
 using System.Data;
+using Percuro.Models.InventoryModels;
 
-namespace Percuro.Services
+namespace Percuro.Services.InventoryServices
 {
     public class StorageLocationService
     {

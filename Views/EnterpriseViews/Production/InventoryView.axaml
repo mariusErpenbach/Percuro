@@ -2,7 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:Percuro.Services"
              xmlns:vm="clr-namespace:Percuro.ViewModels.EnterpriseViewModels.Production"
-             xmlns:models="clr-namespace:Percuro.Models"
+             xmlns:models="clr-namespace:Percuro.Models.InventoryModels"
              x:Class="Percuro.Views.EnterpriseViews.Production.InventoryView"
              x:DataType="vm:InventoryViewModel"
              xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
@@ -121,7 +121,6 @@
                                     <TextBlock Text="{Binding ArtikelId}" />
                                     <TextBlock Text="{Binding ArtikelBezeichnung}" />
                                     <TextBlock Text="{Binding Bestand}" />
-                                    <TextBlock Text="{Binding LagerName}" />
                                 </StackPanel>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>

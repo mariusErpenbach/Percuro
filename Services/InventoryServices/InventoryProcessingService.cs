@@ -3,48 +3,33 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using Percuro.Models;
+using Percuro.Models.InventoryModels;
 
-namespace Percuro.Services
+namespace Percuro.Services.InventoryServices
 {
-    public class InventoryService
+    public class InventoryProcessingService
     {
-        public ObservableCollection<InventoryStock> SortInventoryItems(ObservableCollection<InventoryStock> items, string sortOption)
-        {
-            return new ObservableCollection<InventoryStock>(
-                sortOption switch
-                {
-                    "Menge ▼" => items.OrderByDescending(item => item.Bestand),
-                    "Menge ▲" => items.OrderBy(item => item.Bestand),
-                    "Letzte Änderung ▼" => items.OrderByDescending(item => item.LetzteAenderung),
-                    "Letzte Änderung ▲" => items.OrderBy(item => item.LetzteAenderung),
-                    _ => items
-                });
-        }
-
-        public List<InventoryStock> SortInventoryStocks(List<InventoryStock> stocks, string sortOption)
-        {
-            return sortOption switch
-            {
-                "Menge ▲" => stocks.OrderBy(stock => stock.Bestand).ToList(),
-                "Menge ▼" => stocks.OrderByDescending(stock => stock.Bestand).ToList(),
-                "Letzte Änderung ▲" => stocks.OrderBy(stock => stock.LetzteAenderung).ToList(),
-                "Letzte Änderung ▼" => stocks.OrderByDescending(stock => stock.LetzteAenderung).ToList(),
-                _ => stocks
-            };
-        }
-
-        public async Task<List<InventoryStockGroup>> FilterAndGroupInventoryStocksAsync(
+        public async Task<List<InventoryStockGroup>> FilterSortAndGroupInventoryStocksAsync(
             List<InventoryStock> inventoryStocks,
             string selectedLager,
-            string searchQuery)
+            string searchQuery,
+            string sortOption)
         {
-            var filteredStocks = inventoryStocks
+            var filteredAndSortedStocks = inventoryStocks
                 .Where(item =>
                     (selectedLager == "Alle (Lager)" || item.LagerName == selectedLager) &&
                     (string.IsNullOrWhiteSpace(searchQuery) ||
                      (int.TryParse(searchQuery, out var artikelId) && item.ArtikelId.ToString().StartsWith(searchQuery)) ||
                      (!int.TryParse(searchQuery, out _) && item.ArtikelBezeichnung?.Contains(searchQuery, StringComparison.OrdinalIgnoreCase) == true)))
+                // Handle nullability warnings by ensuring non-nullable types are used
+                .OrderBy<InventoryStock, object>(item => sortOption switch
+                {
+                    "Menge ▲" => item.Bestand,
+                    "Menge ▼" => -item.Bestand,
+                    "Letzte Änderung ▲" => item.LetzteAenderung ?? DateTime.MinValue,
+                    "Letzte Änderung ▼" => item.LetzteAenderung?.Ticks ?? long.MinValue,
+                    _ => 0
+                })
                 .GroupBy(stock => stock.LagerName ?? "Unbekannt")
                 .OrderBy(group => group.Key)
                 .Select(group => new InventoryStockGroup
@@ -54,7 +39,7 @@ namespace Percuro.Services
                 })
                 .ToList();
 
-            return await Task.FromResult(filteredStocks);
+            return await Task.FromResult(filteredAndSortedStocks);
         }
 
         public async Task<List<InventoryStockGroup>> GroupInventoryStocksAsync(List<InventoryStock> inventoryStocks)

@@ -1,20 +1,18 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using MySqlConnector;
 using Percuro.Models;
 using DotNetEnv;
 using System.Data;
 
-namespace Percuro.Services
+namespace Percuro.Services.InventoryServices
 {
-    public class InventoryStockService
+    public class InventoryDatabaseService
     {
         private readonly string _connectionString;
 
-        public InventoryStockService()
+        public InventoryDatabaseService()
         {
             // Load environment variables
             Env.Load();
@@ -58,34 +56,6 @@ namespace Percuro.Services
             return inventoryStocks;
         }
 
-        public async Task<List<InventoryStockGroup>> FilterSortAndGroupInventoryStocksAsync(List<InventoryStock> inventoryStocks, string selectedLager, string searchQuery, string sortOption)
-        {
-            var filteredAndSortedStocks = inventoryStocks
-                .Where(item =>
-                    (selectedLager == "Alle (Lager)" || item.LagerName == selectedLager) &&
-                    (string.IsNullOrWhiteSpace(searchQuery) ||
-                     (int.TryParse(searchQuery, out var artikelId) && item.ArtikelId.ToString().StartsWith(searchQuery)) ||
-                     (!int.TryParse(searchQuery, out _) && item.ArtikelBezeichnung?.Contains(searchQuery, StringComparison.OrdinalIgnoreCase) == true)))
-                .OrderBy(item => sortOption switch
-                {
-                    "Menge ▲" => (object)item.Bestand,
-                    "Menge ▼" => (object)(-item.Bestand),
-                    "Letzte Änderung ▲" => (object)(item.LetzteAenderung ?? DateTime.MinValue),
-                    "Letzte Änderung ▼" => (object)(item.LetzteAenderung.HasValue ? -item.LetzteAenderung.Value.Ticks : long.MinValue),
-                    _ => (object)0
-                })
-                .GroupBy(stock => stock.LagerName ?? "Unbekannt")
-                .OrderBy(group => group.Key)
-                .Select(group => new InventoryStockGroup
-                {
-                    LagerName = group.Key,
-                    Items = new ObservableCollection<InventoryStock>(group)
-                })
-                .ToList();
-
-            return await Task.FromResult(filteredAndSortedStocks);
-        }
-
         public async Task TransferStockAsync(string targetLagerName, int quantity)
         {
             if (string.IsNullOrEmpty(targetLagerName))
@@ -103,7 +73,6 @@ namespace Percuro.Services
                 using var connection = new MySqlConnection(_connectionString);
                 await connection.OpenAsync();
 
-                // Example query to update stock in the target warehouse
                 string query = @"UPDATE lagerbestaende 
                                  SET bestand = bestand + @quantity 
                                  WHERE lager_name = @targetLagerName";
@@ -143,7 +112,6 @@ namespace Percuro.Services
                 using var connection = new MySqlConnection(_connectionString);
                 await connection.OpenAsync();
 
-                // Füge die Lagerbewegung hinzu
                 string insertQuery = @"INSERT INTO lagerbewegungen (ausgangslager, ziellager, artikel_id, artikel_bezeichnung, menge, datum, beweggrund)
                                        VALUES (@ausgangslager, @ziellager, @artikelId, @artikelBezeichnung, @menge, NOW(), @beweggrund)";
 
@@ -158,14 +126,14 @@ namespace Percuro.Services
                 await insertCmd.ExecuteNonQueryAsync();
                 Console.WriteLine("Lagerbewegung erfolgreich gespeichert.");
 
-                // Aktualisiere die umlaufmenge im Ausgangslager anhand der Bestands-ID
                 string updateQuery = @"UPDATE lagerbestaende 
                                        SET umlaufmenge = umlaufmenge + @menge 
                                        WHERE id = @bestandId";
 
                 using var updateCmd = new MySqlCommand(updateQuery, connection);
+                // Ensure correct data types are used for parameters in AddWithValue calls
                 updateCmd.Parameters.AddWithValue("@menge", menge);
-                updateCmd.Parameters.AddWithValue("@bestandId", artikelId); // artikelId repräsentiert hier die Bestands-ID
+                updateCmd.Parameters.AddWithValue("@bestandId", artikelId); // Ensure artikelId is an integer
 
                 int rowsAffected = await updateCmd.ExecuteNonQueryAsync();
 
