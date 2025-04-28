@@ -131,5 +131,64 @@ namespace Percuro.Services
                 throw;
             }
         }
+
+        public async Task CreateLagerbewegungAsync(string ausgangslager, string ziellager, int artikelId, string artikelBezeichnung, int menge, string beweggrund)
+        {
+            if (string.IsNullOrEmpty(ausgangslager) || string.IsNullOrEmpty(ziellager))
+            {
+                throw new ArgumentException("Ausgangslager und Ziellager dürfen nicht leer sein.");
+            }
+
+            if (menge <= 0)
+            {
+                throw new ArgumentException("Die Menge muss größer als null sein.");
+            }
+
+            try
+            {
+                using var connection = new MySqlConnection(_connectionString);
+                await connection.OpenAsync();
+
+                // Füge die Lagerbewegung hinzu
+                string insertQuery = @"INSERT INTO lagerbewegungen (ausgangslager, ziellager, artikel_id, artikel_bezeichnung, menge, datum, beweggrund)
+                                       VALUES (@ausgangslager, @ziellager, @artikelId, @artikelBezeichnung, @menge, NOW(), @beweggrund)";
+
+                using var insertCmd = new MySqlCommand(insertQuery, connection);
+                insertCmd.Parameters.AddWithValue("@ausgangslager", ausgangslager);
+                insertCmd.Parameters.AddWithValue("@ziellager", ziellager);
+                insertCmd.Parameters.AddWithValue("@artikelId", artikelId);
+                insertCmd.Parameters.AddWithValue("@artikelBezeichnung", artikelBezeichnung);
+                insertCmd.Parameters.AddWithValue("@menge", menge);
+                insertCmd.Parameters.AddWithValue("@beweggrund", beweggrund);
+
+                await insertCmd.ExecuteNonQueryAsync();
+                Console.WriteLine("Lagerbewegung erfolgreich gespeichert.");
+
+                // Aktualisiere die umlaufmenge im Ausgangslager anhand der Bestands-ID
+                string updateQuery = @"UPDATE lagerbestaende 
+                                       SET umlaufmenge = umlaufmenge + @menge 
+                                       WHERE id = @bestandId";
+
+                using var updateCmd = new MySqlCommand(updateQuery, connection);
+                updateCmd.Parameters.AddWithValue("@menge", menge);
+                updateCmd.Parameters.AddWithValue("@bestandId", artikelId); // artikelId repräsentiert hier die Bestands-ID
+
+                int rowsAffected = await updateCmd.ExecuteNonQueryAsync();
+
+                if (rowsAffected > 0)
+                {
+                    Console.WriteLine($"umlaufmenge erfolgreich aktualisiert: {rowsAffected} Zeile(n) betroffen.");
+                }
+                else
+                {
+                    Console.WriteLine("Warnung: Keine Zeilen wurden aktualisiert. Überprüfen Sie, ob die Kombination aus Lagername und Artikel-ID existiert.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Fehler beim Erstellen der Lagerbewegung oder Aktualisieren der umlaufmenge: {ex.Message}");
+                throw;
+            }
+        }
     }
 }

@@ -94,9 +94,10 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
                     RightSideLagerOptions.Add(stock);
                 }
             };
-            
-            LoadStorageLocations();
-            LoadInventoryStocks();
+
+            // Initialisiere die Liste für die rechte Seite (Transfer Window)
+            _ = InitializeTargetInventoryStocksAsync();
+            _ = LoadInventoryStocks();
         }
 
         // Commands
@@ -136,15 +137,13 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
             }
         }
 
-        private async void LoadInventoryStocks()
+        private async Task LoadInventoryStocks()
         {
             try
             {
                 IsLoading = true;
 
-           
                 var inventoryStocks = await _inventoryStockService.GetInventoryStocksAsync();
-              
 
                 var groupedStocks = inventoryStocks
                     .GroupBy(stock => stock.LagerName ?? "Unbekannt")
@@ -161,7 +160,7 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
                     GroupedInventoryStocks.Add(group);
                 }
                 Console.WriteLine(GroupedInventoryStocks);
-                
+
                 // Abonniere PropertyChanged-Events für alle geladenen Items
                 SubscribeToInventoryStockChanges();
             }
@@ -319,6 +318,18 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
             }
         }
 
+        [ObservableProperty]
+        private int? selectedItemBestand;
+        
+        [ObservableProperty]
+        private string? selectedItemLagerName;
+        
+        [ObservableProperty]
+        private string? selectedItemArtikelBezeichnung;
+        
+        [ObservableProperty]
+        private long? selectedItemId;
+
         private void InventoryStock_PropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             var stock = sender as InventoryStock;
@@ -331,11 +342,18 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
                     // Setze das geänderte Item als TransferCandidate im ViewModel
                     TransferCandidate = stock;
                     
+                    // Speichere zusätzliche Daten des ausgewählten Items
+                    SelectedItemId = stock.Id;
+                    SelectedItemBestand = stock.Bestand;
+                    SelectedItemLagerName = stock.LagerName;
+                    SelectedItemArtikelBezeichnung = stock.ArtikelBezeichnung;
+                    
                     // Optional: Das rechte Panel anzeigen
                     IsRightPanelVisible = true;
                     
                     // Information ausgeben (Debugging)
                     Console.WriteLine($"Transfer-Kandidat gesetzt: Artikel {stock.ArtikelId} ({stock.ArtikelBezeichnung})");
+                    Console.WriteLine($"Zwischengespeicherte Daten: ID={SelectedItemId}, Bestand={SelectedItemBestand}, Lager={SelectedItemLagerName}");
                 }
                 else if (stock != null && !stock.IsTransferCandidate)
                 {
@@ -343,6 +361,12 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
                     if (TransferCandidate == stock)
                     {
                         TransferCandidate = null;
+                        // Gespeicherte Daten zurücksetzen
+                        SelectedItemId = null;
+                        SelectedItemBestand = null;
+                        SelectedItemLagerName = null;
+                        SelectedItemArtikelBezeichnung = null;
+                        
                         Console.WriteLine($"Transfer-Kandidat zurückgesetzt von Artikel {stock.ArtikelId}");
                     }
                 }
@@ -354,6 +378,96 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
         {
             TransferCandidate = stock;
             IsRightPanelVisible = true;
+        }
+
+        [ObservableProperty]
+        private ObservableCollection<TargetInventoryStock> targetInventoryStocks = new();
+
+        private async Task InitializeTargetInventoryStocksAsync()
+        {
+            try
+            {
+                // Lade alle verfügbaren Optionen für die rechte Seite (Transfer Window)
+                var allStocks = await _inventoryStockService.GetInventoryStocksAsync();
+
+                // Gruppiere die Artikel nach LagerName und fülle die Items-Property
+                var groupedStocks = allStocks
+                    .GroupBy(stock => stock.LagerName ?? "Unbekannt")
+                    .OrderBy(group => group.Key)
+                    .Select(group => new TargetInventoryStock
+                    {
+                        Id = 0, // Dummy ID für die Gruppe
+                        ArtikelBezeichnung = group.Key, // LagerName als Bezeichnung
+                        LagerName = group.Key,
+                        Bestand = group.Sum(item => item.Bestand), // Gesamtsumme der Bestände
+                        Items = new ObservableCollection<InventoryStock>(group) // Fülle die Items-Property
+                    });
+
+                TargetInventoryStocks = new ObservableCollection<TargetInventoryStock>(groupedStocks);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Fehler beim Initialisieren der TargetInventoryStocks: {ex.Message}");
+            }
+        }
+
+        [ObservableProperty]
+        private TargetInventoryStock? selectedTargetStock;
+
+        partial void OnSelectedTargetStockChanged(TargetInventoryStock? value)
+        {
+            if (value != null)
+            {
+                Console.WriteLine($"Selected Target Stock: LagerName={value.LagerName}, Bestand={value.Bestand}, ArtikelBezeichnung={value.ArtikelBezeichnung}");
+            }
+            else
+            {
+                Console.WriteLine("Selected Target Stock is null");
+            }
+        }
+
+        [ObservableProperty]
+        private int transferAmount;
+
+        [ObservableProperty]
+        private string? transferReason;
+
+        [RelayCommand]
+        private async Task ExecuteTransferAsync()
+        {
+            if (SelectedTargetStock == null || string.IsNullOrWhiteSpace(SelectedTargetStock.LagerName) || TransferAmount <= 0 || string.IsNullOrWhiteSpace(TransferReason))
+            {
+                Console.WriteLine("Ungültige Eingaben für die Umlagerung.");
+                return;
+            }
+
+            try
+            {
+                // Erstelle einen neuen Eintrag in der Lagerbewegungstabelle
+                await _inventoryStockService.CreateLagerbewegungAsync(
+                    ausgangslager: SelectedItemLagerName ?? "Unbekannt",
+                    ziellager: SelectedTargetStock.LagerName,
+                    artikelId: (int)(SelectedItemId ?? 0),
+                    artikelBezeichnung: SelectedItemArtikelBezeichnung ?? "Unbekannt",
+                    menge: TransferAmount,
+                    beweggrund: TransferReason
+                );
+
+                Console.WriteLine($"Lagerbewegung erfolgreich erstellt: {TransferAmount} Einheiten von {SelectedItemLagerName} nach {SelectedTargetStock.LagerName}.");
+
+                // Nach der Umlagerung die Daten neu laden
+                await InitializeTargetInventoryStocksAsync();
+                await LoadInventoryStocks();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Fehler beim Erstellen der Lagerbewegung: {ex.Message}");
+            }
+        }
+
+        public async Task InitializeAsync()
+        {
+            await LoadInventoryStocks();
         }
     }
 }
