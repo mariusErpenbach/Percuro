@@ -2,10 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using MySqlConnector;
+using Percuro.Models;
 using DotNetEnv;
+using System.Data;
 using Percuro.Models.InventoryModels;
 
-namespace Percuro.Services.InventoryServices
+namespace Percuro.Services
 {
     public class StorageLocationService
     {

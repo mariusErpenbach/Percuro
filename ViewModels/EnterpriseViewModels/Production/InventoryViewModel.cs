@@ -11,8 +11,7 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
 {
     public partial class InventoryViewModel : ViewModelBase
     {
-        private readonly InventoryService _inventoryService = new();
-        private readonly InventoryStockService _inventoryStockService = new();
+        private readonly InventoryDatabaseService _inventoryDatabaseService = new();
         private readonly InventoryProcessingService _inventoryProcessingService = new();
 
         private bool _isLoading;
@@ -149,7 +148,7 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
 
             try
             {
-                await _inventoryStockService.CreateLagerbewegungAsync(
+                await _inventoryDatabaseService.CreateLagerbewegungAsync(
                     ausgangslager: SelectedItemLagerName ?? "Unbekannt",
                     ziellager: SelectedTargetStock.LagerName,
                     artikelId: (int)(SelectedItemId ?? 0),
@@ -183,7 +182,7 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
             try
             {
                 IsLoading = true;
-                var inventoryStocks = await _inventoryStockService.GetInventoryStocksAsync();
+                var inventoryStocks = await _inventoryDatabaseService.GetInventoryStocksAsync();
                 var groupedStocks = await _inventoryProcessingService.GroupInventoryStocksAsync(inventoryStocks);
 
                 GroupedInventoryStocks.Clear();
@@ -218,7 +217,7 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
             try
             {
                 IsLoading = true;
-                var inventoryStocks = await _inventoryStockService.GetInventoryStocksAsync();
+                var inventoryStocks = await _inventoryDatabaseService.GetInventoryStocksAsync();
                 var filteredStocks = await _inventoryProcessingService.FilterSortAndGroupInventoryStocksAsync(inventoryStocks, SelectedLager, SearchQuery, SelectedSortOption);
 
                 GroupedInventoryStocks.Clear();
@@ -241,10 +240,14 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
 
         private void SubscribeToInventoryStockChanges()
         {
-            _inventoryService.SubscribeToInventoryStockChanges(GroupedInventoryStocks, (stock, propertyName) =>
+            foreach (var group in GroupedInventoryStocks)
             {
-                InventoryStock_PropertyChanged(stock, new PropertyChangedEventArgs(propertyName));
-            });
+                foreach (var stock in group.Items)
+                {
+                    stock.PropertyChanged -= InventoryStock_PropertyChanged;
+                    stock.PropertyChanged += InventoryStock_PropertyChanged;
+                }
+            }
         }
 
         private void InventoryStock_PropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -284,7 +287,7 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
         {
             try
             {
-                var allStocks = await _inventoryStockService.GetInventoryStocksAsync();
+                var allStocks = await _inventoryDatabaseService.GetInventoryStocksAsync();
 
                 var groupedStocks = allStocks
                     .GroupBy(stock => stock.LagerName ?? "Unbekannt")
