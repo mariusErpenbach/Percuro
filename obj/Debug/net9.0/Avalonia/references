@@ -23,6 +23,13 @@
 /home/dci/.nuget/packages/avalonia/11.2.8/ref/net8.0/Avalonia.Vulkan.dll
 /home/dci/.nuget/packages/avalonia.win32/11.2.1/lib/net8.0/Avalonia.Win32.dll
 /home/dci/.nuget/packages/avalonia.x11/11.2.1/lib/net8.0/Avalonia.X11.dll
+/home/dci/.nuget/packages/avalonia.xaml.interactions.custom/11.2.0/lib/net8.0/Avalonia.Xaml.Interactions.Custom.dll
+/home/dci/.nuget/packages/avalonia.xaml.interactions/11.2.0/lib/net8.0/Avalonia.Xaml.Interactions.dll
+/home/dci/.nuget/packages/avalonia.xaml.interactions.draganddrop/11.2.0/lib/net8.0/Avalonia.Xaml.Interactions.DragAndDrop.dll
+/home/dci/.nuget/packages/avalonia.xaml.interactions.draggable/11.2.0/lib/net8.0/Avalonia.Xaml.Interactions.Draggable.dll
+/home/dci/.nuget/packages/avalonia.xaml.interactions.events/11.2.0/lib/net8.0/Avalonia.Xaml.Interactions.Events.dll
+/home/dci/.nuget/packages/avalonia.xaml.interactions.responsive/11.2.0/lib/net8.0/Avalonia.Xaml.Interactions.Responsive.dll
+/home/dci/.nuget/packages/avalonia.xaml.interactivity/11.2.0/lib/net8.0/Avalonia.Xaml.Interactivity.dll
 /home/dci/.nuget/packages/bcrypt.net-next/4.0.3/lib/net6.0/BCrypt.Net-Next.dll
 /home/dci/.nuget/packages/bouncycastle.cryptography/2.3.1/lib/net6.0/BouncyCastle.Cryptography.dll
 /home/dci/.nuget/packages/communitytoolkit.mvvm/8.2.1/lib/net6.0/CommunityToolkit.Mvvm.dll
@@ -133,6 +140,7 @@
 /usr/share/dotnet/packs/Microsoft.NETCore.App.Ref/9.0.4/ref/net9.0/System.Numerics.dll
 /usr/share/dotnet/packs/Microsoft.NETCore.App.Ref/9.0.4/ref/net9.0/System.Numerics.Vectors.dll
 /usr/share/dotnet/packs/Microsoft.NETCore.App.Ref/9.0.4/ref/net9.0/System.ObjectModel.dll
+/home/dci/.nuget/packages/system.reactive/6.0.1/lib/net6.0/System.Reactive.dll
 /usr/share/dotnet/packs/Microsoft.NETCore.App.Ref/9.0.4/ref/net9.0/System.Reflection.DispatchProxy.dll
 /usr/share/dotnet/packs/Microsoft.NETCore.App.Ref/9.0.4/ref/net9.0/System.Reflection.dll
 /usr/share/dotnet/packs/Microsoft.NETCore.App.Ref/9.0.4/ref/net9.0/System.Reflection.Emit.dll

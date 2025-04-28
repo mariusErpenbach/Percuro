@@ -1,5 +1,6 @@
 using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Input;
@@ -71,9 +72,29 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
             }
         }
 
+        // Füge eine separate Collection für die rechte Seite mit "Kein Lager" Option hinzu
+        public ObservableCollection<InventoryStockGroup> RightSideLagerOptions { get; private set; } = new();
+
         // Constructor
         public InventoryViewModel()
         {
+            // Erstelle eine "Kein Lager" Option, die tatsächlich wählbar ist
+            var noneOption = new NoneInventoryStockGroup();
+            
+            // Initialisiere RightSideLagerOptions mit der "Kein Lager" Option
+            RightSideLagerOptions = new ObservableCollection<InventoryStockGroup>() { noneOption };
+            
+            // Aktualisiere RightSideLagerOptions, wenn sich GroupedInventoryStocks ändert
+            GroupedInventoryStocks.CollectionChanged += (s, e) =>
+            {
+                RightSideLagerOptions.Clear();
+                RightSideLagerOptions.Add(noneOption); // Füge die "Kein Lager" Option hinzu
+                foreach (var stock in GroupedInventoryStocks)
+                {
+                    RightSideLagerOptions.Add(stock);
+                }
+            };
+            
             LoadStorageLocations();
             LoadInventoryStocks();
         }
@@ -121,9 +142,9 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
             {
                 IsLoading = true;
 
-                Console.WriteLine("Loading inventory stocks...");
+           
                 var inventoryStocks = await _inventoryStockService.GetInventoryStocksAsync();
-                Console.WriteLine($"Fetched {inventoryStocks.Count} inventory stocks from the service.");
+              
 
                 var groupedStocks = inventoryStocks
                     .GroupBy(stock => stock.LagerName ?? "Unbekannt")
@@ -218,26 +239,97 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
             // Logic to load right-side lager options will be implemented here.
         }
 
-        partial void OnSelectedRightSideLagerGroupChanged(InventoryStockGroup? value)
+        [ObservableProperty]
+        private InventoryStockGroup? selectedRightSideItem;
+
+        partial void OnSelectedRightSideItemChanged(InventoryStockGroup? value)
         {
-            if (value != null)
+            if (value is NoneInventoryStockGroup)
+            {
+                // Wenn "Kein Lager" ausgewählt ist, setze SelectedRightSideLagerGroup auf null
+                SelectedRightSideLagerGroup = null;
+                Console.WriteLine("Kein Lager ausgewählt (None option)");
+            }
+            else if (value != null)
             {
                 Console.WriteLine($"Selected LagerName: {value.LagerName}");
-                var matchingGroup = GroupedInventoryStocks.FirstOrDefault(group => group.LagerName == value.LagerName);
-                if (matchingGroup != null)
-                {
-                    Console.WriteLine($"Matching group found: {matchingGroup.LagerName} with {matchingGroup.Items.Count} items.");
-                    SelectedRightSideLagerGroup = matchingGroup;
-                }
-                else
-                {
-                    Console.WriteLine("No matching group found.");
-                }
+                SelectedRightSideLagerGroup = value;
             }
             else
             {
-                Console.WriteLine("SelectedRightSideLagerGroup is null.");
+                SelectedRightSideLagerGroup = null;
+                Console.WriteLine("Kein Item ausgewählt (null)");
             }
+        }
+
+        [ObservableProperty]
+        private bool isRightPanelVisible = false;
+
+        [RelayCommand]
+        private void ShowRightPanel()
+        {
+            IsRightPanelVisible = true;
+        }
+
+        [ObservableProperty]
+        private InventoryStock? selectedTransferStock;
+
+        [RelayCommand]
+        private void StartTransfer(InventoryStock stock)
+        {
+            SelectedTransferStock = stock;
+            IsRightPanelVisible = true;
+        }
+
+        public void OnTransferButtonClicked(InventoryStock stock)
+        {
+            SelectedTransferStock = stock;
+            IsRightPanelVisible = true;
+        }
+
+        [ObservableProperty]
+        private InventoryStock? transferCandidate;
+
+        partial void OnTransferCandidateChanged(InventoryStock? value)
+        {
+            // Hier kannst du auf Änderungen reagieren, z.B. Logging, UI-Updates etc.
+            if (value != null)
+            {
+                value.IsTransferCandidate = true;
+            }
+            // Optional: Vorherigen Kandidaten zurücksetzen, falls nötig
+        }
+
+        private void SubscribeToInventoryStockChanges()
+        {
+            foreach (var group in GroupedInventoryStocks)
+            {
+                foreach (var stock in group.Items)
+                {
+                    stock.PropertyChanged -= InventoryStock_PropertyChanged;
+                    stock.PropertyChanged += InventoryStock_PropertyChanged;
+                }
+            }
+        }
+
+        private void InventoryStock_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(InventoryStock.IsTransferCandidate))
+            {
+                var stock = sender as InventoryStock;
+                if (stock != null && stock.IsTransferCandidate)
+                {
+                    // Hier kannst du auf die Änderung reagieren, z.B. Logging, UI-Update, etc.
+                    // Beispiel: transferCandidate = stock;
+                }
+            }
+        }
+
+        [RelayCommand]
+        private void SetTransferCandidate(InventoryStock stock)
+        {
+            TransferCandidate = stock;
+            IsRightPanelVisible = true;
         }
     }
 }

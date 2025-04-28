@@ -64,6 +64,10 @@
               "target": "Package",
               "version": "[11.2.1, )"
             },
+            "Avalonia.Xaml.Behaviors": {
+              "target": "Package",
+              "version": "[11.2.0, )"
+            },
             "BCrypt.Net-Next": {
               "target": "Package",
               "version": "[4.0.3, )"
