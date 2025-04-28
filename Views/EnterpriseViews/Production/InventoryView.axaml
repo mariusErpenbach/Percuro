@@ -118,10 +118,10 @@
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Vertical" Margin="5">
-                                    <TextBlock Text="Artikel ID: {Binding ArtikelId}" />
-                                    <TextBlock Text="Artikel Bezeichnung: {Binding ArtikelBezeichnung}" />
-                                    <TextBlock Text="Bestand: {Binding Bestand}" />
-                                    <TextBlock Text="Lager Name: {Binding LagerName}" />
+                                    <TextBlock Text="{Binding ArtikelId}" />
+                                    <TextBlock Text="{Binding ArtikelBezeichnung}" />
+                                    <TextBlock Text="{Binding Bestand}" />
+                                    <TextBlock Text="{Binding LagerName}" />
                                 </StackPanel>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>

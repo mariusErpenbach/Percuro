@@ -12,7 +12,7 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
 {
     public partial class InventoryViewModel : ViewModelBase
     {
-     
+        private readonly InventoryService _inventoryService = new();
         private readonly InventoryStockService _inventoryStockService = new();
         private bool _isLoading;
         private string _selectedLager = "Alle (Lager)";
@@ -63,12 +63,12 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
             set
             {
                 SetProperty(ref selectedSortOption, value);
-                ApplySorting();
+                if (!string.IsNullOrEmpty(value) && value != "Sortieren nach...")
+                {
+                    FilterGroupedInventoryStocks();
+                }
             }
         }
-
-        [ObservableProperty]
-        private InventoryStockGroup? selectedRightSideLagerGroup;
 
         [ObservableProperty]
         private bool isRightPanelVisible = false;
@@ -118,24 +118,6 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
             {
                 mainVm.CurrentViewModel = new ProductionViewModel();
             }
-        }
-
-        [RelayCommand]
-        public void FilterGroupedInventoryStocksCommand()
-        {
-            FilterGroupedInventoryStocks();
-        }
-
-        [RelayCommand]
-        private void TransferStock()
-        {
-            // Logic to transfer stock will be implemented here.
-        }
-
-        [RelayCommand]
-        private void LoadRightSideLagerOptions()
-        {
-            // Logic to load right-side lager options will be implemented here.
         }
 
         [RelayCommand]
@@ -196,14 +178,7 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
             {
                 IsLoading = true;
                 var inventoryStocks = await _inventoryStockService.GetInventoryStocksAsync();
-                var groupedStocks = inventoryStocks
-                    .GroupBy(stock => stock.LagerName ?? "Unbekannt")
-                    .OrderBy(group => group.Key)
-                    .Select(group => new InventoryStockGroup
-                    {
-                        LagerName = group.Key,
-                        Items = new ObservableCollection<InventoryStock>(group)
-                    });
+                var groupedStocks = await _inventoryService.GroupInventoryStocksAsync(inventoryStocks);
 
                 GroupedInventoryStocks.Clear();
                 foreach (var group in groupedStocks)
@@ -234,51 +209,30 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
             }
         }
 
-        private ObservableCollection<InventoryStock> SortInventoryItems(ObservableCollection<InventoryStock> items, string sortOption)
-        {
-            return new ObservableCollection<InventoryStock>(
-                sortOption switch
-                {
-                    "Menge ▼" => items.OrderByDescending(item => item.Bestand),
-                    "Menge ▲" => items.OrderBy(item => item.Bestand),
-                    "Letzte Änderung ▼" => items.OrderByDescending(item => item.LetzteAenderung),
-                    "Letzte Änderung ▲" => items.OrderBy(item => item.LetzteAenderung),
-                    _ => items
-                });
-        }
-
-        private void ApplySorting()
-        {
-            var sortedGroups = GroupedInventoryStocks.Select(group => new InventoryStockGroup
-            {
-                LagerName = group.LagerName,
-                Items = SortInventoryItems(group.Items, SelectedSortOption)
-            }).ToList();
-
-            GroupedInventoryStocks.Clear();
-            foreach (var group in sortedGroups)
-            {
-                GroupedInventoryStocks.Add(group);
-            }
-        }
-
         private async void FilterGroupedInventoryStocks()
         {
-            var filteredStocks = await _inventoryStockService.FilterAndGroupInventoryStocksAsync(SelectedLager, SearchQuery);
-
-            var sortedGroups = filteredStocks.Select(group => new InventoryStockGroup
+            try
             {
-                LagerName = group.LagerName,
-                Items = SortInventoryItems(group.Items, SelectedSortOption)
-            }).ToList();
+                IsLoading = true;
+                var inventoryStocks = await _inventoryStockService.GetInventoryStocksAsync();
+                var filteredStocks = await _inventoryStockService.FilterSortAndGroupInventoryStocksAsync(inventoryStocks, SelectedLager, SearchQuery, SelectedSortOption);
 
-            GroupedInventoryStocks.Clear();
-            foreach (var group in sortedGroups)
-            {
-                GroupedInventoryStocks.Add(group);
+                GroupedInventoryStocks.Clear();
+                foreach (var group in filteredStocks)
+                {
+                    GroupedInventoryStocks.Add(group);
+                }
+
+                SubscribeToInventoryStockChanges();
             }
-
-            SubscribeToInventoryStockChanges();
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error filtering, sorting, and grouping inventory stocks: {ex.Message}");
+            }
+            finally
+            {
+                IsLoading = false;
+            }
         }
 
         private void SubscribeToInventoryStockChanges()
@@ -289,7 +243,17 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
                 foreach (var stock in group.Items)
                 {
                     stock.PropertyChanged -= InventoryStock_PropertyChanged;
-                    stock.PropertyChanged += InventoryStock_PropertyChanged;
+                    stock.PropertyChanged += (sender, e) =>
+                    {
+                        if (e.PropertyName == nameof(InventoryStock.IsTransferCandidate) ||
+                            e.PropertyName == nameof(InventoryStock.Bestand) ||
+                            e.PropertyName == nameof(InventoryStock.LagerName) ||
+                            e.PropertyName == nameof(InventoryStock.ArtikelBezeichnung) ||
+                            e.PropertyName == nameof(InventoryStock.Id))
+                        {
+                            InventoryStock_PropertyChanged(sender, e);
+                        }
+                    };
                 }
             }
         }
@@ -362,18 +326,6 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
             if (value != null)
             {
                 value.IsTransferCandidate = true;
-            }
-        }
-
-        partial void OnSelectedTargetStockChanged(TargetInventoryStock? value)
-        {
-            if (value != null)
-            {
-                Console.WriteLine($"Selected Target Stock: LagerName={value.LagerName}, Bestand={value.Bestand}, ArtikelBezeichnung={value.ArtikelBezeichnung}");
-            }
-            else
-            {
-                Console.WriteLine("Selected Target Stock is null");
             }
         }
     }
