@@ -20,16 +20,9 @@ public partial class InventoryStock : ObservableObject
     public string PlatzbezeichnungDescription => $"Platzbezeichnung: {Platzbezeichnung}";
     public string LetzteAenderungDescription => $"Letzte Änderung: {LetzteAenderung}";
     public string ArtikelShortInfo => $"{ArtikelId}, {ArtikelBezeichnung}, {Bestand}";
-    public string? AlternatingRowColor { get; set; }
-    
 
     [ObservableProperty]
     private bool isTransferCandidate;
-
-    public void SetAlternatingRowColor(int index)
-    {
-        AlternatingRowColor = index % 2 == 0 ? "LightGray" : "White";
-    }
 
     public void SetAsTransferCandidate()
     {
