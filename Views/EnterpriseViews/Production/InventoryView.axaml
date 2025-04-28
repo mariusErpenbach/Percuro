@@ -72,7 +72,7 @@
                                                                 <TextBlock Text="{Binding MindestbestandDescription}" Margin="0"/>
                                                                 <TextBlock Text="{Binding PlatzbezeichnungDescription}" Margin="0"/>
                                                                 <TextBlock Text="{Binding LetzteAenderungDescription}" Margin="0"/>
-                                                                <Button Content="Umlagern"  />
+                                                                <Button Content="Umlagern" Command="{Binding SetAsTransferCandidate}" />
                                                             </StackPanel>
                                                         </Expander.Content>
                                            

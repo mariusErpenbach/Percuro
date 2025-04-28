@@ -21,7 +21,10 @@ public partial class InventoryStock : ObservableObject
     public string LetzteAenderungDescription => $"Letzte Änderung: {LetzteAenderung}";
     public string ArtikelShortInfo => $"{ArtikelId}, {ArtikelBezeichnung}, {Bestand}";
     public string? AlternatingRowColor { get; set; }
-    public bool IsTransferCandidate { get; set; }
+    
+
+    [ObservableProperty]
+    private bool isTransferCandidate;
 
     public void SetAlternatingRowColor(int index)
     {
@@ -30,7 +33,8 @@ public partial class InventoryStock : ObservableObject
 
     public void SetAsTransferCandidate()
     {
-        IsTransferCandidate = true;
-        Console.WriteLine($"Artikel ID {ArtikelId} wurde als Transferkandidat markiert.");
+        // Umschalten zwischen true und false
+        IsTransferCandidate = !IsTransferCandidate;
+        Console.WriteLine($"Artikel ID {ArtikelId} wurde als Transferkandidat {(IsTransferCandidate ? "markiert" : "demarkiert")}.");
     }
 }

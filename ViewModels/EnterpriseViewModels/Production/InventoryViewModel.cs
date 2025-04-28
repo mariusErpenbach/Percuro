@@ -161,6 +161,9 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
                     GroupedInventoryStocks.Add(group);
                 }
                 Console.WriteLine(GroupedInventoryStocks);
+                
+                // Abonniere PropertyChanged-Events für alle geladenen Items
+                SubscribeToInventoryStockChanges();
             }
             catch (Exception ex)
             {
@@ -197,6 +200,9 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
             {
                 GroupedInventoryStocks.Add(group);
             }
+            
+            // Nach dem Filtern auch die Events neu abonnieren
+            SubscribeToInventoryStockChanges();
         }
 
         private void ApplySorting()
@@ -302,6 +308,7 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
 
         private void SubscribeToInventoryStockChanges()
         {
+            Console.WriteLine($"SubscribeToInventoryStockChanges: Registriere PropertyChanged-Events für {GroupedInventoryStocks.Sum(g => g.Items.Count)} Items");
             foreach (var group in GroupedInventoryStocks)
             {
                 foreach (var stock in group.Items)
@@ -314,13 +321,30 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
 
         private void InventoryStock_PropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
+            var stock = sender as InventoryStock;
+            Console.WriteLine($"PropertyChanged Event empfangen: {e.PropertyName} für Artikel ID {stock?.ArtikelId}");
+            
             if (e.PropertyName == nameof(InventoryStock.IsTransferCandidate))
             {
-                var stock = sender as InventoryStock;
                 if (stock != null && stock.IsTransferCandidate)
                 {
-                    // Hier kannst du auf die Änderung reagieren, z.B. Logging, UI-Update, etc.
-                    // Beispiel: transferCandidate = stock;
+                    // Setze das geänderte Item als TransferCandidate im ViewModel
+                    TransferCandidate = stock;
+                    
+                    // Optional: Das rechte Panel anzeigen
+                    IsRightPanelVisible = true;
+                    
+                    // Information ausgeben (Debugging)
+                    Console.WriteLine($"Transfer-Kandidat gesetzt: Artikel {stock.ArtikelId} ({stock.ArtikelBezeichnung})");
+                }
+                else if (stock != null && !stock.IsTransferCandidate)
+                {
+                    // Optional: Transfer-Kandidat zurücksetzen wenn der aktuelle deselektiert wurde
+                    if (TransferCandidate == stock)
+                    {
+                        TransferCandidate = null;
+                        Console.WriteLine($"Transfer-Kandidat zurückgesetzt von Artikel {stock.ArtikelId}");
+                    }
                 }
             }
         }
