@@ -13,8 +13,6 @@
                 Width="150" Height="50" Margin="10"
                 HorizontalAlignment="Left" VerticalAlignment="Top"
                 HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-
-        <!-- Placeholder Content -->
-        <TextBlock Text="Einkauf View" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20"/>
+        <TextBlock Text="Hallo Freunde" HorizontalAlignment="Center" VerticalAlignment="Center"/>
     </Grid>
 </UserControl>

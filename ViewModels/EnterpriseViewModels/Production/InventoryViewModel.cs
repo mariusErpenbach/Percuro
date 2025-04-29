@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
@@ -73,7 +74,7 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
         }
 
         [ObservableProperty]
-        private bool isRightPanelVisible = false;
+        private bool isTransferPanelVisible = false;
 
         [ObservableProperty]
         private InventoryStock? selectedTransferStock;
@@ -105,6 +106,30 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
         [ObservableProperty]
         private string? selectedItemArtikelBezeichnung;
 
+        [ObservableProperty]
+        private int? umlaufmenge; // Ensure Umlaufmenge is available in the ViewModel
+
+        [ObservableProperty]
+        private string umlaufmengeDescription = string.Empty; // Property to hold UmlaufmengeDescription
+
+        [ObservableProperty]
+        private int verfuegbar; // Property to hold Verfuegbar value
+
+        [ObservableProperty]
+        private string verfuegbarDescription = string.Empty; // Property to hold VerfuegbarDescription
+
+        [ObservableProperty]
+        private bool isKorrekturPanelVisible = false;
+
+        [ObservableProperty]
+        private bool isInputAreaEnabled = true; // Property to control the IsEnabled state of the input area
+
+        [ObservableProperty]
+        private List<string>? selectedStockDetails;
+
+        [ObservableProperty]
+        private BestandskorrekturModel? bestandskorrekturDetails;
+
         public InventoryViewModel()
         {
             _ = InitializeTargetInventoryStocksAsync();
@@ -123,21 +148,22 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
         [RelayCommand]
         private void ShowRightPanel()
         {
-            IsRightPanelVisible = true;
+            IsTransferPanelVisible = true;
         }
 
         [RelayCommand]
         private void StartTransfer(InventoryStock stock)
         {
             SelectedTransferStock = stock;
-            IsRightPanelVisible = true;
+            IsTransferPanelVisible = true;
         }
 
         [RelayCommand]
         private void SetTransferCandidate(InventoryStock stock)
         {
             TransferCandidate = stock;
-            IsRightPanelVisible = true;
+            IsInputAreaEnabled = false;
+            IsTransferPanelVisible = true;
         }
 
         // Executes a stock transfer operation and updates the database.
@@ -164,7 +190,7 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
 
                 Console.WriteLine($"Lagerbewegung erfolgreich erstellt: {TransferAmount} Einheiten von {SelectedItemLagerName} nach {SelectedTargetStock.LagerName}.");
 
-                IsRightPanelVisible = false;
+                IsTransferPanelVisible = false;
                 SelectedItemId = null;
                 SelectedItemBestand = null;
                 SelectedItemLagerName = null;
@@ -206,6 +232,15 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
                 }
 
                 SelectedLager = "Alle (Lager)";
+
+                // Fetch Umlaufmenge and Verfuegbar for the first stock (adjust as needed)
+                if (inventoryStocks.Any())
+                {
+                    Umlaufmenge = inventoryStocks.First().Umlaufmenge;
+                    Verfuegbar = inventoryStocks.First().Verfuegbar;
+                    UmlaufmengeDescription = $"Umlaufmenge: {Umlaufmenge}";
+                    VerfuegbarDescription = $"Verfügbar: {Verfuegbar}";
+                }
 
                 SubscribeToInventoryStockChanges();
             }
@@ -266,11 +301,44 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
 
             if (e.PropertyName == nameof(InventoryStock.IsTransferCandidate))
             {
-                UpdateRightPanelVisibility(stock?.IsTransferCandidate == true ? stock : null);
+                UpdateTransferVisibility(stock?.IsTransferCandidate == true ? stock : null);
+            }
+            else if (e.PropertyName == nameof(InventoryStock.IsKorrekturCandidate))
+            {
+                UpdateKorrekturPanelVisibility(stock?.IsKorrekturCandidate == true ? stock : null);
             }
         }
 
-        private void UpdateRightPanelVisibility(InventoryStock? transferCandidate)
+        private async void UpdateKorrekturPanelVisibility(InventoryStock? korrecturCandidate)
+        {
+            if (korrecturCandidate != null)
+            {
+                IsKorrekturPanelVisible = true;
+                var stock = await _inventoryDatabaseService.GetInventoryStockByIdAsync(korrecturCandidate.Id);
+                if (stock != null)
+                {
+                    BestandskorrekturDetails = new BestandskorrekturModel
+                    {
+                        Id = stock.Id,
+                        ArtikelId = stock.ArtikelId,
+                        Bestand = stock.Bestand,
+                        Mindestbestand = stock.Mindestbestand,
+                        Platzbezeichnung = stock.Platzbezeichnung,
+                        LetzteAenderung = stock.LetzteAenderung,
+                        LagerName = stock.LagerName,
+                        ArtikelBezeichnung = stock.ArtikelBezeichnung,
+                        Umlaufmenge = stock.Umlaufmenge
+                    };
+                }
+            }
+            else
+            {
+                IsKorrekturPanelVisible = false;
+                BestandskorrekturDetails = null;
+            }
+        }
+
+        private void UpdateTransferVisibility(InventoryStock? transferCandidate)
         {
             if (transferCandidate != null)
             {
@@ -279,7 +347,7 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
                 SelectedItemBestand = transferCandidate.Bestand;
                 SelectedItemLagerName = transferCandidate.LagerName;
                 SelectedItemArtikelBezeichnung = transferCandidate.ArtikelBezeichnung;
-                IsRightPanelVisible = true;
+                IsTransferPanelVisible = true;
             }
             else
             {
@@ -288,7 +356,7 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
                 SelectedItemBestand = null;
                 SelectedItemLagerName = null;
                 SelectedItemArtikelBezeichnung = null;
-                IsRightPanelVisible = false;
+                IsTransferPanelVisible = false;
             }
         }
 
@@ -325,6 +393,12 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
             {
                 value.IsTransferCandidate = true;
             }
+        }
+
+        [RelayCommand]
+        private void SetAsKorrekturCandidate()
+        {
+            IsKorrekturPanelVisible = true;
         }
     }
 }

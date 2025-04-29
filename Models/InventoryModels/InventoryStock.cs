@@ -20,6 +20,9 @@ public partial class InventoryStock : ObservableObject
     public string PlatzbezeichnungDescription => $"Platzbezeichnung: {Platzbezeichnung}";
     public string LetzteAenderungDescription => $"Letzte Änderung: {LetzteAenderung}";
     public string ArtikelShortInfo => $"{ArtikelId}, {ArtikelBezeichnung}, {Bestand}";
+    public string UmlaufmengeDescription => $"Umlaufmenge: {Umlaufmenge}"; // Define Umlaufmenge as a descriptive text property
+    public int Umlaufmenge { get; set; } // New property for Umlaufmenge
+    public int Verfuegbar => Bestand - Umlaufmenge; // New computed property for Verfuegbar
 
     [ObservableProperty]
     private bool isTransferCandidate;
@@ -29,5 +32,14 @@ public partial class InventoryStock : ObservableObject
         // Umschalten zwischen true und false
         IsTransferCandidate = !IsTransferCandidate;
         Console.WriteLine($"Artikel ID {ArtikelId} wurde als Transferkandidat {(IsTransferCandidate ? "markiert" : "demarkiert")}.");
+    }
+
+    [ObservableProperty]
+    private bool isKorrekturCandidate;
+    public void SetAsKorrekturCandidate()
+    {
+        // Logic for setting this stock as a correction candidate
+        IsKorrekturCandidate = !IsKorrekturCandidate;
+        Console.WriteLine($"Artikel ID {ArtikelId} wurde als Korrekturkandidat {(IsKorrekturCandidate ? "markiert" : "demarkiert")}.");
     }
 }

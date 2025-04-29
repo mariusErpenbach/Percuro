@@ -38,7 +38,7 @@
                 <DockPanel Grid.Column="0">
                     <!-- Filter Section -->
                     <DockPanel DockPanel.Dock="Top" Margin="10">
-                        <StackPanel Orientation="Vertical" HorizontalAlignment="Left">
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Left" IsEnabled="{Binding IsInputAreaEnabled}">
                             <TextBlock Text="(Filter: Geben Sie einen Artikelbegriff ein)" Margin="0,0,0,10" FontStyle="Italic" Foreground="Gray"/>
                             <TextBox Width="310" Watermark="Artikel suchen..." Text="{Binding SearchQuery, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left"/>
                             <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
@@ -61,7 +61,7 @@
                                                         <Expander.Header>
                                                             <StackPanel Orientation="Horizontal" Margin="0">
                                                                 <TextBlock Width="150" Text="{Binding ArtikelBezeichnung}" Margin="0"/>
-                                                                <TextBlock Width="100" Text="{Binding Bestand}" Margin="0" TextAlignment="Right"/>
+                                                                <TextBlock Width="100" Text="{Binding Verfuegbar}" Margin="0" TextAlignment="Right"/>
                                                             </StackPanel>
                                                         </Expander.Header>
                                                         <Expander.Content>
@@ -69,10 +69,13 @@
                                                                 <TextBlock Text="{Binding ArtikelIdDescription}" Margin="0"/>
                                                                 <TextBlock Text="{Binding ArtikelBezeichnungDescription}" Margin="0"/>
                                                                 <TextBlock Text="{Binding BestandDescription}" Margin="0"/>
+                                                                <TextBlock Text="{Binding UmlaufmengeDescription}" Margin="0"/>
                                                                 <TextBlock Text="{Binding MindestbestandDescription}" Margin="0"/>
                                                                 <TextBlock Text="{Binding PlatzbezeichnungDescription}" Margin="0"/>
                                                                 <TextBlock Text="{Binding LetzteAenderungDescription}" Margin="0"/>
-                                                                <Button Content="Umlagern" Command="{Binding SetAsTransferCandidate}" />
+                                                             
+                                                                <Button Content="Umlagern" Command="{Binding SetAsTransferCandidate}" CommandParameter="true" />
+                                                                <Button Content="Bestandskorrektur" Command="{Binding SetAsKorrekturCandidate}" Margin="0,5,0,0"/>
                                                             </StackPanel>
                                                         </Expander.Content>
                                            
@@ -87,8 +90,8 @@
                     </ScrollViewer>
                 </DockPanel>
 
-                <!-- Rechte Hälfte-->
-                <StackPanel Grid.Column="1" Margin="10" HorizontalAlignment="Left" VerticalAlignment="Top" Orientation="Vertical" IsVisible="{Binding IsRightPanelVisible}">
+                <!-- Transfer Area-->
+                <StackPanel Grid.Column="1" Margin="10" HorizontalAlignment="Left" VerticalAlignment="Top" Orientation="Vertical" IsVisible="{Binding IsTransferPanelVisible}">
                     <StackPanel Orientation="Vertical" HorizontalAlignment="Left">
                         <!-- Label für Menge -->
                         <TextBlock Text="Menge eingeben:" Margin="0,0,0,5"/>
@@ -121,10 +124,55 @@
                                     <TextBlock Text="{Binding ArtikelId}" />
                                     <TextBlock Text="{Binding ArtikelBezeichnung}" />
                                     <TextBlock Text="{Binding Bestand}" />
+                                    <TextBlock Text="Umlaufmenge: {Binding Umlaufmenge}" Margin="0"/>
                                 </StackPanel>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
+                </StackPanel>
+
+                <!-- Korrektur Area -->
+                <StackPanel Grid.Column="1" Margin="10" HorizontalAlignment="Left" VerticalAlignment="Top" Orientation="Vertical" IsVisible="{Binding IsKorrekturPanelVisible}">
+                    <TextBlock Text="Bestandskorrektur" FontSize="16" FontWeight="Bold" Margin="0,0,0,10"/>
+
+                    <StackPanel Orientation="Vertical" Margin="0,0,0,10">
+
+                        <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                            <TextBlock Text="{Binding BestandskorrekturDetails.ArtikelIdDescription}" FontSize="14" FontWeight="Bold" VerticalAlignment="Center" Width="235" />
+                            <TextBox Text="{Binding BestandskorrekturDetails.ArtikelId}" FontSize="14"  IsReadOnly="True" Width="80" HorizontalAlignment="Right" IsEnabled="false"/>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                            <TextBlock Text="{Binding BestandskorrekturDetails.BestandDescription}" FontSize="12"  FontWeight="Bold" VerticalAlignment="Center" Width="235"/>
+                            <TextBox Text="{Binding BestandskorrekturDetails.Bestand}" FontSize="12" HorizontalAlignment="Right"/>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                            <TextBlock Text="{Binding BestandskorrekturDetails.MindestbestandDescription}" FontSize="12"  FontWeight="Bold" VerticalAlignment="Center" Width="235"/>
+                            <TextBox Text="{Binding BestandskorrekturDetails.Mindestbestand}" FontSize="12"  HorizontalAlignment="Right"/>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                            <TextBlock Text="{Binding BestandskorrekturDetails.PlatzbezeichnungDescription}"  FontSize="12"  FontWeight="Bold" VerticalAlignment="Center" Width="235"/>
+                            <TextBox Text="{Binding BestandskorrekturDetails.Platzbezeichnung}" FontSize="12"   HorizontalAlignment="Right"/>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                            <TextBlock Text="{Binding BestandskorrekturDetails.ArtikelBezeichnungDescription}" FontSize="12"  FontWeight="Bold" VerticalAlignment="Center" Width="235"/>
+                            <TextBox Text="{Binding BestandskorrekturDetails.ArtikelBezeichnung}" FontSize="12"  Width="150" HorizontalAlignment="Right"/>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                            <TextBlock Text="{Binding BestandskorrekturDetails.UmlaufmengeDescription}" FontSize="12"  FontWeight="Bold" VerticalAlignment="Center" Width="235"/>
+                            <TextBox Text="{Binding BestandskorrekturDetails.Umlaufmenge}" FontSize="12"  Width="80" Margin="0,0,0,0"/>
+                        </StackPanel>
+                    
+                        <TextBlock Text="{Binding BestandskorrekturDetails.LagerNameDescription}" FontWeight="Bold" HorizontalAlignment="Left" Width="200" Margin="0,20,0,10"/>
+                        <TextBlock Text="{Binding BestandskorrekturDetails.LetzteAenderungDescription}" FontWeight="Bold"  HorizontalAlignment="Left" />
+
+                    </StackPanel>
+
+                    <Button Content="Bestätigen" Width="100" HorizontalAlignment="Left" Margin="0,10,0,0"/>
                 </StackPanel>
             </Grid>
         </ScrollViewer>

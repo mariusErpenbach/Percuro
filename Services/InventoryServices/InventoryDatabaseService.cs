@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using MySqlConnector;
 using Percuro.Models;
@@ -31,7 +32,7 @@ namespace Percuro.Services.InventoryServices
                 using var connection = new MySqlConnection(_connectionString);
                 await connection.OpenAsync();
 
-                string query = "SELECT id, artikel_id, artikel_bezeichnung, bestand, mindestbestand, platzbezeichnung, letzte_aenderung, lager_name FROM lagerbestaende";
+                string query = "SELECT id, artikel_id, artikel_bezeichnung, bestand, mindestbestand, platzbezeichnung, letzte_aenderung, lager_name, umlaufmenge FROM lagerbestaende";
                 using var cmd = new MySqlCommand(query, connection);
                 using var reader = await cmd.ExecuteReaderAsync();
 
@@ -46,7 +47,8 @@ namespace Percuro.Services.InventoryServices
                         Platzbezeichnung = reader.IsDBNull("platzbezeichnung") ? null : reader.GetString("platzbezeichnung"),
                         LetzteAenderung = reader.IsDBNull("letzte_aenderung") ? null : reader.GetDateTime("letzte_aenderung"),
                         LagerName = reader.IsDBNull("lager_name") ? null : reader.GetString("lager_name"),
-                        ArtikelBezeichnung = reader.IsDBNull("artikel_bezeichnung") ? null : reader.GetString("artikel_bezeichnung")
+                        ArtikelBezeichnung = reader.IsDBNull("artikel_bezeichnung") ? null : reader.GetString("artikel_bezeichnung"),
+                        Umlaufmenge = reader.GetInt32("umlaufmenge")
                     });
                 }
             }
@@ -56,6 +58,13 @@ namespace Percuro.Services.InventoryServices
             }
 
             return inventoryStocks;
+        }
+
+        public async Task<InventoryStock?> GetInventoryStockByIdAsync(long id)
+        {
+            // Simulate fetching the inventory stock from the database
+            var inventoryStocks = await GetInventoryStocksAsync();
+            return inventoryStocks.FirstOrDefault(stock => stock.Id == id);
         }
 
         // Transfers stock to a target warehouse by updating the database.
