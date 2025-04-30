@@ -130,6 +130,20 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
         [ObservableProperty]
         private BestandskorrekturModel? bestandskorrekturDetails;
 
+        private string _errorMessage = string.Empty;
+        public string ErrorMessage
+        {
+            get => _errorMessage;
+            set => SetProperty(ref _errorMessage, value);
+        }
+
+        private bool _isErrorMessageVisible;
+        public bool IsErrorMessageVisible
+        {
+            get => _isErrorMessageVisible;
+            set => SetProperty(ref _isErrorMessageVisible, value);
+        }
+
         public InventoryViewModel()
         {
             _ = InitializeTargetInventoryStocksAsync();
@@ -183,9 +197,31 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
         [RelayCommand]
         private async Task ExecuteTransferAsync()
         {
-            if (SelectedTargetStock == null || string.IsNullOrWhiteSpace(SelectedTargetStock.LagerName) || TransferAmount <= 0 || string.IsNullOrWhiteSpace(TransferReason))
+            if (SelectedTargetStock == null || string.IsNullOrWhiteSpace(SelectedTargetStock.LagerName))
             {
-                Console.WriteLine("Ungültige Eingaben für die Umlagerung.");
+                ErrorMessage = "Bitte wählen Sie ein gültiges Ziel-Lager aus.";
+                IsErrorMessageVisible = true;
+                return;
+            }
+
+            if (TransferAmount <= 0)
+            {
+                ErrorMessage = "Die Umlagerungsmenge muss größer als 0 sein.";
+                IsErrorMessageVisible = true;
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(TransferReason))
+            {
+                ErrorMessage = "Bitte geben Sie einen Beweggrund für die Umlagerung an.";
+                IsErrorMessageVisible = true;
+                return;
+            }
+
+            if (SelectedItemBestand.HasValue && Umlaufmenge.HasValue && TransferAmount > (SelectedItemBestand.Value - Umlaufmenge.Value))
+            {
+                ErrorMessage = $"Die Umlagerungsmenge ({TransferAmount}) überschreitet den verfügbaren Bestand ({SelectedItemBestand.Value - Umlaufmenge.Value}).";
+                IsErrorMessageVisible = true;
                 return;
             }
 
@@ -211,12 +247,16 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
                 TransferAmount = 0;
                 TransferReason = string.Empty;
 
+                ErrorMessage = string.Empty;
+                IsErrorMessageVisible = false;
+
                 await InitializeTargetInventoryStocksAsync();
                 await LoadInventoryStocks();
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Fehler beim Erstellen der Lagerbewegung: {ex.Message}");
+                ErrorMessage = $"Fehler beim Erstellen der Lagerbewegung: {ex.Message}";
+                IsErrorMessageVisible = true;
             }
             finally
             {
@@ -489,6 +529,10 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
                     stock.ResetCandidateButtons();
                 }
             }
+
+            // Reset error message
+            ErrorMessage = string.Empty;
+            IsErrorMessageVisible = false;
         }
 
         [RelayCommand]
@@ -496,7 +540,22 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
         {
             if (BestandskorrekturDetails == null)
             {
-                Console.WriteLine("Keine Bestandskorrektur-Daten verfügbar.");
+                ErrorMessage = "Keine Bestandskorrektur-Daten verfügbar.";
+                IsErrorMessageVisible = true;
+                return;
+            }
+
+            if (BestandskorrekturDetails.Bestand < 0)
+            {
+                ErrorMessage = "Der Bestand darf nicht negativ sein.";
+                IsErrorMessageVisible = true;
+                return;
+            }
+
+            if (BestandskorrekturDetails.Mindestbestand.HasValue && BestandskorrekturDetails.Mindestbestand > BestandskorrekturDetails.Bestand)
+            {
+                ErrorMessage = "Der Mindestbestand darf den aktuellen Bestand nicht überschreiten.";
+                IsErrorMessageVisible = true;
                 return;
             }
 
@@ -512,11 +571,22 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
 
                 // Reset the view by calling CancelInventoryAction
                 CancelInventoryAction();
+
+                // Reset error message
+                ErrorMessage = string.Empty;
+                IsErrorMessageVisible = false;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[ConfirmCorrectionAsync] Fehler bei der Bestandskorrektur: {ex.Message}");
+                ErrorMessage = $"Fehler bei der Bestandskorrektur: {ex.Message}";
+                IsErrorMessageVisible = true;
             }
+        }
+
+        [RelayCommand]
+        public void ClearSearchQuery()
+        {
+            SearchQuery = string.Empty;
         }
     }
 }
