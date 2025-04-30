@@ -5,12 +5,32 @@
 Ein datengetriebenes System zur Verwaltung und Organisation sensibler sowie öffentlicher Informationen. Ziel ist die Schaffung einer sicheren, benutzerfreundlichen und modularen Anwendung für Desktop Computer, mit einer Lite Version für Web/Mobile.
 
 Als Example arbeiten wir mit den Daten eines imaginären Maschinenbau-Unternehmens
+---
+
+<h3>Aktueller Entwicklungsschritt: Mitarbeiter Verwaltung</h3>
+
+🧪 Testdaten
+Es existieren derzeit 20 realistische Beispielmitarbeiter (inkl. Dänemark als Auslandsstandort).
+
+Admins und reguläre Mitarbeiter sind zur Rechtevergabe differenziert.
+
+Positionen sind bereits vergeben und können über JOIN-Abfragen ausgewertet werden.
+
+🧩 Nächste Entwicklungsschritte
+GUI-Formular zur Erfassung und Bearbeitung von Mitarbeitenden
+
+Filterfunktionen nach Position, Admin-Status oder Land
+
+Integration eines Avatarsystems über bild_url
+
+CSV-Export für HR-Zwecke
 
 ---
-<h3>Aktueller Entwicklungsschritt</h3>  
+Anbindung an das Session- oder Rechtemanagement
+---
+<h3>InventoryView Features: </h3>  
 Lagerbestandsverwaltung (InventoryView)
-Derzeit arbeite ich an der Implementierung der InventoryView-Seite, die dazu dient, die Lagerbestände in Echtzeit darzustellen. Diese View zieht ihre Daten aus den Tabellen Artikel und Lagerorte und bietet eine detaillierte Übersicht der Bestände für jedes Lager und jeden Artikel.
-Wichtige Funktionen, die gerade entwickelt werden: </br> </br>
+Wichtige Funktionen, die noch eingeplant sind: </br> </br>
 
 ~~Filter- und Suchfunktionen für eine gezielte Bestandsanzeige. </br>~~
 
@@ -20,7 +40,7 @@ Wichtige Funktionen, die gerade entwickelt werden: </br> </br>
 
 Visualisierung von Bestandsmengen mit Warnungen bei niedrigem Bestand. </br>
 
-Verknüpfung zu Artikeldetails für detaillierte Infos zu jedem Artikel. </br>
+~~Verknüpfung zu Artikeldetails für detaillierte Infos zu jedem Artikel. </br>~~
 
 Der nächste Schritt wird die Verfeinerung der Filteroptionen und die Einführung von Reporting-Funktionen (z. B. CSV-Export) sein. </br>
 
