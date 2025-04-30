@@ -56,13 +56,27 @@ public partial class InventoryStock : ObservableObject
         CandidateButtonsEnabled = true;
     }
 
-    partial void OnIsKorrekturCandidateChanged(bool value)
+    private bool isCandidateSet;
+    public bool IsCandidateSet
     {
-        CandidateButtonsEnabled = !value;
+        get => isCandidateSet;
+        private set => SetProperty(ref isCandidateSet, value);
     }
 
     partial void OnIsTransferCandidateChanged(bool value)
     {
         CandidateButtonsEnabled = !value;
+        UpdateIsCandidateSet();
+    }
+
+    partial void OnIsKorrekturCandidateChanged(bool value)
+    {
+        CandidateButtonsEnabled = !value;
+        UpdateIsCandidateSet();
+    }
+
+    private void UpdateIsCandidateSet()
+    {
+        IsCandidateSet = IsTransferCandidate || IsKorrekturCandidate;
     }
 }

@@ -159,11 +159,23 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
         }
 
         [RelayCommand]
-        private void SetTransferCandidate(InventoryStock stock)
+        private void SetAsTransferCandidate(InventoryStock stock)
         {
+            Console.WriteLine("[SetAsTransferCandidate] Called with stock: " + stock.ArtikelBezeichnung);
+
+            // Set filters to display only the selected stock in the left panel
+            Console.WriteLine("[SetAsTransferCandidate] Setting SelectedLager to: " + (stock.LagerName ?? "Alle (Lager)"));
+            SetProperty(ref _selectedLager, stock.LagerName ?? "Alle (Lager)", nameof(SelectedLager));
+
+            Console.WriteLine("[SetAsTransferCandidate] Setting SearchQuery to: " + (stock.ArtikelBezeichnung ?? string.Empty));
+            SetProperty(ref _searchQuery, stock.ArtikelBezeichnung ?? string.Empty, nameof(SearchQuery));
+
+            // Disable input and show the transfer panel
             TransferCandidate = stock;
             IsInputEnabled = false;
             IsTransferPanelVisible = true;
+
+            Console.WriteLine("[SetAsTransferCandidate] Transfer panel visibility set to true.");
         }
 
         // Executes a stock transfer operation and updates the database.
@@ -263,13 +275,21 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
         {
             try
             {
+                Console.WriteLine("[FilterGroupedInventoryStocks] Started filtering with:");
+                Console.WriteLine("[FilterGroupedInventoryStocks] SelectedLager: " + SelectedLager);
+                Console.WriteLine("[FilterGroupedInventoryStocks] SearchQuery: " + SearchQuery);
+                Console.WriteLine("[FilterGroupedInventoryStocks] SelectedSortOption: " + SelectedSortOption);
+
                 IsLoading = true;
                 var inventoryStocks = await _inventoryDatabaseService.GetInventoryStocksAsync();
                 var filteredStocks = await _inventoryProcessingService.FilterSortAndGroupInventoryStocksAsync(inventoryStocks, SelectedLager, SearchQuery, SelectedSortOption);
 
+                Console.WriteLine("[FilterGroupedInventoryStocks] Filtered groups count: " + filteredStocks.Count);
+
                 GroupedInventoryStocks.Clear();
                 foreach (var group in filteredStocks)
                 {
+                    Console.WriteLine("[FilterGroupedInventoryStocks] Adding group: " + group.LagerName);
                     GroupedInventoryStocks.Add(group);
                 }
 
@@ -277,7 +297,7 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error filtering, sorting, and grouping inventory stocks: {ex.Message}");
+                Console.WriteLine($"[FilterGroupedInventoryStocks] Error: {ex.Message}");
             }
             finally
             {
@@ -330,6 +350,12 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
                 var stock = sender as InventoryStock;
                 if (stock?.IsTransferCandidate == true)
                 {
+                    Console.WriteLine("[OnIsTransferCandidateChanged] Transfer candidate selected: " + stock.ArtikelBezeichnung);
+
+                    // Update filters to display only the selected stock in the left panel
+                    SelectedLager = stock.LagerName ?? "Alle (Lager)";
+                    SearchQuery = stock.ArtikelBezeichnung ?? string.Empty;
+
                     IsInputEnabled = false;
                 }
                 UpdateTransferVisibility(stock?.IsTransferCandidate == true ? stock : null);

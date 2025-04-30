@@ -53,7 +53,7 @@
                         <ItemsControl ItemsSource="{Binding GroupedInventoryStocks}" Margin="10" IsEnabled="{Binding IsInputEnabled}">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Expander Header="{Binding LagerName}" IsExpanded="False" Margin="0" MinHeight="30" HorizontalAlignment="Stretch" >
+                                    <Expander Header="{Binding LagerName}" Margin="0" MinHeight="30" HorizontalAlignment="Stretch">
                                         <ItemsControl ItemsSource="{Binding Items}" Margin="0">
                                             <ItemsControl.ItemTemplate>
                                                 <DataTemplate>
@@ -93,6 +93,7 @@
                 <!-- Transfer Area-->
                 <StackPanel Grid.Column="1" Margin="10" HorizontalAlignment="Left" VerticalAlignment="Top" Orientation="Vertical" IsVisible="{Binding IsTransferPanelVisible}">
                     <StackPanel Orientation="Vertical" HorizontalAlignment="Left">
+                        <TextBlock Text="Umlagerung" FontSize="20" FontWeight="Bold" Margin="0,0,0,20"/>
                         <!-- Label für Menge -->
                         <TextBlock Text="Menge eingeben:" Margin="0,0,0,5"/>
                         <TextBox Width="200" Text="{Binding TransferAmount, Mode=TwoWay}" Margin="0,0,0,10"/>
@@ -106,27 +107,31 @@
                     <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
                         <ComboBox Width="200" 
                                   ItemsSource="{Binding TargetInventoryStocks}"
-                                  SelectedItem="{Binding SelectedTargetStock}">
+                                  SelectedItem="{Binding SelectedTargetStock}"
+                                  PlaceholderText="Ziel-Lager wählen">
                             <ComboBox.ItemTemplate>
                                 <DataTemplate>
                                     <TextBlock Text="{Binding ArtikelBezeichnung}" />
                                 </DataTemplate>
                             </ComboBox.ItemTemplate>
                         </ComboBox>
-                        <Button Content="Bestätigen" Command="{Binding ExecuteTransferCommand}" Margin="10,0,0,0"/>
-                        <Button Content="Cancel"  Command="{Binding CancelInventoryActionCommand}"  Width="100" HorizontalAlignment="Left" Margin="0,10,0,0"/>
                     </StackPanel>
-
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                        <Button Content="Bestätigen" Command="{Binding ExecuteTransferCommand}"/>
+                        <Button Content="Cancel" Command="{Binding CancelInventoryActionCommand}" Width="100" HorizontalAlignment="Left" Margin="12,0,0,0" HorizontalContentAlignment="Center"/>
+                    </StackPanel>
                     <!-- Anzeige der Details des ausgewählten Lagers -->
-                    <ItemsControl ItemsSource="{Binding SelectedTargetStock.Items}" Margin="10">
+                    <ItemsControl ItemsSource="{Binding SelectedTargetStock.Items}" Margin="0">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <StackPanel Orientation="Vertical" Margin="5">
-                                    <TextBlock Text="{Binding ArtikelId}" />
-                                    <TextBlock Text="{Binding ArtikelBezeichnung}" />
-                                    <TextBlock Text="{Binding Bestand}" />
-                                    <TextBlock Text="Umlaufmenge: {Binding Umlaufmenge}" Margin="0"/>
-                                </StackPanel>
+                             <Border Background="#2D2D30" CornerRadius="8" Padding="10" BorderBrush="#3E3E42" BorderThickness="1" Margin="5">
+                            <StackPanel Orientation="Vertical">
+                                <TextBlock Text="{Binding ArtikelIdDescription}" Foreground="White"/>
+                                <TextBlock Text="{Binding ArtikelBezeichnung}" Foreground="White"/>
+                                <TextBlock Text="{Binding BestandDescription}" Foreground="White"/>
+                                <TextBlock Text="{Binding UmlaufmengeDescription}" Foreground="White" Margin="0"/>
+                            </StackPanel>
+</Border>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
