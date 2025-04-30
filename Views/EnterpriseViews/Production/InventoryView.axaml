@@ -53,7 +53,7 @@
                         <ItemsControl ItemsSource="{Binding GroupedInventoryStocks}" Margin="10" IsEnabled="{Binding IsInputEnabled}">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Expander Header="{Binding LagerName}" Margin="0" MinHeight="30" HorizontalAlignment="Stretch">
+                                    <Expander IsExpanded="True" Header="{Binding LagerName}" Margin="0" MinHeight="30" HorizontalAlignment="Stretch">
                                         <ItemsControl ItemsSource="{Binding Items}" Margin="0">
                                             <ItemsControl.ItemTemplate>
                                                 <DataTemplate>
@@ -66,16 +66,31 @@
                                                         </Expander.Header>
                                                         <Expander.Content>
                                                             <StackPanel Orientation="Vertical" Margin="0">
-                                                                <TextBlock Text="{Binding ArtikelIdDescription}" Margin="0"/>
-                                                                <TextBlock Text="{Binding ArtikelBezeichnungDescription}" Margin="0"/>
-                                                                <TextBlock Text="{Binding BestandDescription}" Margin="0"/>
-                                                                <TextBlock Text="{Binding UmlaufmengeDescription}" Margin="0"/>
-                                                                <TextBlock Text="{Binding MindestbestandDescription}" Margin="0"/>
-                                                                <TextBlock Text="{Binding PlatzbezeichnungDescription}" Margin="0"/>
-                                                                <TextBlock Text="{Binding LetzteAenderungDescription}" Margin="0"/>
-                                                             
-                                                                <Button IsEnabled="{Binding CandidateButtonsEnabled}" Content="Umlagern" Command="{Binding SetAsTransferCandidate}" CommandParameter="true" Margin="0,5,0,0"/>
-                                                                <Button IsEnabled="{Binding CandidateButtonsEnabled}" Content="Bestandskorrektur" Command="{Binding SetAsKorrekturCandidate}" Margin="0,5,0,0"/>
+                                                                <Border Background="#2D2D30" BorderBrush="#5A5A5A" BorderThickness="1" Margin="5,2,5,2" Padding="10,5">
+                                                                    <TextBlock Text="{Binding ArtikelIdDescription}" Foreground="White" FontSize="14"/>
+                                                                </Border>
+                                                                <Border Background="#2D2D30" BorderBrush="#5A5A5A" BorderThickness="1" Margin="5,2,5,2" Padding="10,5">
+                                                                    <TextBlock Text="{Binding ArtikelBezeichnungDescription}" Foreground="White" FontSize="14"/>
+                                                                </Border>
+                                                                <Border Background="#2D2D30" BorderBrush="#5A5A5A" BorderThickness="1" Margin="5,2,5,2" Padding="10,5">
+                                                                    <TextBlock Text="{Binding BestandDescription}" Foreground="White" FontSize="14"/>
+                                                                </Border>
+                                                                <Border Background="#2D2D30" BorderBrush="#5A5A5A" BorderThickness="1" Margin="5,2,5,2" Padding="10,5">
+                                                                    <TextBlock Text="{Binding UmlaufmengeDescription}" Foreground="White" FontSize="14"/>
+                                                                </Border>
+                                                                <Border Background="#2D2D30" BorderBrush="#5A5A5A" BorderThickness="1" Margin="5,2,5,2" Padding="10,5">
+                                                                    <TextBlock Text="{Binding MindestbestandDescription}" Foreground="White" FontSize="14"/>
+                                                                </Border>
+                                                                <Border Background="#2D2D30" BorderBrush="#5A5A5A" BorderThickness="1" Margin="5,2,5,2" Padding="10,5">
+                                                                    <TextBlock Text="{Binding PlatzbezeichnungDescription}" Foreground="White" FontSize="14"/>
+                                                                </Border>
+                                                                <Border Background="#2D2D30" BorderBrush="#5A5A5A" BorderThickness="1" Margin="5,2,5,2" Padding="10,5">
+                                                                    <TextBlock Text="{Binding LetzteAenderungDescription}" Foreground="White" FontSize="14"/>
+                                                                </Border>
+                                                                <StackPanel Orientation="Horizontal">
+                                                                    <Button IsEnabled="{Binding CandidateButtonsEnabled}" Content="Umlagern" Command="{Binding SetAsTransferCandidate}" CommandParameter="true" Margin="0,5,0,0"/>
+                                                                    <Button IsEnabled="{Binding CandidateButtonsEnabled}" Content="Bestandskorrektur" Command="{Binding SetAsKorrekturCandidate}" Margin="15,5,0,0"/>
+                                                                </StackPanel>
                                                             </StackPanel>
                                                         </Expander.Content>
                                            
@@ -129,7 +144,7 @@
                                 <TextBlock Text="{Binding ArtikelIdDescription}" Foreground="White"/>
                                 <TextBlock Text="{Binding ArtikelBezeichnung}" Foreground="White"/>
                                 <TextBlock Text="{Binding BestandDescription}" Foreground="White"/>
-                                <TextBlock Text="{Binding UmlaufmengeDescription}" Foreground="White" Margin="0"/>
+                                <TextBlock Text="{Binding Umlaufmenge}" Foreground="White" Margin="0"/>
                             </StackPanel>
 </Border>
                             </DataTemplate>
