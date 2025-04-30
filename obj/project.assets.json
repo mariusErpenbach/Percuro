@@ -124,11 +124,11 @@
           }
         }
       },
-      "Avalonia.Controls.DataGrid/11.2.1": {
+      "Avalonia.Controls.DataGrid/11.2.8": {
         "type": "package",
         "dependencies": {
-          "Avalonia": "11.2.1",
-          "Avalonia.Remote.Protocol": "11.2.1"
+          "Avalonia": "11.2.8",
+          "Avalonia.Remote.Protocol": "11.2.8"
         },
         "compile": {
           "lib/net8.0/Avalonia.Controls.DataGrid.dll": {
@@ -2776,15 +2776,15 @@
         "lib/netstandard2.0/Avalonia.Controls.ColorPicker.xml"
       ]
     },
-    "Avalonia.Controls.DataGrid/11.2.1": {
-      "sha512": "UaNQrY86GBqMZqZ/N/5/wLzr4Emh2N405VZI/IgH0I8BoMrjnosNr+++D7BOcahMNce0lUZLOsFyy+OY02PUAw==",
+    "Avalonia.Controls.DataGrid/11.2.8": {
+      "sha512": "qrHnurYxbIn5rSLrBkhGvfWTxORwPR4abyH8fG7L/IE9QRoMdqr4aLsA4WRc8KiaKr9e/krGB2WpK7goAbkd/Q==",
       "type": "package",
-      "path": "avalonia.controls.datagrid/11.2.1",
+      "path": "avalonia.controls.datagrid/11.2.8",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "Icon.png",
-        "avalonia.controls.datagrid.11.2.1.nupkg.sha512",
+        "avalonia.controls.datagrid.11.2.8.nupkg.sha512",
         "avalonia.controls.datagrid.nuspec",
         "lib/net6.0/Avalonia.Controls.DataGrid.dll",
         "lib/net6.0/Avalonia.Controls.DataGrid.xml",
@@ -7758,6 +7758,7 @@
   "projectFileDependencyGroups": {
     "net9.0": [
       "Avalonia >= 11.2.8",
+      "Avalonia.Controls.DataGrid >= 11.2.8",
       "Avalonia.Desktop >= 11.2.1",
       "Avalonia.Diagnostics >= 11.2.1",
       "Avalonia.Fonts.Inter >= 11.2.1",
@@ -7815,6 +7816,10 @@
         "targetAlias": "net9.0",
         "dependencies": {
           "Avalonia": {
+            "target": "Package",
+            "version": "[11.2.8, )"
+          },
+          "Avalonia.Controls.DataGrid": {
             "target": "Package",
             "version": "[11.2.8, )"
           },

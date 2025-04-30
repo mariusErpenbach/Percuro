@@ -9,6 +9,7 @@
       "Percuro/1.0.0": {
         "dependencies": {
           "Avalonia": "11.2.8",
+          "Avalonia.Controls.DataGrid": "11.2.8",
           "Avalonia.Desktop": "11.2.1",
           "Avalonia.Diagnostics": "11.2.1",
           "Avalonia.Fonts.Inter": "11.2.1",
@@ -110,15 +111,15 @@
           }
         }
       },
-      "Avalonia.Controls.DataGrid/11.2.1": {
+      "Avalonia.Controls.DataGrid/11.2.8": {
         "dependencies": {
           "Avalonia": "11.2.8",
           "Avalonia.Remote.Protocol": "11.2.8"
         },
         "runtime": {
           "lib/net8.0/Avalonia.Controls.DataGrid.dll": {
-            "assemblyVersion": "11.2.1.0",
-            "fileVersion": "11.2.1.0"
+            "assemblyVersion": "11.2.8.0",
+            "fileVersion": "11.2.8.0"
           }
         }
       },
@@ -141,7 +142,7 @@
         "dependencies": {
           "Avalonia": "11.2.8",
           "Avalonia.Controls.ColorPicker": "11.2.1",
-          "Avalonia.Controls.DataGrid": "11.2.1",
+          "Avalonia.Controls.DataGrid": "11.2.8",
           "Avalonia.Themes.Simple": "11.2.1"
         },
         "runtime": {
@@ -1545,12 +1546,12 @@
       "path": "avalonia.controls.colorpicker/11.2.1",
       "hashPath": "avalonia.controls.colorpicker.11.2.1.nupkg.sha512"
     },
-    "Avalonia.Controls.DataGrid/11.2.1": {
+    "Avalonia.Controls.DataGrid/11.2.8": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-UaNQrY86GBqMZqZ/N/5/wLzr4Emh2N405VZI/IgH0I8BoMrjnosNr+++D7BOcahMNce0lUZLOsFyy+OY02PUAw==",
-      "path": "avalonia.controls.datagrid/11.2.1",
-      "hashPath": "avalonia.controls.datagrid.11.2.1.nupkg.sha512"
+      "sha512": "sha512-qrHnurYxbIn5rSLrBkhGvfWTxORwPR4abyH8fG7L/IE9QRoMdqr4aLsA4WRc8KiaKr9e/krGB2WpK7goAbkd/Q==",
+      "path": "avalonia.controls.datagrid/11.2.8",
+      "hashPath": "avalonia.controls.datagrid.11.2.8.nupkg.sha512"
     },
     "Avalonia.Desktop/11.2.1": {
       "type": "package",

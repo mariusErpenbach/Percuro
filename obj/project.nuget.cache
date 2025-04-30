@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "y1uGUvbPvB4=",
+  "dgSpecHash": "8YHv6ThjcA4=",
   "success": true,
   "projectFilePath": "/home/dci/Desktop/Github/Percuro/Percuro.csproj",
   "expectedPackageFiles": [
@@ -8,7 +8,7 @@
     "/home/dci/.nuget/packages/avalonia.angle.windows.natives/2.1.22045.20230930/avalonia.angle.windows.natives.2.1.22045.20230930.nupkg.sha512",
     "/home/dci/.nuget/packages/avalonia.buildservices/0.0.31/avalonia.buildservices.0.0.31.nupkg.sha512",
     "/home/dci/.nuget/packages/avalonia.controls.colorpicker/11.2.1/avalonia.controls.colorpicker.11.2.1.nupkg.sha512",
-    "/home/dci/.nuget/packages/avalonia.controls.datagrid/11.2.1/avalonia.controls.datagrid.11.2.1.nupkg.sha512",
+    "/home/dci/.nuget/packages/avalonia.controls.datagrid/11.2.8/avalonia.controls.datagrid.11.2.8.nupkg.sha512",
     "/home/dci/.nuget/packages/avalonia.desktop/11.2.1/avalonia.desktop.11.2.1.nupkg.sha512",
     "/home/dci/.nuget/packages/avalonia.diagnostics/11.2.1/avalonia.diagnostics.11.2.1.nupkg.sha512",
     "/home/dci/.nuget/packages/avalonia.fonts.inter/11.2.1/avalonia.fonts.inter.11.2.1.nupkg.sha512",

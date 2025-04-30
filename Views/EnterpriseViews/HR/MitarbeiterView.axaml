@@ -1,17 +1,38 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:vm="using:Percuro.ViewModels.EnterpriseViewModels.HR"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:Percuro.ViewModels.EnterpriseViewModels.HR"
+             mc:Ignorable="d"
              x:Class="Percuro.Views.EnterpriseViews.HR.MitarbeiterView"
              x:DataType="vm:MitarbeiterViewModel">
-
     <Grid>
-        <!-- To HR Button -->
-        <Button Content="To HR" Command="{Binding ToHRView}"
-                Width="150" Height="50" Margin="10"
-                HorizontalAlignment="Left" VerticalAlignment="Top"
-                HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
 
-        <!-- Placeholder Content -->
-        <TextBlock Text="Mitarbeiter View" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20"/>
+        <!-- ToHRView Button -->
+        <Button Grid.Row="0" Content="Back to HR View" Command="{Binding ToHRViewCommand}" HorizontalAlignment="Left" Margin="10" />
+
+        <!-- DataGrid displaying all fields -->
+        <DataGrid Grid.Row="1" ItemsSource="{Binding MitarbeiterListe}" AutoGenerateColumns="False" IsReadOnly="True">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="Auto" />
+                <DataGridTextColumn Header="Vorname" Binding="{Binding Vorname}" Width="*" />
+                <DataGridTextColumn Header="Nachname" Binding="{Binding Nachname}" Width="*" />
+                <DataGridTextColumn Header="Geburtsdatum" Binding="{Binding Geburtsdatum}" Width="Auto" />
+                <DataGridTextColumn Header="Eintrittsdatum" Binding="{Binding Eintrittsdatum}" Width="Auto" />
+                <DataGridTextColumn Header="Position ID" Binding="{Binding PositionId}" Width="Auto" />
+                <DataGridTextColumn Header="Telefon" Binding="{Binding Telefon}" Width="*" />
+                <DataGridTextColumn Header="Email" Binding="{Binding Email}" Width="*" />
+                <DataGridCheckBoxColumn Header="Aktiv" Binding="{Binding Aktiv}" Width="Auto" />
+                <DataGridTextColumn Header="Gehalt" Binding="{Binding Gehalt}" Width="Auto" />
+                <DataGridCheckBoxColumn Header="Ist Admin" Binding="{Binding IstAdmin}" Width="Auto" />
+                <DataGridTextColumn Header="Bild URL" Binding="{Binding BildUrl}" Width="*" />
+                <DataGridTextColumn Header="Notizen" Binding="{Binding Notizen}" Width="*" />
+                <DataGridTextColumn Header="Adresse" Binding="{Binding Adresse}" Width="*" />
+            </DataGrid.Columns>
+        </DataGrid>
     </Grid>
 </UserControl>
