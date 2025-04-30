@@ -165,5 +165,59 @@ namespace Percuro.Services.InventoryServices
                 throw;
             }
         }
+
+        public async Task UpdateInventoryStockAsync(BestandskorrekturModel correctionDetails)
+        {
+            if (correctionDetails == null)
+            {
+                Console.WriteLine("[UpdateInventoryStockAsync] Correction details are null.");
+                throw new ArgumentNullException(nameof(correctionDetails), "Correction details cannot be null.");
+            }
+
+            try
+            {
+                Console.WriteLine("[UpdateInventoryStockAsync] Starting update for ID: " + correctionDetails.Id);
+
+                using var connection = new MySqlConnection(_connectionString);
+                await connection.OpenAsync();
+                Console.WriteLine("[UpdateInventoryStockAsync] Database connection opened.");
+
+                string query = @"UPDATE lagerbestaende 
+                                 SET bestand = @bestand, 
+                                     mindestbestand = @mindestbestand, 
+                                     platzbezeichnung = @platzbezeichnung, 
+                                     artikel_bezeichnung = @artikelBezeichnung, 
+                                     umlaufmenge = @umlaufmenge, 
+                                     letzte_aenderung = NOW() 
+                                 WHERE id = @id";
+
+                using var cmd = new MySqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@bestand", correctionDetails.Bestand);
+                cmd.Parameters.AddWithValue("@mindestbestand", correctionDetails.Mindestbestand ?? (object)DBNull.Value);
+                cmd.Parameters.AddWithValue("@platzbezeichnung", correctionDetails.Platzbezeichnung ?? (object)DBNull.Value);
+                cmd.Parameters.AddWithValue("@artikelBezeichnung", correctionDetails.ArtikelBezeichnung ?? (object)DBNull.Value);
+                cmd.Parameters.AddWithValue("@umlaufmenge", correctionDetails.Umlaufmenge);
+                cmd.Parameters.AddWithValue("@id", correctionDetails.Id);
+
+                Console.WriteLine("[UpdateInventoryStockAsync] Executing query: " + query);
+
+                int rowsAffected = await cmd.ExecuteNonQueryAsync();
+
+                Console.WriteLine("[UpdateInventoryStockAsync] Rows affected: " + rowsAffected);
+
+                if (rowsAffected == 0)
+                {
+                    Console.WriteLine("[UpdateInventoryStockAsync] No rows were updated. The inventory stock might not exist.");
+                    throw new Exception("No rows were updated. The inventory stock might not exist.");
+                }
+
+                Console.WriteLine("[UpdateInventoryStockAsync] Inventory stock successfully updated.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[UpdateInventoryStockAsync] Error: {ex.Message}");
+                throw;
+            }
+        }
     }
 }

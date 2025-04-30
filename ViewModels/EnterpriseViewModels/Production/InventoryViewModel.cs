@@ -122,7 +122,7 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
         private bool isKorrekturPanelVisible = false;
 
         [ObservableProperty]
-        private bool isInputAreaEnabled = true; // Property to control the IsEnabled state of the input area
+        private bool isInputEnabled = true;
 
         [ObservableProperty]
         private List<string>? selectedStockDetails;
@@ -162,7 +162,7 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
         private void SetTransferCandidate(InventoryStock stock)
         {
             TransferCandidate = stock;
-            IsInputAreaEnabled = false;
+            IsInputEnabled = false;
             IsTransferPanelVisible = true;
         }
 
@@ -205,6 +205,10 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
             catch (Exception ex)
             {
                 Console.WriteLine($"Fehler beim Erstellen der Lagerbewegung: {ex.Message}");
+            }
+            finally
+            {
+                IsInputEnabled = true;
             }
         }
 
@@ -290,6 +294,12 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
                 {
                     stock.PropertyChanged -= InventoryStock_PropertyChanged;
                     stock.PropertyChanged += InventoryStock_PropertyChanged;
+
+                    // Subscribe to isKorrekturCandidate and isTransferCandidate changes
+                    stock.PropertyChanged -= OnIsKorrekturCandidateChanged;
+                    stock.PropertyChanged -= OnIsTransferCandidateChanged;
+                    stock.PropertyChanged += OnIsKorrekturCandidateChanged;
+                    stock.PropertyChanged += OnIsTransferCandidateChanged;
                 }
             }
         }
@@ -298,14 +308,31 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
         {
             var stock = sender as InventoryStock;
             Console.WriteLine($"PropertyChanged Event empfangen: {e.PropertyName} für Artikel ID {stock?.ArtikelId}");
+        }
 
+        private void OnIsKorrekturCandidateChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(InventoryStock.IsKorrekturCandidate))
+            {
+                var stock = sender as InventoryStock;
+                if (stock?.IsKorrekturCandidate == true)
+                {
+                    IsInputEnabled = false;
+                }
+                UpdateKorrekturPanelVisibility(stock?.IsKorrekturCandidate == true ? stock : null);
+            }
+        }
+
+        private void OnIsTransferCandidateChanged(object? sender, PropertyChangedEventArgs e)
+        {
             if (e.PropertyName == nameof(InventoryStock.IsTransferCandidate))
             {
+                var stock = sender as InventoryStock;
+                if (stock?.IsTransferCandidate == true)
+                {
+                    IsInputEnabled = false;
+                }
                 UpdateTransferVisibility(stock?.IsTransferCandidate == true ? stock : null);
-            }
-            else if (e.PropertyName == nameof(InventoryStock.IsKorrekturCandidate))
-            {
-                UpdateKorrekturPanelVisibility(stock?.IsKorrekturCandidate == true ? stock : null);
             }
         }
 
@@ -399,6 +426,71 @@ namespace Percuro.ViewModels.EnterpriseViewModels.Production
         private void SetAsKorrekturCandidate()
         {
             IsKorrekturPanelVisible = true;
+            IsInputEnabled = false;
+        }
+
+        [RelayCommand]
+        private void CancelInventoryAction()
+        {
+            IsKorrekturPanelVisible = false;
+            IsTransferPanelVisible = false;
+
+            BestandskorrekturDetails = null;
+
+            // Reset TransferCandidate
+            if (TransferCandidate != null)
+            {
+                TransferCandidate.IsTransferCandidate = false;
+                TransferCandidate = null;
+            }
+
+            SelectedItemId = null;
+            SelectedItemBestand = null;
+            SelectedItemLagerName = null;
+            SelectedItemArtikelBezeichnung = null;
+            TransferReason = string.Empty; 
+            TransferAmount = 0;
+            SelectedTargetStock = null;
+
+            IsInputEnabled = true;
+
+            // Reset CandidateButtonsEnabled and IsKorrekturCandidate for all stocks
+            foreach (var group in GroupedInventoryStocks)
+            {
+                foreach (var stock in group.Items)
+                {
+                    stock.IsKorrekturCandidate = false;
+                    stock.ResetCandidateButtons();
+                }
+            }
+        }
+
+        [RelayCommand]
+        private async Task ConfirmCorrectionAsync()
+        {
+            if (BestandskorrekturDetails == null)
+            {
+                Console.WriteLine("Keine Bestandskorrektur-Daten verfügbar.");
+                return;
+            }
+
+            try
+            {
+                Console.WriteLine("[ConfirmCorrectionAsync] Starting correction for ID: " + BestandskorrekturDetails.Id);
+
+                await _inventoryDatabaseService.UpdateInventoryStockAsync(BestandskorrekturDetails);
+                Console.WriteLine("[ConfirmCorrectionAsync] Bestandskorrektur erfolgreich abgeschlossen.");
+
+                // Refresh inventory data
+                await LoadInventoryStocks();
+
+                // Reset the view by calling CancelInventoryAction
+                CancelInventoryAction();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[ConfirmCorrectionAsync] Fehler bei der Bestandskorrektur: {ex.Message}");
+            }
         }
     }
 }

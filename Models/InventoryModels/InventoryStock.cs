@@ -38,8 +38,31 @@ public partial class InventoryStock : ObservableObject
     private bool isKorrekturCandidate;
     public void SetAsKorrekturCandidate()
     {
-        // Logic for setting this stock as a correction candidate
+        // Umschalten zwischen true und false
         IsKorrekturCandidate = !IsKorrekturCandidate;
         Console.WriteLine($"Artikel ID {ArtikelId} wurde als Korrekturkandidat {(IsKorrekturCandidate ? "markiert" : "demarkiert")}.");
+    }
+
+    private bool candidateButtonsEnabled = true;
+
+    public bool CandidateButtonsEnabled
+    {
+        get => candidateButtonsEnabled;
+        set => SetProperty(ref candidateButtonsEnabled, value);
+    }
+
+    public void ResetCandidateButtons()
+    {
+        CandidateButtonsEnabled = true;
+    }
+
+    partial void OnIsKorrekturCandidateChanged(bool value)
+    {
+        CandidateButtonsEnabled = !value;
+    }
+
+    partial void OnIsTransferCandidateChanged(bool value)
+    {
+        CandidateButtonsEnabled = !value;
     }
 }

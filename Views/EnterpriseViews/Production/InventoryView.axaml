@@ -38,7 +38,7 @@
                 <DockPanel Grid.Column="0">
                     <!-- Filter Section -->
                     <DockPanel DockPanel.Dock="Top" Margin="10">
-                        <StackPanel Orientation="Vertical" HorizontalAlignment="Left" IsEnabled="{Binding IsInputAreaEnabled}">
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Left" IsEnabled="{Binding IsInputEnabled}">
                             <TextBlock Text="(Filter: Geben Sie einen Artikelbegriff ein)" Margin="0,0,0,10" FontStyle="Italic" Foreground="Gray"/>
                             <TextBox Width="310" Watermark="Artikel suchen..." Text="{Binding SearchQuery, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left"/>
                             <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
@@ -50,10 +50,10 @@
 
                     <!-- Scrollable Content Section -->
                     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-                        <ItemsControl ItemsSource="{Binding GroupedInventoryStocks}" Margin="10">
+                        <ItemsControl ItemsSource="{Binding GroupedInventoryStocks}" Margin="10" IsEnabled="{Binding IsInputEnabled}">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Expander Header="{Binding LagerName}" IsExpanded="False" Margin="0" MinHeight="30" HorizontalAlignment="Stretch" Focusable="False">
+                                    <Expander Header="{Binding LagerName}" IsExpanded="False" Margin="0" MinHeight="30" HorizontalAlignment="Stretch" >
                                         <ItemsControl ItemsSource="{Binding Items}" Margin="0">
                                             <ItemsControl.ItemTemplate>
                                                 <DataTemplate>
@@ -74,8 +74,8 @@
                                                                 <TextBlock Text="{Binding PlatzbezeichnungDescription}" Margin="0"/>
                                                                 <TextBlock Text="{Binding LetzteAenderungDescription}" Margin="0"/>
                                                              
-                                                                <Button Content="Umlagern" Command="{Binding SetAsTransferCandidate}" CommandParameter="true" />
-                                                                <Button Content="Bestandskorrektur" Command="{Binding SetAsKorrekturCandidate}" Margin="0,5,0,0"/>
+                                                                <Button IsEnabled="{Binding CandidateButtonsEnabled}" Content="Umlagern" Command="{Binding SetAsTransferCandidate}" CommandParameter="true" Margin="0,5,0,0"/>
+                                                                <Button IsEnabled="{Binding CandidateButtonsEnabled}" Content="Bestandskorrektur" Command="{Binding SetAsKorrekturCandidate}" Margin="0,5,0,0"/>
                                                             </StackPanel>
                                                         </Expander.Content>
                                            
@@ -114,6 +114,7 @@
                             </ComboBox.ItemTemplate>
                         </ComboBox>
                         <Button Content="Bestätigen" Command="{Binding ExecuteTransferCommand}" Margin="10,0,0,0"/>
+                        <Button Content="Cancel"  Command="{Binding CancelInventoryActionCommand}"  Width="100" HorizontalAlignment="Left" Margin="0,10,0,0"/>
                     </StackPanel>
 
                     <!-- Anzeige der Details des ausgewählten Lagers -->
@@ -172,7 +173,8 @@
 
                     </StackPanel>
 
-                    <Button Content="Bestätigen" Width="100" HorizontalAlignment="Left" Margin="0,10,0,0"/>
+                    <Button Content="Bestätigen" Command="{Binding ConfirmCorrectionCommand}" Width="100" HorizontalAlignment="Left" Margin="0,10,0,0"/>
+                    <Button Content="Cancel" Command="{Binding CancelInventoryActionCommand}" Width="100" HorizontalAlignment="Left" Margin="0,10,0,0"/>
                 </StackPanel>
             </Grid>
         </ScrollViewer>
