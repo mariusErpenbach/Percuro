@@ -17,5 +17,8 @@ public class Mitarbeiter
     public bool IstAdmin { get; set; } = false;
     public string? BildUrl { get; set; }
     public string? Notizen { get; set; }
-    public string? Adresse { get; set; }
+
+    public string? PositionTitel { get; set; }
+    public string? FormattedGeburtsdatum => Geburtsdatum?.ToString("dd.MM.yyyy") ?? string.Empty;
+    public string? FormattedEintrittsdatum => Eintrittsdatum?.ToString("dd.MM.yyyy");
 }

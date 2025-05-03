@@ -9,29 +9,29 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
         <!-- ToHRView Button -->
         <Button Grid.Row="0" Content="Back to HR View" Command="{Binding ToHRViewCommand}" HorizontalAlignment="Left" Margin="10" />
 
+        <!-- Search TextBox -->
+        <TextBox Grid.Row="1" Watermark="Search..." Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" Margin="10" />
+
         <!-- DataGrid displaying all fields -->
-        <DataGrid Grid.Row="1" ItemsSource="{Binding MitarbeiterListe}" AutoGenerateColumns="False" IsReadOnly="True">
+        <DataGrid Grid.Row="2" ItemsSource="{Binding FilteredMitarbeiterListe}" AutoGenerateColumns="False" IsReadOnly="True">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="Auto" />
-                <DataGridTextColumn Header="Vorname" Binding="{Binding Vorname}" Width="*" />
-                <DataGridTextColumn Header="Nachname" Binding="{Binding Nachname}" Width="*" />
-                <DataGridTextColumn Header="Geburtsdatum" Binding="{Binding Geburtsdatum}" Width="Auto" />
-                <DataGridTextColumn Header="Eintrittsdatum" Binding="{Binding Eintrittsdatum}" Width="Auto" />
-                <DataGridTextColumn Header="Position ID" Binding="{Binding PositionId}" Width="Auto" />
-                <DataGridTextColumn Header="Telefon" Binding="{Binding Telefon}" Width="*" />
-                <DataGridTextColumn Header="Email" Binding="{Binding Email}" Width="*" />
+                <DataGridTextColumn Header="Vorname" Binding="{Binding Vorname}" Width="Auto" />
+                <DataGridTextColumn Header="Nachname" Binding="{Binding Nachname}" Width="Auto" />
+                <DataGridTextColumn Header="Geburtsdatum" Binding="{Binding FormattedGeburtsdatum}" Width="Auto" />
+                <DataGridTextColumn Header="Eintrittsdatum" Binding="{Binding FormattedEintrittsdatum}" Width="Auto" />
+                <DataGridTextColumn Header="Position" Binding="{Binding PositionTitel}" Width="Auto" />
+                <DataGridTextColumn Header="Telefon" Binding="{Binding Telefon}" Width="Auto" />
+                <DataGridTextColumn Header="Email" Binding="{Binding Email}" Width="Auto" />
                 <DataGridCheckBoxColumn Header="Aktiv" Binding="{Binding Aktiv}" Width="Auto" />
-                <DataGridTextColumn Header="Gehalt" Binding="{Binding Gehalt}" Width="Auto" />
-                <DataGridCheckBoxColumn Header="Ist Admin" Binding="{Binding IstAdmin}" Width="Auto" />
-                <DataGridTextColumn Header="Bild URL" Binding="{Binding BildUrl}" Width="*" />
                 <DataGridTextColumn Header="Notizen" Binding="{Binding Notizen}" Width="*" />
-                <DataGridTextColumn Header="Adresse" Binding="{Binding Adresse}" Width="*" />
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

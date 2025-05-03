@@ -30,7 +30,9 @@ public class MitarbeiterDatabaseService
             await connection.OpenAsync();
             Console.WriteLine("Database connection established.");
 
-            string query = "SELECT id, vorname, nachname, geburtsdatum, eintrittsdatum, position_id, telefon, email, aktiv, gehalt, ist_admin, bild_url, notizen, adresse FROM mitarbeiter";
+            string query = @"SELECT m.id, m.vorname, m.nachname, m.geburtsdatum, m.eintrittsdatum, m.position_id, p.titel, m.telefon, m.email, m.aktiv, m.gehalt, m.ist_admin, m.bild_url, m.notizen 
+                              FROM mitarbeiter m
+                              LEFT JOIN positionen p ON m.position_id = p.id";
             Console.WriteLine("Executing query: " + query);
             using var cmd = new MySqlCommand(query, connection);
             using var reader = await cmd.ExecuteReaderAsync();
@@ -46,14 +48,14 @@ public class MitarbeiterDatabaseService
                     Geburtsdatum = reader.IsDBNull(3) ? (DateTime?)null : reader.GetDateTime(3),
                     Eintrittsdatum = reader.IsDBNull(4) ? (DateTime?)null : reader.GetDateTime(4),
                     PositionId = reader.IsDBNull(5) ? (int?)null : reader.GetInt32(5),
-                    Telefon = reader.IsDBNull(6) ? null : reader.GetString(6),
-                    Email = reader.IsDBNull(7) ? null : reader.GetString(7),
-                    Aktiv = reader.GetBoolean(8),
-                    Gehalt = reader.IsDBNull(9) ? (decimal?)null : reader.GetDecimal(9),
-                    IstAdmin = reader.GetBoolean(10),
-                    BildUrl = reader.IsDBNull(11) ? null : reader.GetString(11),
-                    Notizen = reader.IsDBNull(12) ? null : reader.GetString(12),
-                    Adresse = reader.IsDBNull(13) ? null : reader.GetString(13)
+                    PositionTitel = reader.IsDBNull(6) ? null : reader.GetString(6),
+                    Telefon = reader.IsDBNull(7) ? null : reader.GetString(7),
+                    Email = reader.IsDBNull(8) ? null : reader.GetString(8),
+                    Aktiv = reader.GetBoolean(9),
+                    Gehalt = reader.IsDBNull(10) ? (decimal?)null : reader.GetDecimal(10),
+                    IstAdmin = reader.GetBoolean(11),
+                    BildUrl = reader.IsDBNull(12) ? null : reader.GetString(12),
+                    Notizen = reader.IsDBNull(13) ? null : reader.GetString(13)
                 });
             }
         }
