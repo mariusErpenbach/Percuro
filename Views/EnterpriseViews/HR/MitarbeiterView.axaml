@@ -15,8 +15,11 @@
 
         <!-- ToHRView Button -->
         <Button Grid.Row="0" Content="Back to HR View" Command="{Binding ToHRViewCommand}" HorizontalAlignment="Left" Margin="10" />
-
         <!-- Search TextBox -->
+                <!-- MitarbeiterView Overview-->
+                <TextBlock Text="Mitarbeiter Übersicht" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="10" />
+        <Button Content="Neue/r Mitarbeiter/in" Command="{Binding ToNewMitarbeiterViewCommand}" FontSize="16" HorizontalAlignment="Right" Margin="10" />
+
         <TextBox Grid.Row="1" Watermark="Search..." Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" Margin="10" />
 
         <!-- DataGrid displaying all fields -->
@@ -24,14 +27,28 @@
             <DataGrid.Columns>
                 <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="Auto" />
                 <DataGridTextColumn Header="Vorname" Binding="{Binding Vorname}" Width="Auto" />
-                <DataGridTextColumn Header="Nachname" Binding="{Binding Nachname}" Width="Auto" />
+                <DataGridTextColumn Header="Nachname" Binding="{Binding Nachname}" Width="Auto"/>
                 <DataGridTextColumn Header="Geburtsdatum" Binding="{Binding FormattedGeburtsdatum}" Width="Auto" />
                 <DataGridTextColumn Header="Eintrittsdatum" Binding="{Binding FormattedEintrittsdatum}" Width="Auto" />
                 <DataGridTextColumn Header="Position" Binding="{Binding PositionTitel}" Width="Auto" />
                 <DataGridTextColumn Header="Telefon" Binding="{Binding Telefon}" Width="Auto" />
                 <DataGridTextColumn Header="Email" Binding="{Binding Email}" Width="Auto" />
                 <DataGridCheckBoxColumn Header="Aktiv" Binding="{Binding Aktiv}" Width="Auto" />
-                <DataGridTextColumn Header="Notizen" Binding="{Binding Notizen}" Width="*" />
+                <DataGridTemplateColumn Header="Notizen" Width="Auto">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Expander>
+                                <StackPanel>
+                                    <TextBlock Text="{Binding Notizen}" />
+                                </StackPanel>
+                            </Expander>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Header="Straße" Binding="{Binding Strasse}" Width="Auto" />
+                <DataGridTextColumn Header="Stadt" Binding="{Binding Stadt}" Width="Auto" />
+                <DataGridTextColumn Header="PLZ" Binding="{Binding PLZ}" Width="Auto" />
+                <DataGridTextColumn Header="Land" Binding="{Binding Land}" Width="Auto" />
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

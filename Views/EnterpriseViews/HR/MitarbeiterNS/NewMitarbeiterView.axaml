@@ -1,0 +1,65 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:Percuro.ViewModels.EnterpriseViewModels.HR.MitarbeiterNS"
+             x:Class="Percuro.Views.EnterpriseViews.HR.MitarbeiterNS.NewMitarbeiterView"
+             x:DataType="vm:NewMitarbeiterViewModel">
+
+    <Grid>
+        <!-- To HR Button -->
+        <Button Content="Back" Command="{Binding ToMitarbeiterViewCommand}"
+                Width="150" Height="50" Margin="10"
+                HorizontalAlignment="Left" VerticalAlignment="Top"
+                HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+
+        <!-- Placeholder Content -->
+        <TextBlock Text="NewMitarbeiter View" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20"/>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Margin="10">
+            <TextBlock Text="Vorname:"/>
+            <TextBox Text="{Binding Vorname}"/>
+
+            <TextBlock Text="Nachname:"/>
+            <TextBox Text="{Binding Nachname}"/>
+
+            <TextBlock Text="Geburtsdatum:"/>
+            <DatePicker SelectedDate="{Binding Geburtsdatum}"/>
+
+            <TextBlock Text="Eintrittsdatum:"/>
+            <DatePicker SelectedDate="{Binding Eintrittsdatum}"/>
+
+            <TextBlock Text="Telefon:"/>
+            <TextBox Text="{Binding Telefon}"/>
+
+            <TextBlock Text="Email:"/>
+            <TextBox Text="{Binding Email}"/>
+
+            <TextBlock Text="Straße:"/>
+            <TextBox Text="{Binding Strasse}"/>
+
+            <TextBlock Text="Hausnummer:"/>
+            <TextBox Text="{Binding Hausnummer}"/>
+
+            <TextBlock Text="PLZ:"/>
+            <TextBox Text="{Binding Plz}"/>
+
+            <TextBlock Text="Stadt:"/>
+            <TextBox Text="{Binding Stadt}"/>
+
+            <TextBlock Text="Land:"/>
+            <TextBox Text="{Binding Land}"/>
+
+            <TextBlock Text="Adresszusatz:"/>
+            <TextBox Text="{Binding Adresszusatz}"/>
+
+            <TextBlock Text="Typ:"/>
+            <TextBox Text="{Binding Typ}"/>
+        </StackPanel>
+
+        <Button Content="Speichern" Command="{Binding SaveMitarbeiterAsyncCommand}" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+    </Grid>
+</UserControl>

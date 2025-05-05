@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 using CommunityToolkit.Mvvm.Input;
 using Percuro.Models.MitarbeiterModels;
 using Percuro.Services.MitarbeiterServices;
+using Percuro.ViewModels.EnterpriseViewModels.HR.MitarbeiterNS;
 
 namespace Percuro.ViewModels.EnterpriseViewModels.HR;
 
@@ -95,6 +96,14 @@ public partial class MitarbeiterViewModel : ViewModelBase
         if (Parent is MainWindowViewModel mainVm)
         {
             mainVm.CurrentViewModel = new HRViewModel();
+        }
+    }
+       [RelayCommand]
+    public void ToNewMitarbeiterView()
+    {
+        if (Parent is MainWindowViewModel mainVm)
+        {
+            mainVm.CurrentViewModel = new NewMitarbeiterViewModel();
         }
     }
 }
