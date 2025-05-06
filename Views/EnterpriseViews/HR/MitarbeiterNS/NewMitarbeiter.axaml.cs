@@ -1,3 +1,4 @@
+using System;
 using Avalonia.Controls;
 using Percuro.ViewModels.EnterpriseViewModels.HR;
 
@@ -8,6 +9,7 @@ namespace Percuro.Views.EnterpriseViews.HR.MitarbeiterNS
         public NewMitarbeiterView()
         {
             InitializeComponent();
+            Console.WriteLine("NewMitarbeiterView initialized.");
         }
     }
 }

@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using MySqlConnector;
 using Percuro.Models.MitarbeiterModels;
+using Percuro.Models;
 using DotNetEnv;
+using Percuro.Models.HRModels;
 
 namespace Percuro.Services.MitarbeiterServices;
 
@@ -73,8 +75,14 @@ public class MitarbeiterDatabaseService
         return mitarbeiterList;
     }
 
-    public async Task<int> SaveAdressbuchAsync(string? strasse, string? hausnummer, string? plz, string? stadt, string? land, string? adresszusatz, string? typ)
+    public async Task<int> SaveAdressbuchAsync(Adressbuch adressbuch)
     {
+        // Validate input fields
+        if (string.IsNullOrWhiteSpace(adressbuch.Strasse) || string.IsNullOrWhiteSpace(adressbuch.Plz) || string.IsNullOrWhiteSpace(adressbuch.Stadt) || string.IsNullOrWhiteSpace(adressbuch.Land))
+        {
+            throw new ArgumentException("Die Felder Straße, PLZ, Stadt und Land dürfen nicht leer sein.");
+        }
+
         var query = "INSERT INTO adressbuch (strasse, hausnummer, plz, stadt, land, adresszusatz, typ) VALUES (@strasse, @hausnummer, @plz, @stadt, @land, @adresszusatz, @typ); SELECT LAST_INSERT_ID();";
 
         try
@@ -83,13 +91,13 @@ public class MitarbeiterDatabaseService
             await connection.OpenAsync();
 
             using var cmd = new MySqlCommand(query, connection);
-            cmd.Parameters.AddWithValue("@strasse", strasse);
-            cmd.Parameters.AddWithValue("@hausnummer", hausnummer);
-            cmd.Parameters.AddWithValue("@plz", plz);
-            cmd.Parameters.AddWithValue("@stadt", stadt);
-            cmd.Parameters.AddWithValue("@land", land);
-            cmd.Parameters.AddWithValue("@adresszusatz", adresszusatz);
-            cmd.Parameters.AddWithValue("@typ", typ);
+            cmd.Parameters.AddWithValue("@strasse", adressbuch.Strasse);
+            cmd.Parameters.AddWithValue("@hausnummer", adressbuch.Hausnummer);
+            cmd.Parameters.AddWithValue("@plz", adressbuch.Plz);
+            cmd.Parameters.AddWithValue("@stadt", adressbuch.Stadt);
+            cmd.Parameters.AddWithValue("@land", adressbuch.Land);
+            cmd.Parameters.AddWithValue("@adresszusatz", adressbuch.Adresszusatz);
+            cmd.Parameters.AddWithValue("@typ", adressbuch.Typ);
 
             var result = await cmd.ExecuteScalarAsync();
             return Convert.ToInt32(result);
@@ -133,5 +141,44 @@ public class MitarbeiterDatabaseService
             Console.WriteLine($"Fehler beim Hinzufügen eines Mitarbeiters: {ex.Message}");
             throw;
         }
+    }
+
+    public async Task<List<string>> FetchPositionTitlesAsync()
+    {
+        var titles = new List<string>();
+
+        try
+        {
+            using var connection = new MySqlConnection(_connectionString);
+            await connection.OpenAsync();
+
+            using var command = connection.CreateCommand();
+            command.CommandText = "SELECT Titel FROM positionen";
+
+            using var reader = await command.ExecuteReaderAsync();
+            while (await reader.ReadAsync())
+            {
+                titles.Add(reader.GetString(0));
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Fehler beim Abrufen der Positionstitel: {ex.Message}");
+        }
+
+        return titles;
+    }
+
+    public async Task<int?> GetPositionIdByTitleAsync(string title)
+    {
+        using var connection = new MySqlConnection(_connectionString);
+        await connection.OpenAsync();
+
+        var command = connection.CreateCommand();
+        command.CommandText = "SELECT Id FROM positionen WHERE Titel = @title";
+        command.Parameters.AddWithValue("@title", title);
+
+        var result = await command.ExecuteScalarAsync();
+        return result != null ? Convert.ToInt32(result) : (int?)null;
     }
 }
