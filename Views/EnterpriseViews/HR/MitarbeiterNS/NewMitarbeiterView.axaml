@@ -4,84 +4,107 @@
              x:Class="Percuro.Views.EnterpriseViews.HR.MitarbeiterNS.NewMitarbeiterView"
              x:DataType="vm:NewMitarbeiterViewModel">
 
-    <ScrollViewer VerticalScrollBarVisibility="Auto">
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
-            <!-- To HR Button -->
-            <Button Content="Back" Command="{Binding ToMitarbeiterViewCommand}"
-                    Width="150" Height="50" Margin="10"
-                    HorizontalAlignment="Left" VerticalAlignment="Top"
-                    HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+        <!-- To HR Button -->
+        <Button Content="Back" Command="{Binding ToMitarbeiterViewCommand}"
+                Width="150" Height="50" Margin="10"
+                HorizontalAlignment="Left" VerticalAlignment="Top"
+                HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
 
-            <!-- Placeholder Content -->
-            <TextBlock Text="NewMitarbeiter View" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="20" Margin="0,60,0,10"/>
+        <!-- Placeholder Content -->
+        <TextBlock Text="NewMitarbeiter View" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="20" Margin="0,60,0,10"/>
 
-            <StackPanel Grid.Row="1" Margin="10">
-                <TextBlock Text="Vorname:"/>
-                <TextBox Text="{Binding Vorname}"/>
-                <TextBlock Text="{Binding VornameError}" Foreground="Red" FontSize="12"/>
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" IsVisible="{Binding IsInputFormVisible}">
+            <Grid>
+                <StackPanel Margin="10">
+                    <TextBlock Text="Vorname:"/>
+                    <TextBox Text="{Binding Vorname}"/>
+                    <TextBlock Text="{Binding VornameError}" Foreground="Red" FontSize="12"/>
 
-                <TextBlock Text="Nachname:"/>
-                <TextBox Text="{Binding Nachname}"/>
-                <TextBlock Text="{Binding NachnameError}" Foreground="Red" FontSize="12"/>
+                    <TextBlock Text="Nachname:"/>
+                    <TextBox Text="{Binding Nachname}"/>
+                    <TextBlock Text="{Binding NachnameError}" Foreground="Red" FontSize="12"/>
 
-                <TextBlock Text="Geburtsdatum:"/>
-                <TextBox Text="{Binding Geburtsdatum}"/>
-                <TextBlock Text="{Binding GeburtsdatumError}" Foreground="Red" FontSize="12"/>
+                    <TextBlock Text="Geburtsdatum:"/>
+                    <TextBox Text="{Binding Geburtsdatum}"/>
+                    <TextBlock Text="{Binding GeburtsdatumError}" Foreground="Red" FontSize="12"/>
 
-                <TextBlock Text="Eintrittsdatum:"/>
-                <TextBox Text="{Binding Eintrittsdatum}"/>
-                <TextBlock Text="{Binding EintrittsdatumError}" Foreground="Red" FontSize="12"/>
+                    <TextBlock Text="Eintrittsdatum:"/>
+                    <TextBox Text="{Binding Eintrittsdatum}"/>
+                    <TextBlock Text="{Binding EintrittsdatumError}" Foreground="Red" FontSize="12"/>
 
-                <TextBlock Text="Telefon:"/>
-                <TextBox Text="{Binding Telefon}"/>
-                <TextBlock Text="{Binding TelefonError}" Foreground="Red" FontSize="12"/>
+                    <TextBlock Text="Telefon:"/>
+                    <TextBox Text="{Binding Telefon}"/>
+                    <TextBlock Text="{Binding TelefonError}" Foreground="Red" FontSize="12"/>
 
-                <TextBlock Text="Email:"/>
-                <TextBox Text="{Binding Email}"/>
-                <TextBlock Text="{Binding EmailError}" Foreground="Red" FontSize="12"/>
+                    <TextBlock Text="Email:"/>
+                    <TextBox Text="{Binding Email}"/>
+                    <TextBlock Text="{Binding EmailError}" Foreground="Red" FontSize="12"/>
 
-                <TextBlock Text="Straße:"/>
-                <TextBox Text="{Binding Strasse}"/>
-                <TextBlock Text="{Binding StrasseError}" Foreground="Red" FontSize="12"/>
+                    <TextBlock Text="Straße:"/>
+                    <TextBox Text="{Binding Strasse}"/>
+                    <TextBlock Text="{Binding StrasseError}" Foreground="Red" FontSize="12"/>
 
-                <TextBlock Text="Hausnummer:"/>
-                <TextBox Text="{Binding Hausnummer}"/>
-                <TextBlock Text="{Binding HausnummerError}" Foreground="Red" FontSize="12"/>
+                    <TextBlock Text="Hausnummer:"/>
+                    <TextBox Text="{Binding Hausnummer}"/>
+                    <TextBlock Text="{Binding HausnummerError}" Foreground="Red" FontSize="12"/>
 
-                <TextBlock Text="PLZ:"/>
-                <TextBox Text="{Binding Plz}"/>
-                <TextBlock Text="{Binding PlzError}" Foreground="Red" FontSize="12"/>
+                    <TextBlock Text="PLZ:"/>
+                    <TextBox Text="{Binding Plz}"/>
+                    <TextBlock Text="{Binding PlzError}" Foreground="Red" FontSize="12"/>
 
-                <TextBlock Text="Stadt:"/>
-                <TextBox Text="{Binding Stadt}"/>
-                <TextBlock Text="{Binding StadtError}" Foreground="Red" FontSize="12"/>
+                    <TextBlock Text="Stadt:"/>
+                    <TextBox Text="{Binding Stadt}"/>
+                    <TextBlock Text="{Binding StadtError}" Foreground="Red" FontSize="12"/>
 
-                <TextBlock Text="Land:"/>
-                <TextBox Text="{Binding Land}"/>
-                <TextBlock Text="{Binding LandError}" Foreground="Red" FontSize="12"/>
+                    <TextBlock Text="Land:"/>
+                    <TextBox Text="{Binding Land}"/>
+                    <TextBlock Text="{Binding LandError}" Foreground="Red" FontSize="12"/>
 
-                <TextBlock Text="Adresszusatz:"/>
-                <TextBox Text="{Binding Adresszusatz}"/>
+                    <TextBlock Text="Adresszusatz:"/>
+                    <TextBox Text="{Binding Adresszusatz}"/>
 
-                <TextBlock Text="Typ:"/>
-                <TextBox Text="{Binding Typ}"/>
-                <TextBlock Text="{Binding TypError}" Foreground="Red" FontSize="12"/>
+                    <TextBlock Text="Typ:"/>
+                    <ComboBox ItemsSource="{Binding TypOptions}" SelectedItem="{Binding Typ}"/>
+                    <TextBlock Text="{Binding TypError}" Foreground="Red" FontSize="12"/>
 
-                <TextBlock Text="Gehalt:"/>
-                <TextBox Text="{Binding Gehalt}"/>
-                <TextBlock Text="{Binding GehaltError}" Foreground="Red" FontSize="12"/>
+                    <TextBlock Text="Gehalt:"/>
+                    <TextBox Text="{Binding Gehalt}"/>
+                    <TextBlock Text="{Binding GehaltError}" Foreground="Red" FontSize="12"/>
 
-                <TextBlock Text="Position:"/>
-                <ComboBox ItemsSource="{Binding PositionTitles}" SelectedItem="{Binding SelectedPosition}"/>
-                <TextBlock Text="{Binding PositionError}" Foreground="Red" FontSize="12"/>
-            </StackPanel>
+                    <TextBlock Text="Position:"/>
+                    <ComboBox ItemsSource="{Binding PositionTitles}" SelectedItem="{Binding SelectedPosition}"/>
+                    <TextBlock Text="{Binding PositionError}" Foreground="Red" FontSize="12"/>
+                    <Button Content="Speichern" Command="{Binding SaveMitarbeiterAsyncCommand}" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,10,0,10"/>
 
-            <Button Content="Speichern" Command="{Binding SaveMitarbeiterAsyncCommand}" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,10,0,10"/>
-        </Grid>
-    </ScrollViewer>
+                </StackPanel>
+            </Grid>
+        </ScrollViewer>
+        <StackPanel Grid.Row="1" IsVisible="{Binding IsSuccessMessageVisible}" Margin="10">
+            <TextBlock Text="Mitarbeiter wurde erfolgreich erstellt!" FontSize="20" FontWeight="Bold" Foreground="Green"/>
+            <TextBlock Text="Übersicht:" FontSize="16" Margin="0,10,0,5"/>
+            <TextBlock Text="Vorname:"/>
+            <TextBlock Text="{Binding Vorname}"/>
+            <TextBlock Text="Nachname:"/>
+            <TextBlock Text="{Binding Nachname}"/>
+            <TextBlock Text="Geburtsdatum:"/>
+            <TextBlock Text="{Binding Geburtsdatum}"/>
+            <TextBlock Text="Eintrittsdatum:"/>
+            <TextBlock Text="{Binding Eintrittsdatum}"/>
+            <TextBlock Text="Telefon:"/>
+            <TextBlock Text="{Binding Telefon}"/>
+            <TextBlock Text="Email:"/>
+            <TextBlock Text="{Binding Email}"/>
+            <TextBlock Text="Typ:"/>
+            <TextBlock Text="{Binding Typ}"/>
+            <TextBlock Text="Position:"/>
+            <TextBlock Text="{Binding SelectedPosition}"/>
+            <Button Content="Zurück" Command="{Binding ToMitarbeiterViewCommand}" HorizontalAlignment="Center" Margin="0,20,0,0"/>
+        </StackPanel>
+    </Grid>
 </UserControl>

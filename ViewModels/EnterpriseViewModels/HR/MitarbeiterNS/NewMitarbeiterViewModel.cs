@@ -42,7 +42,7 @@ public partial class NewMitarbeiterViewModel : ViewModelBase
     private string? adresszusatz;
 
     [ObservableProperty]
-    private string? typ;
+    private string? typ = "privat";
 
     // Mitarbeiter-Felder
     [ObservableProperty]
@@ -148,6 +148,7 @@ public partial class NewMitarbeiterViewModel : ViewModelBase
         GeburtsdatumError = GeburtsdatumAsDateTime == null ? "Geburtsdatum muss im Format TT.MM.JJJJ sein." : null;
         EintrittsdatumError = EintrittsdatumAsDateTime == null ? "Eintrittsdatum muss im Format TT.MM.JJJJ sein." : null;
         TypError = string.IsNullOrWhiteSpace(Typ) ? "Typ ist erforderlich." : null;
+        PositionError = string.IsNullOrEmpty(SelectedPosition) ? "Bitte wählen Sie eine Position aus." : null;
     }
 
     [RelayCommand]
@@ -241,6 +242,7 @@ public partial class NewMitarbeiterViewModel : ViewModelBase
 
             // Optionally, navigate back or show success message
             Console.WriteLine("SaveMitarbeiterAsync completed successfully.");
+            ShowSuccessMessage();
         }
         catch (Exception ex)
         {
@@ -287,9 +289,24 @@ public partial class NewMitarbeiterViewModel : ViewModelBase
         set => SetProperty(ref positionError, value);
     }
 
+    private readonly List<string> typOptions = new() { "privat", "geschäftlich" };
+    public List<string> TypOptions => typOptions;
+
     public async Task LoadPositionTitlesAsync()
     {
         var titles = await _mitarbeiterService.FetchPositionTitlesAsync();
         PositionTitles = titles;
     }
+
+    public void ShowSuccessMessage()
+    {
+        IsInputFormVisible = false;
+        IsSuccessMessageVisible = true;
+    }
+
+    [ObservableProperty]
+    private bool isInputFormVisible = true;
+
+    [ObservableProperty]
+    private bool isSuccessMessageVisible = false;
 }
