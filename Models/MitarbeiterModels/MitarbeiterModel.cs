@@ -1,9 +1,19 @@
 using System;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 namespace Percuro.Models.MitarbeiterModels;
 
-public class Mitarbeiter
+public partial class Mitarbeiter : ObservableObject
 {
+    [ObservableProperty]
+    private bool editCandidate;
+
+    [ObservableProperty]
+    private bool editButtonVisible;
+
     public int Id { get; set; }
     public string? Vorname { get; set; }
     public string? Nachname { get; set; }
@@ -30,4 +40,11 @@ public class Mitarbeiter
     public string? FormattedEintrittsdatum => Eintrittsdatum?.ToString("dd.MM.yyyy");
     public int? AdressbuchId { get; set; }
 
+    
+    [RelayCommand]
+    public void EditMitarbeiter()
+    {
+        EditCandidate = true;
+        Console.WriteLine("EditMitarbeiter command executed.");
+    }
 }

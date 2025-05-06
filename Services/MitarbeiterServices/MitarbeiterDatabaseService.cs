@@ -181,4 +181,44 @@ public class MitarbeiterDatabaseService
         var result = await command.ExecuteScalarAsync();
         return result != null ? Convert.ToInt32(result) : (int?)null;
     }
+
+    public async Task<Adressbuch?> GetAdressbuchByMitarbeiterIdAsync(int mitarbeiterId)
+    {
+        Adressbuch? adressbuch = null;
+
+        try
+        {
+            using var connection = new MySqlConnection(_connectionString);
+            await connection.OpenAsync();
+
+            var query = @"SELECT a.strasse, a.hausnummer, a.plz, a.stadt, a.land, a.adresszusatz, a.typ
+                          FROM adressbuch a
+                          INNER JOIN mitarbeiter m ON m.adressbuch_id = a.id
+                          WHERE m.id = @mitarbeiterId";
+
+            using var cmd = new MySqlCommand(query, connection);
+            cmd.Parameters.AddWithValue("@mitarbeiterId", mitarbeiterId);
+
+            using var reader = await cmd.ExecuteReaderAsync();
+            if (await reader.ReadAsync())
+            {
+                adressbuch = new Adressbuch
+                {
+                    Strasse = reader.IsDBNull(0) ? string.Empty : reader.GetString(0),
+                    Hausnummer = reader.IsDBNull(1) ? string.Empty : reader.GetString(1),
+                    Plz = reader.IsDBNull(2) ? string.Empty : reader.GetString(2),
+                    Stadt = reader.IsDBNull(3) ? string.Empty : reader.GetString(3),
+                    Land = reader.IsDBNull(4) ? string.Empty : reader.GetString(4),
+                    Adresszusatz = reader.IsDBNull(5) ? string.Empty : reader.GetString(5),
+                    Typ = reader.IsDBNull(6) ? string.Empty : reader.GetString(6)
+                };
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Fehler beim Abrufen des Adressbuchs: {ex.Message}");
+        }
+
+        return adressbuch;
+    }
 }

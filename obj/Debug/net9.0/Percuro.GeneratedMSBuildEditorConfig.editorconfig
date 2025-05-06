@@ -63,6 +63,9 @@ build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 [/home/dci/Desktop/Github/Percuro/Views/EnterpriseViews/HR/GehaltsabrechnungView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
+[/home/dci/Desktop/Github/Percuro/Views/EnterpriseViews/HR/MitarbeiterNS/EditMitarbeiterView.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
 [/home/dci/Desktop/Github/Percuro/Views/EnterpriseViews/HR/MitarbeiterNS/NewMitarbeiterView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 

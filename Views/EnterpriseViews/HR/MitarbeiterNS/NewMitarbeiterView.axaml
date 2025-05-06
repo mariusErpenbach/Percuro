@@ -16,75 +16,76 @@
                 HorizontalAlignment="Left" VerticalAlignment="Top"
                 HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
 
-        <!-- Placeholder Content -->
-        <TextBlock Text="NewMitarbeiter View" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="20" Margin="0,60,0,10"/>
-
-        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" IsVisible="{Binding IsInputFormVisible}">
-            <Grid>
-                <StackPanel Margin="10">
-                    <TextBlock Text="Vorname:"/>
-                    <TextBox Text="{Binding Vorname}"/>
+    
+        <TextBlock Text="NewMitarbeiter View" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20" Margin="0,60,0,10"/>
+        <!-- Input Form -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" IsVisible="{Binding IsInputFormVisible}" HorizontalAlignment="Stretch">
+            <Grid HorizontalAlignment="Center" Width="800">
+                <StackPanel Margin="10" Spacing="7">
+                    <TextBlock Text="Vorname:" FontWeight="Bold" FontSize="14"/>
+                    <TextBox Text="{Binding Vorname}" Padding="5" BorderBrush="Gray" BorderThickness="1" CornerRadius="5"/>
                     <TextBlock Text="{Binding VornameError}" Foreground="Red" FontSize="12"/>
 
-                    <TextBlock Text="Nachname:"/>
-                    <TextBox Text="{Binding Nachname}"/>
+                    <TextBlock Text="Nachname:" FontWeight="Bold" FontSize="14"/>
+                    <TextBox Text="{Binding Nachname}" Padding="5" BorderBrush="Gray" BorderThickness="1" CornerRadius="5"/>
                     <TextBlock Text="{Binding NachnameError}" Foreground="Red" FontSize="12"/>
 
-                    <TextBlock Text="Geburtsdatum:"/>
-                    <TextBox Text="{Binding Geburtsdatum}"/>
+                    <TextBlock Text="Geburtsdatum:" FontWeight="Bold" FontSize="14"/>
+                    <TextBox Text="{Binding Geburtsdatum}" Padding="5" BorderBrush="Gray" BorderThickness="1" CornerRadius="5"/>
                     <TextBlock Text="{Binding GeburtsdatumError}" Foreground="Red" FontSize="12"/>
 
-                    <TextBlock Text="Eintrittsdatum:"/>
-                    <TextBox Text="{Binding Eintrittsdatum}"/>
+                    <TextBlock Text="Eintrittsdatum:" FontWeight="Bold" FontSize="14"/>
+                    <TextBox Text="{Binding Eintrittsdatum}" Padding="5" BorderBrush="Gray" BorderThickness="1" CornerRadius="5"/>
                     <TextBlock Text="{Binding EintrittsdatumError}" Foreground="Red" FontSize="12"/>
 
-                    <TextBlock Text="Telefon:"/>
-                    <TextBox Text="{Binding Telefon}"/>
+                    <TextBlock Text="Telefon:" FontWeight="Bold" FontSize="14"/>
+                    <TextBox Text="{Binding Telefon}" Padding="5" BorderBrush="Gray" BorderThickness="1" CornerRadius="5"/>
                     <TextBlock Text="{Binding TelefonError}" Foreground="Red" FontSize="12"/>
 
-                    <TextBlock Text="Email:"/>
-                    <TextBox Text="{Binding Email}"/>
+                    <TextBlock Text="Email:" FontWeight="Bold" FontSize="14"/>
+                    <TextBox Text="{Binding Email}" Padding="5" BorderBrush="Gray" BorderThickness="1" CornerRadius="5"/>
                     <TextBlock Text="{Binding EmailError}" Foreground="Red" FontSize="12"/>
 
-                    <TextBlock Text="Straße:"/>
-                    <TextBox Text="{Binding Strasse}"/>
+                    <TextBlock Text="Straße:" FontWeight="Bold" FontSize="14"/>
+                    <TextBox Text="{Binding Strasse}" Padding="5" BorderBrush="Gray" BorderThickness="1" CornerRadius="5"/>
                     <TextBlock Text="{Binding StrasseError}" Foreground="Red" FontSize="12"/>
 
-                    <TextBlock Text="Hausnummer:"/>
-                    <TextBox Text="{Binding Hausnummer}"/>
+                    <TextBlock Text="Hausnummer:" FontWeight="Bold" FontSize="14"/>
+                    <TextBox Text="{Binding Hausnummer}" Padding="5" BorderBrush="Gray" BorderThickness="1" CornerRadius="5"/>
                     <TextBlock Text="{Binding HausnummerError}" Foreground="Red" FontSize="12"/>
 
-                    <TextBlock Text="PLZ:"/>
-                    <TextBox Text="{Binding Plz}"/>
+                    <TextBlock Text="PLZ:" FontWeight="Bold" FontSize="14"/>
+                    <TextBox Text="{Binding Plz}" Padding="5" BorderBrush="Gray" BorderThickness="1" CornerRadius="5"/>
                     <TextBlock Text="{Binding PlzError}" Foreground="Red" FontSize="12"/>
 
-                    <TextBlock Text="Stadt:"/>
-                    <TextBox Text="{Binding Stadt}"/>
+                    <TextBlock Text="Stadt:" FontWeight="Bold" FontSize="14"/>
+                    <TextBox Text="{Binding Stadt}" Padding="5" BorderBrush="Gray" BorderThickness="1" CornerRadius="5"/>
                     <TextBlock Text="{Binding StadtError}" Foreground="Red" FontSize="12"/>
 
-                    <TextBlock Text="Land:"/>
-                    <TextBox Text="{Binding Land}"/>
+                    <TextBlock Text="Land:" FontWeight="Bold" FontSize="14"/>
+                    <TextBox Text="{Binding Land}" Padding="5" BorderBrush="Gray" BorderThickness="1" CornerRadius="5"/>
                     <TextBlock Text="{Binding LandError}" Foreground="Red" FontSize="12"/>
 
-                    <TextBlock Text="Adresszusatz:"/>
-                    <TextBox Text="{Binding Adresszusatz}"/>
+                    <TextBlock Text="Adresszusatz:" FontWeight="Bold" FontSize="14"/>
+                    <TextBox Text="{Binding Adresszusatz}" Padding="5" BorderBrush="Gray" BorderThickness="1" CornerRadius="5"/>
 
-                    <TextBlock Text="Typ:"/>
-                    <ComboBox ItemsSource="{Binding TypOptions}" SelectedItem="{Binding Typ}"/>
+                    <TextBlock Text="Typ:" FontWeight="Bold" FontSize="14"/>
+                    <ComboBox ItemsSource="{Binding TypOptions}" SelectedItem="{Binding Typ}" Padding="5" BorderBrush="Gray" BorderThickness="1" CornerRadius="5"/>
                     <TextBlock Text="{Binding TypError}" Foreground="Red" FontSize="12"/>
 
-                    <TextBlock Text="Gehalt:"/>
-                    <TextBox Text="{Binding Gehalt}"/>
+                    <TextBlock Text="Gehalt:" FontWeight="Bold" FontSize="14"/>
+                    <TextBox Text="{Binding Gehalt}" Padding="5" BorderBrush="Gray" BorderThickness="1" CornerRadius="5"/>
                     <TextBlock Text="{Binding GehaltError}" Foreground="Red" FontSize="12"/>
 
-                    <TextBlock Text="Position:"/>
-                    <ComboBox ItemsSource="{Binding PositionTitles}" SelectedItem="{Binding SelectedPosition}"/>
+                    <TextBlock Text="Position:" FontWeight="Bold" FontSize="14"/>
+                    <ComboBox ItemsSource="{Binding PositionTitles}" SelectedItem="{Binding SelectedPosition}" Padding="5" BorderBrush="Gray" BorderThickness="1" CornerRadius="5"/>
                     <TextBlock Text="{Binding PositionError}" Foreground="Red" FontSize="12"/>
                     <Button Content="Speichern" Command="{Binding SaveMitarbeiterAsyncCommand}" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,10,0,10"/>
 
                 </StackPanel>
             </Grid>
         </ScrollViewer>
+        
         <StackPanel Grid.Row="1" IsVisible="{Binding IsSuccessMessageVisible}" Margin="10">
             <TextBlock Text="Mitarbeiter wurde erfolgreich erstellt!" FontSize="20" FontWeight="Bold" Foreground="Green"/>
             <TextBlock Text="Übersicht:" FontSize="16" Margin="0,10,0,5"/>
@@ -106,5 +107,6 @@
             <TextBlock Text="{Binding SelectedPosition}"/>
             <Button Content="Zurück" Command="{Binding ToMitarbeiterViewCommand}" HorizontalAlignment="Center" Margin="0,20,0,0"/>
         </StackPanel>
+
     </Grid>
 </UserControl>

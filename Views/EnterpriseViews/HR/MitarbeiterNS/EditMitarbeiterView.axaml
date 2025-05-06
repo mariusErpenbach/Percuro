@@ -1,0 +1,83 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:Percuro.ViewModels.EnterpriseViewModels.HR.MitarbeiterNS"
+             x:DataType="vm:EditMitarbeiterViewModel"
+             x:Class="Percuro.Views.EnterpriseViews.HR.MitarbeiterNS.EditMitarbeiterView">
+    <DockPanel>
+        <!-- Title -->
+        <TextBlock Text="Mitarbeiter bearbeiten" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,20" DockPanel.Dock="Top" />
+
+        <!-- Scrollable Content -->
+        <ScrollViewer>
+            <StackPanel Margin="20" Spacing="10">
+                <!-- Labels and TextBoxes for Mitarbeiter properties -->
+                <TextBlock Text="Vorname:" FontWeight="Bold" FontSize="14" />
+                <TextBlock Text="{Binding Mitarbeiter.Vorname}" FontSize="14" Margin="0,0,10,0" />
+                <TextBox Text="{Binding EditableVorname}" Padding="5" BorderBrush="Gray" BorderThickness="1" CornerRadius="5" />
+                <TextBlock Text="{Binding VornameError}" Foreground="Red" FontSize="12" />
+
+                <TextBlock Text="Nachname:" FontWeight="Bold" FontSize="14" />
+                <TextBlock Text="{Binding Mitarbeiter.Nachname}" FontSize="14" Margin="0,0,10,0" />
+                <TextBox Text="{Binding EditableNachname}" Padding="5" BorderBrush="Gray" BorderThickness="1" CornerRadius="5" />
+                <TextBlock Text="{Binding NachnameError}" Foreground="Red" FontSize="12" />
+
+                <TextBlock Text="Geburtsdatum:" FontWeight="Bold" FontSize="14" />
+                <TextBlock Text="{Binding Mitarbeiter.Geburtsdatum}" FontSize="14" Margin="0,0,10,0" />
+                <TextBox Text="{Binding EditableGeburtsdatum}" Padding="5" BorderBrush="Gray" BorderThickness="1" CornerRadius="5" />
+                <TextBlock Text="{Binding GeburtsdatumError}" Foreground="Red" FontSize="12" />
+
+                <TextBlock Text="Eintrittsdatum:" FontWeight="Bold" FontSize="14" />
+                <TextBlock Text="{Binding Mitarbeiter.Eintrittsdatum}" FontSize="14" Margin="0,0,10,0" />
+                <TextBox Text="{Binding EditableEintrittsdatum}" Padding="5" BorderBrush="Gray" BorderThickness="1" CornerRadius="5" />
+                <TextBlock Text="{Binding EintrittsdatumError}" Foreground="Red" FontSize="12" />
+
+                <TextBlock Text="Telefon:" FontWeight="Bold" FontSize="14" />
+                <TextBlock Text="{Binding Mitarbeiter.Telefon}" FontSize="14" Margin="0,0,10,0" />
+                <TextBox Text="{Binding EditableTelefon}" Padding="5" BorderBrush="Gray" BorderThickness="1" CornerRadius="5" />
+                <TextBlock Text="{Binding TelefonError}" Foreground="Red" FontSize="12" />
+
+                <TextBlock Text="Email:" FontWeight="Bold" FontSize="14" />
+                <TextBlock Text="{Binding Mitarbeiter.Email}" FontSize="14" Margin="0,0,10,0" />
+                <TextBox Text="{Binding EditableEmail}" Padding="5" BorderBrush="Gray" BorderThickness="1" CornerRadius="5" />
+                <TextBlock Text="{Binding EmailError}" Foreground="Red" FontSize="12" />
+
+                <TextBlock Text="Straße:" FontWeight="Bold" FontSize="14" />
+                <TextBlock Text="{Binding Adressbuch.Strasse}" FontSize="14" Margin="0,0,10,0" />
+                <TextBox Text="{Binding EditableStrasse}" Padding="5" BorderBrush="Gray" BorderThickness="1" CornerRadius="5" />
+                <TextBlock Text="{Binding StrasseError}" Foreground="Red" FontSize="12" />
+
+                <TextBlock Text="Hausnummer:" FontWeight="Bold" FontSize="14" />
+                <TextBlock Text="{Binding Adressbuch.Hausnummer}" FontSize="14" Margin="0,0,10,0" />
+                <TextBox Text="{Binding EditableHausnummer}" Padding="5" BorderBrush="Gray" BorderThickness="1" CornerRadius="5" />
+                <TextBlock Text="{Binding HausnummerError}" Foreground="Red" FontSize="12" />
+
+                <TextBlock Text="PLZ:" FontWeight="Bold" FontSize="14" />
+                <TextBlock Text="{Binding Adressbuch.Plz}" FontSize="14" Margin="0,0,10,0" />
+                <TextBox Text="{Binding EditablePlz}" Padding="5" BorderBrush="Gray" BorderThickness="1" CornerRadius="5" />
+                <TextBlock Text="{Binding PlzError}" Foreground="Red" FontSize="12" />
+
+                <TextBlock Text="Stadt:" FontWeight="Bold" FontSize="14" />
+                <TextBlock Text="{Binding Adressbuch.Stadt}" FontSize="14" Margin="0,0,10,0" />
+                <TextBox Text="{Binding EditableStadt}" Padding="5" BorderBrush="Gray" BorderThickness="1" CornerRadius="5" />
+                <TextBlock Text="{Binding StadtError}" Foreground="Red" FontSize="12" />
+
+                <TextBlock Text="Land:" FontWeight="Bold" FontSize="14" />
+                <TextBlock Text="{Binding Adressbuch.Land}" FontSize="14" Margin="0,0,10,0" />
+                <TextBox Text="{Binding EditableLand}" Padding="5" BorderBrush="Gray" BorderThickness="1" CornerRadius="5" />
+                <TextBlock Text="{Binding LandError}" Foreground="Red" FontSize="12" />
+
+                <TextBlock Text="Adresszusatz:" FontWeight="Bold" FontSize="14" />
+                <TextBox Text="{Binding EditableAdresszusatz}" Padding="5" BorderBrush="Gray" BorderThickness="1" CornerRadius="5" />
+
+                <TextBlock Text="Typ:" FontWeight="Bold" FontSize="14" />
+                <ComboBox ItemsSource="{Binding TypOptions}" SelectedItem="{Binding EditableTyp}" Padding="5" BorderBrush="Gray" BorderThickness="1" CornerRadius="5" />
+
+                <TextBlock Text="Gehalt:" FontWeight="Bold" FontSize="14" />
+                <TextBox Text="{Binding EditableGehalt}" Padding="5" BorderBrush="Gray" BorderThickness="1" CornerRadius="5" />
+
+                <!-- Save Button -->
+                <Button Content="Speichern" HorizontalAlignment="Center" Command="{Binding SaveAsyncCommand}" Padding="10,5" FontSize="16" />
+            </StackPanel>
+        </ScrollViewer>
+    </DockPanel>
+</UserControl>

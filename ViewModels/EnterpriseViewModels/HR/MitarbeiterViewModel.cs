@@ -1,7 +1,9 @@
 using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using Avalonia.Input;
 using CommunityToolkit.Mvvm.Input;
 using Percuro.Models.MitarbeiterModels;
 using Percuro.Services.MitarbeiterServices;
@@ -84,9 +86,55 @@ public partial class MitarbeiterViewModel : ViewModelBase
             MitarbeiterListe.Add(person);
         }
 
+        // Ensure MitarbeiterListe uses the updated Mitarbeiter class
+        MitarbeiterListe = new ObservableCollection<Mitarbeiter>(MitarbeiterListe.Select(m => new Mitarbeiter
+        {
+            Id = m.Id,
+            Vorname = m.Vorname,
+            Nachname = m.Nachname,
+            Geburtsdatum = m.Geburtsdatum,
+            Eintrittsdatum = m.Eintrittsdatum,
+            PositionId = m.PositionId,
+            Telefon = m.Telefon,
+            Email = m.Email,
+            Aktiv = m.Aktiv,
+            Gehalt = m.Gehalt,
+            IstAdmin = m.IstAdmin,
+            BildUrl = m.BildUrl,
+            Notizen = m.Notizen,
+            Strasse = m.Strasse,
+            Stadt = m.Stadt,
+            PLZ = m.PLZ,
+            Land = m.Land,
+            PositionTitel = m.PositionTitel
+        }));
+
         // Initialize FilteredMitarbeiterListe with all Mitarbeiter
         FilteredMitarbeiterListe = new ObservableCollection<Mitarbeiter>(MitarbeiterListe);
         OnPropertyChanged(nameof(FilteredMitarbeiterListe));
+
+        SubscribeToMitarbeiterPropertyChanges();
+    }
+
+    private void SubscribeToMitarbeiterPropertyChanges()
+    {
+        foreach (var mitarbeiter in MitarbeiterListe)
+        {
+            mitarbeiter.PropertyChanged -= Mitarbeiter_PropertyChanged;
+            mitarbeiter.PropertyChanged += Mitarbeiter_PropertyChanged;
+        }
+    }
+
+    private void Mitarbeiter_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (sender is Mitarbeiter mitarbeiter && e.PropertyName == nameof(Mitarbeiter.EditCandidate))
+        {
+            Console.WriteLine($"EditCandidate changed for Mitarbeiter: {mitarbeiter.Vorname} {mitarbeiter.Nachname} (ID: {mitarbeiter.Id})");
+            if (mitarbeiter.EditCandidate)
+            {
+                ToEditMitarbeiterView(mitarbeiter);
+            }
+        }
     }
 
     // Basic ViewModel for MitarbeiterView
@@ -106,4 +154,32 @@ public partial class MitarbeiterViewModel : ViewModelBase
             mainVm.CurrentViewModel = new NewMitarbeiterViewModel();
         }
     }
+    [RelayCommand]
+    public void ToEditMitarbeiterView(Mitarbeiter mitarbeiter)
+    {
+        if (Parent is MainWindowViewModel mainVm)
+        {
+            Console.WriteLine($"Switching to EditMitarbeiterView for Mitarbeiter: {mitarbeiter.Vorname} {mitarbeiter.Nachname} (ID: {mitarbeiter.Id})");
+            mainVm.CurrentViewModel = new EditMitarbeiterViewModel(mitarbeiter);
+        }
+    }
+
+    [RelayCommand]
+    public void InitializeEditMode()
+    {
+        foreach (var mitarbeiter in MitarbeiterListe)
+        {
+            mitarbeiter.EditButtonVisible = true;
+        }
+
+        // Force the DataGrid to refresh by reassigning the FilteredMitarbeiterListe
+        FilteredMitarbeiterListe = new ObservableCollection<Mitarbeiter>(MitarbeiterListe);
+        OnPropertyChanged(nameof(FilteredMitarbeiterListe));
+
+        // Trigger UI refresh for DataGrid columns
+        OnPropertyChanged(nameof(MitarbeiterListe));
+
+        Console.WriteLine("Edit mode initialized for all Mitarbeiter.");
+    }
+
 }
