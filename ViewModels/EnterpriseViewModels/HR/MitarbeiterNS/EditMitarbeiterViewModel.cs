@@ -24,6 +24,7 @@ public partial class EditMitarbeiterViewModel : ViewModelBase
         Mitarbeiter = mitarbeiter;
         SaveAsyncCommand = new AsyncRelayCommand(SaveAsync);
         _ = LoadAdressbuchAsync(mitarbeiter.Id);
+        _ = LoadPositionTitlesAsync();
     }
 
     public List<string> TypOptions { get; } = new() { "privat", "geschäftlich" };
@@ -56,52 +57,177 @@ public partial class EditMitarbeiterViewModel : ViewModelBase
     [RelayCommand]
     public async Task SaveAsync()
     {
-        // Check if all editable fields are empty
-        if (string.IsNullOrWhiteSpace(EditableVorname) &&
-            string.IsNullOrWhiteSpace(EditableNachname) &&
-            string.IsNullOrWhiteSpace(EditableGeburtsdatum) &&
-            string.IsNullOrWhiteSpace(EditableEintrittsdatum) &&
-            string.IsNullOrWhiteSpace(EditableTelefon) &&
-            string.IsNullOrWhiteSpace(EditableEmail) &&
-            string.IsNullOrWhiteSpace(EditableStrasse) &&
-            string.IsNullOrWhiteSpace(EditableHausnummer) &&
-            string.IsNullOrWhiteSpace(EditablePlz) &&
-            string.IsNullOrWhiteSpace(EditableStadt) &&
-            string.IsNullOrWhiteSpace(EditableLand) &&
-            string.IsNullOrWhiteSpace(EditableAdresszusatz) &&
-            string.IsNullOrWhiteSpace(EditableTyp) &&
-            string.IsNullOrWhiteSpace(EditableGehalt))
+        bool hasMitarbeiterChanges = false;
+        bool hasAdressbuchChanges = false;
+
+        try
         {
-            Console.WriteLine("Keine Änderungen vorgenommen. Zurück zur Mitarbeiteransicht.");
-            ToMitarbeiterView();
-            return;
+            // Validate and check for Mitarbeiter changes
+            if (!string.IsNullOrWhiteSpace(EditableVorname))
+            {
+                if (!InputValidation.IsValidName(EditableVorname))
+                {
+                    VornameError = "Vorname muss aus mehr als einem Buchstaben bestehen und nur Buchstaben enthalten.";
+                    UpdateError = true;
+                    return;
+                }
+                Mitarbeiter.Vorname = EditableVorname;
+                hasMitarbeiterChanges = true;
+            }
+            if (!string.IsNullOrWhiteSpace(EditableNachname))
+            {
+                if (!InputValidation.IsValidName(EditableNachname))
+                {
+                    NachnameError = "Nachname muss aus mehr als einem Buchstaben bestehen und nur Buchstaben enthalten.";
+                    UpdateError = true;
+                    return;
+                }
+                Mitarbeiter.Nachname = EditableNachname;
+                hasMitarbeiterChanges = true;
+            }
+            if (!string.IsNullOrWhiteSpace(EditableGeburtsdatum))
+            {
+                if (!DateTime.TryParseExact(EditableGeburtsdatum, "dd.MM.yyyy", System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out var geburtsdatum))
+                {
+                    GeburtsdatumError = "Geburtsdatum muss im Format TT.MM.JJJJ sein.";
+                    UpdateError = true;
+                    return;
+                }
+                Mitarbeiter.Geburtsdatum = geburtsdatum;
+                hasMitarbeiterChanges = true;
+            }
+            if (!string.IsNullOrWhiteSpace(EditableEintrittsdatum))
+            {
+                if (!DateTime.TryParseExact(EditableEintrittsdatum, "dd.MM.yyyy", System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out var eintrittsdatum))
+                {
+                    EintrittsdatumError = "Eintrittsdatum muss im Format TT.MM.JJJJ sein.";
+                    UpdateError = true;
+                    return;
+                }
+                Mitarbeiter.Eintrittsdatum = eintrittsdatum;
+                hasMitarbeiterChanges = true;
+            }
+            if (!string.IsNullOrWhiteSpace(EditableTelefon))
+            {
+                if (!InputValidation.IsValidPhoneNumber(EditableTelefon))
+                {
+                    TelefonError = "Telefonnummer darf nur Zahlen enthalten.";
+                    UpdateError = true;
+                    return;
+                }
+                Mitarbeiter.Telefon = EditableTelefon;
+                hasMitarbeiterChanges = true;
+            }
+            if (!string.IsNullOrWhiteSpace(EditableEmail))
+            {
+                if (!InputValidation.IsValidEmail(EditableEmail))
+                {
+                    EmailError = "Ungültige Email-Adresse.";
+                    UpdateError = true;
+                    return;
+                }
+                Mitarbeiter.Email = EditableEmail;
+                hasMitarbeiterChanges = true;
+            }
+
+            // Validate and check for Adressbuch changes
+            if (!string.IsNullOrWhiteSpace(EditableStrasse))
+            {
+                if (!InputValidation.IsValidString(EditableStrasse))
+                {
+                    StrasseError = "Straße darf nur Buchstaben enthalten.";
+                    UpdateError = true;
+                    return;
+                }
+                Adressbuch.Strasse = EditableStrasse;
+                hasAdressbuchChanges = true;
+            }
+            if (!string.IsNullOrWhiteSpace(EditableHausnummer))
+            {
+                if (!InputValidation.IsValidNumber(EditableHausnummer))
+                {
+                    HausnummerError = "Hausnummer muss eine Zahl sein.";
+                    UpdateError = true;
+                    return;
+                }
+                Adressbuch.Hausnummer = EditableHausnummer;
+                hasAdressbuchChanges = true;
+            }
+            if (!string.IsNullOrWhiteSpace(EditablePlz))
+            {
+                if (!InputValidation.IsValidPostalCode(EditablePlz))
+                {
+                    PlzError = "PLZ muss aus maximal 6 Zahlen bestehen.";
+                    UpdateError = true;
+                    return;
+                }
+                Adressbuch.Plz = EditablePlz;
+                hasAdressbuchChanges = true;
+            }
+            if (!string.IsNullOrWhiteSpace(EditableStadt))
+            {
+                if (!InputValidation.IsValidString(EditableStadt))
+                {
+                    StadtError = "Stadt darf nur Buchstaben enthalten.";
+                    UpdateError = true;
+                    return;
+                }
+                Adressbuch.Stadt = EditableStadt;
+                hasAdressbuchChanges = true;
+            }
+            if (!string.IsNullOrWhiteSpace(EditableLand))
+            {
+                if (!InputValidation.IsValidString(EditableLand))
+                {
+                    LandError = "Land darf nur Buchstaben enthalten.";
+                    UpdateError = true;
+                    return;
+                }
+                Adressbuch.Land = EditableLand;
+                hasAdressbuchChanges = true;
+            }
+
+            // Check for Position changes
+            if (!string.IsNullOrWhiteSpace(SelectedPosition) && SelectedPosition != Mitarbeiter.PositionTitel)
+            {
+                var positionId = await _databaseService.GetPositionIdByTitleAsync(SelectedPosition);
+                if (positionId.HasValue)
+                {
+                    Mitarbeiter.PositionId = positionId.Value;
+                    hasMitarbeiterChanges = true;
+                }
+            }
+
+            // Save changes to the database
+            if (hasMitarbeiterChanges)
+            {
+                await _databaseService.UpdateMitarbeiterAsync(Mitarbeiter);
+            }
+            if (hasAdressbuchChanges)
+            {
+                await _databaseService.UpdateAdressbuchAsync(Adressbuch);
+            }
+
+            Console.WriteLine("Änderungen erfolgreich gespeichert.");
+            SaveSuccess = true;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Fehler beim Speichern: {ex.Message}");
+            UpdateError = true;
+            Console.WriteLine("UpdateError wurde auf true gesetzt.");
         }
 
-        ValidateFields();
-
-        // Check for any error messages
-        if (!string.IsNullOrEmpty(VornameError) || !string.IsNullOrEmpty(NachnameError) ||
-            !string.IsNullOrEmpty(StrasseError) || !string.IsNullOrEmpty(HausnummerError) ||
-            !string.IsNullOrEmpty(PlzError) || !string.IsNullOrEmpty(StadtError) ||
-            !string.IsNullOrEmpty(LandError) || !string.IsNullOrEmpty(TelefonError) ||
-            !string.IsNullOrEmpty(EmailError) || !string.IsNullOrEmpty(GeburtsdatumError) ||
-            !string.IsNullOrEmpty(EintrittsdatumError))
+        if (UpdateError)
         {
-            Console.WriteLine("Es gibt Fehler in den Eingabefeldern. Bitte korrigieren Sie diese.");
-            return;
+            Console.WriteLine("UpdateError is true. The error message should be visible.");
         }
-
-        Console.WriteLine("Alle Felder sind gültig. Speichere Mitarbeiter...");
-
-        // Logic to save changes to the database or service
-        await Task.CompletedTask;
     }
 
     [RelayCommand]
     public void Cancel()
     {
-        Console.WriteLine("Edit canceled.");
-        // Logic to navigate back or discard changes
+ToMitarbeiterView();
     }
 
     [ObservableProperty]
@@ -179,20 +305,25 @@ public partial class EditMitarbeiterViewModel : ViewModelBase
     [ObservableProperty]
     private string? editableGehalt;
 
-    private void ValidateFields()
+    [ObservableProperty]
+    private string? selectedPosition;
+
+    private bool updateError;
+    public bool UpdateError
     {
-        VornameError = string.IsNullOrWhiteSpace(EditableVorname) ? null : (!InputValidation.IsValidName(EditableVorname) ? "Vorname muss aus mehr als einem Buchstaben bestehen und nur Buchstaben enthalten." : null);
-        NachnameError = string.IsNullOrWhiteSpace(EditableNachname) ? null : (!InputValidation.IsValidName(EditableNachname) ? "Nachname muss aus mehr als einem Buchstaben bestehen und nur Buchstaben enthalten." : null);
-        GeburtsdatumError = string.IsNullOrWhiteSpace(EditableGeburtsdatum) ? null : (!DateTime.TryParseExact(EditableGeburtsdatum, "dd.MM.yyyy", System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out _) ? "Geburtsdatum muss im Format TT.MM.JJJJ sein." : null);
-        EintrittsdatumError = string.IsNullOrWhiteSpace(EditableEintrittsdatum) ? null : (!DateTime.TryParseExact(EditableEintrittsdatum, "dd.MM.yyyy", System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out _) ? "Eintrittsdatum muss im Format TT.MM.JJJJ sein." : null);
-        TelefonError = string.IsNullOrWhiteSpace(EditableTelefon) ? null : (!InputValidation.IsValidPhoneNumber(EditableTelefon) ? "Telefonnummer darf nur Zahlen enthalten." : null);
-        EmailError = string.IsNullOrWhiteSpace(EditableEmail) ? null : (!InputValidation.IsValidEmail(EditableEmail) ? "Ungültige Email-Adresse." : null);
-        StrasseError = string.IsNullOrWhiteSpace(EditableStrasse) ? null : (!InputValidation.IsValidString(EditableStrasse) ? "Straße darf nur Buchstaben enthalten." : null);
-        HausnummerError = string.IsNullOrWhiteSpace(EditableHausnummer) ? null : (!InputValidation.IsValidNumber(EditableHausnummer) ? "Hausnummer muss eine Zahl sein." : null);
-        PlzError = string.IsNullOrWhiteSpace(EditablePlz) ? null : (!InputValidation.IsValidPostalCode(EditablePlz) ? "PLZ muss aus maximal 6 Zahlen bestehen." : null);
-        StadtError = string.IsNullOrWhiteSpace(EditableStadt) ? null : (!InputValidation.IsValidString(EditableStadt) ? "Stadt darf nur Buchstaben enthalten." : null);
-        LandError = string.IsNullOrWhiteSpace(EditableLand) ? null : (!InputValidation.IsValidString(EditableLand) ? "Land darf nur Buchstaben enthalten." : null);
+        get => updateError;
+        set
+        {
+            if (updateError != value)
+            {
+                updateError = value;
+                OnPropertyChanged();
+            }
+        }
     }
+
+    [ObservableProperty]
+    private bool saveSuccess = false;
 
         [RelayCommand]
     public void ToMitarbeiterView()

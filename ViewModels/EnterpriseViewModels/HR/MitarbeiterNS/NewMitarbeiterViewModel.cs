@@ -80,12 +80,7 @@ public partial class NewMitarbeiterViewModel : ViewModelBase
     [ObservableProperty]
     private int? adressbuchId;
 
-    private string? errorMessage;
-    public string? ErrorMessage
-    {
-        get => errorMessage;
-        set => SetProperty(ref errorMessage, value);
-    }
+   
 
     [ObservableProperty]
     private string? vornameError;

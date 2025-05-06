@@ -221,4 +221,63 @@ public class MitarbeiterDatabaseService
 
         return adressbuch;
     }
+
+    public async Task UpdateMitarbeiterAsync(Mitarbeiter mitarbeiter)
+    {
+        try
+        {
+            using var connection = new MySqlConnection(_connectionString);
+            await connection.OpenAsync();
+
+            var query = @"UPDATE mitarbeiter
+                          SET vorname = @vorname, nachname = @nachname, geburtsdatum = @geburtsdatum, eintrittsdatum = @eintrittsdatum,
+                              telefon = @telefon, email = @email, position_id = @position_id
+                          WHERE id = @id";
+
+            using var cmd = new MySqlCommand(query, connection);
+            cmd.Parameters.AddWithValue("@vorname", mitarbeiter.Vorname);
+            cmd.Parameters.AddWithValue("@nachname", mitarbeiter.Nachname);
+            cmd.Parameters.AddWithValue("@geburtsdatum", mitarbeiter.Geburtsdatum);
+            cmd.Parameters.AddWithValue("@eintrittsdatum", mitarbeiter.Eintrittsdatum);
+            cmd.Parameters.AddWithValue("@telefon", mitarbeiter.Telefon);
+            cmd.Parameters.AddWithValue("@email", mitarbeiter.Email);
+            cmd.Parameters.AddWithValue("@position_id", mitarbeiter.PositionId);
+            cmd.Parameters.AddWithValue("@id", mitarbeiter.Id);
+
+            await cmd.ExecuteNonQueryAsync();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Fehler beim Aktualisieren des Mitarbeiters: {ex.Message}");
+            throw;
+        }
+    }
+
+    public async Task UpdateAdressbuchAsync(Adressbuch adressbuch)
+    {
+        try
+        {
+            using var connection = new MySqlConnection(_connectionString);
+            await connection.OpenAsync();
+
+            var query = @"UPDATE adressbuch
+                          SET strasse = @strasse, hausnummer = @hausnummer, plz = @plz, stadt = @stadt, land = @land
+                          WHERE id = @id";
+
+            using var cmd = new MySqlCommand(query, connection);
+            cmd.Parameters.AddWithValue("@strasse", adressbuch.Strasse);
+            cmd.Parameters.AddWithValue("@hausnummer", adressbuch.Hausnummer);
+            cmd.Parameters.AddWithValue("@plz", adressbuch.Plz);
+            cmd.Parameters.AddWithValue("@stadt", adressbuch.Stadt);
+            cmd.Parameters.AddWithValue("@land", adressbuch.Land);
+            cmd.Parameters.AddWithValue("@id", adressbuch.Id);
+
+            await cmd.ExecuteNonQueryAsync();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Fehler beim Aktualisieren des Adressbuchs: {ex.Message}");
+            throw;
+        }
+    }
 }
