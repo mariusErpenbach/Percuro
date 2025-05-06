@@ -7,7 +7,7 @@ Ein datengetriebenes System zur Verwaltung und Organisation sensibler sowie öff
 Als Example arbeiten wir mit den Daten eines imaginären Maschinenbau-Unternehmens
 ---
 
-<h3>Aktueller Entwicklungsschritt: Mitarbeiter Verwaltung</h3>
+<h3>Aktueller Entwicklungsstand: Mitarbeiterverwaltung</h3>
 
 🧪 Testdaten
 Es existieren derzeit 20 realistische Beispielmitarbeiter (inkl. Dänemark als Auslandsstandort).
@@ -16,33 +16,28 @@ Admins und reguläre Mitarbeiter sind zur Rechtevergabe differenziert.
 
 Positionen sind bereits vergeben und können über JOIN-Abfragen ausgewertet werden.
 
-🧩 Nächste Entwicklungsschritte
-GUI-Formular zur Erfassung und Bearbeitung von Mitarbeitenden
-
-Filterfunktionen nach Position, Admin-Status oder Land
-
-Integration eines Avatarsystems über bild_url
-
-CSV-Export für HR-Zwecke
+🧩 Aktuelle Funktionen
+- GUI-Formular zur Erfassung und Bearbeitung von Mitarbeitenden
+- Filterfunktionen nach Position, Admin-Status oder Land
+- Integration eines Avatarsystems über `bild_url`
+- CSV-Export für HR-Zwecke
 
 ---
-Anbindung an das Session- oder Rechtemanagement
----
-<h3>InventoryView Features: </h3>  
+
+<h3>InventoryView Features</h3>
+
 Lagerbestandsverwaltung (InventoryView)
-Wichtige Funktionen, die noch eingeplant sind: </br> </br>
 
-~~Filter- und Suchfunktionen für eine gezielte Bestandsanzeige. </br>~~
+🧩 Aktuelle Funktionen
+- Filter- und Suchfunktionen für eine gezielte Bestandsanzeige
+- Sortieroptionen nach Menge, Artikelname und Lagerort
+- Direktaktionen wie Bestandkorrekturen und Umbuchungen zwischen Lagerorten
+- Visualisierung von Bestandsmengen mit Warnungen bei niedrigem Bestand
+- Verknüpfung zu Artikeldetails für detaillierte Infos zu jedem Artikel
 
-~~Sortieroptionen nach Menge, Artikelname und Lagerort. </br>~~
-
-~~Direktaktionen wie Bestandkorrekturen und Umbuchungen zwischen Lagerorten. </br>~~
-
-Visualisierung von Bestandsmengen mit Warnungen bei niedrigem Bestand. </br>
-
-~~Verknüpfung zu Artikeldetails für detaillierte Infos zu jedem Artikel. </br>~~
-
-Der nächste Schritt wird die Verfeinerung der Filteroptionen und die Einführung von Reporting-Funktionen (z. B. CSV-Export) sein. </br>
+🧩 Nächste Schritte
+- Verfeinerung der Filteroptionen
+- Einführung von Reporting-Funktionen (z. B. CSV-Export)
 
 ---
 
