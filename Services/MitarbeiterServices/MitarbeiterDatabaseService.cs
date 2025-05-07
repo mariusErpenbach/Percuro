@@ -280,4 +280,27 @@ public class MitarbeiterDatabaseService
             throw;
         }
     }
+
+    public async Task DeleteMitarbeiterAsync(int mitarbeiterId)
+    {
+        try
+        {
+            using var connection = new MySqlConnection(_connectionString);
+            await connection.OpenAsync();
+
+            var query = "DELETE FROM mitarbeiter WHERE id = @id";
+            using var cmd = new MySqlCommand(query, connection);
+            cmd.Parameters.AddWithValue("@id", mitarbeiterId);
+
+            var rowsAffected = await cmd.ExecuteNonQueryAsync();
+            Console.WriteLine(rowsAffected > 0
+                ? $"Mitarbeiter with ID {mitarbeiterId} has been successfully deleted."
+                : $"No Mitarbeiter found with ID {mitarbeiterId}.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error deleting Mitarbeiter with ID {mitarbeiterId}: {ex.Message}");
+            throw;
+        }
+    }
 }

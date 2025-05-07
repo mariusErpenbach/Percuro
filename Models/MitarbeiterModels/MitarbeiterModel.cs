@@ -3,6 +3,9 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using System.Threading.Tasks;
+using Percuro.Services;
+using Percuro.Services.MitarbeiterServices;
 
 namespace Percuro.Models.MitarbeiterModels;
 
@@ -13,6 +16,12 @@ public partial class Mitarbeiter : ObservableObject
 
     [ObservableProperty]
     private bool editButtonVisible;
+
+    [ObservableProperty]
+    private bool deleteModeActivated;
+
+    [ObservableProperty]
+    private bool isDeleted;
 
     public int Id { get; set; }
     public string? Vorname { get; set; }
@@ -46,5 +55,20 @@ public partial class Mitarbeiter : ObservableObject
     {
         EditCandidate = true;
         Console.WriteLine("EditMitarbeiter command executed.");
+    }
+
+    [RelayCommand]
+    public async Task DeleteMitarbeiterAsync()
+    {
+        try
+        {
+            var databaseService = new MitarbeiterDatabaseService();
+            await databaseService.DeleteMitarbeiterAsync(Id);
+            Console.WriteLine($"Mitarbeiter with ID {Id} has been deleted from the database.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error deleting Mitarbeiter with ID {Id}: {ex.Message}");
+        }
     }
 }

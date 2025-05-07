@@ -137,32 +137,6 @@ public partial class MitarbeiterViewModel : ViewModelBase
         }
     }
 
-    // Basic ViewModel for MitarbeiterView
-    [RelayCommand]
-    public void ToHRView()
-    {
-        if (Parent is MainWindowViewModel mainVm)
-        {
-            mainVm.CurrentViewModel = new HRViewModel();
-        }
-    }
-       [RelayCommand]
-    public void ToNewMitarbeiterView()
-    {
-        if (Parent is MainWindowViewModel mainVm)
-        {
-            mainVm.CurrentViewModel = new NewMitarbeiterViewModel();
-        }
-    }
-    [RelayCommand]
-    public void ToEditMitarbeiterView(Mitarbeiter mitarbeiter)
-    {
-        if (Parent is MainWindowViewModel mainVm)
-        {
-            Console.WriteLine($"Switching to EditMitarbeiterView for Mitarbeiter: {mitarbeiter.Vorname} {mitarbeiter.Nachname} (ID: {mitarbeiter.Id})");
-            mainVm.CurrentViewModel = new EditMitarbeiterViewModel(mitarbeiter);
-        }
-    }
 
     [RelayCommand]
     public void InitializeEditMode()
@@ -180,6 +154,84 @@ public partial class MitarbeiterViewModel : ViewModelBase
         OnPropertyChanged(nameof(MitarbeiterListe));
 
         Console.WriteLine("Edit mode initialized for all Mitarbeiter.");
+    }
+
+    private bool _deleteModeActivated = false;
+    public bool DeleteModeActivated
+    {
+        get => _deleteModeActivated;
+        set
+        {
+            if (_deleteModeActivated != value)
+            {
+                _deleteModeActivated = value;
+                OnPropertyChanged();
+            }
+        }
+    }
+
+    [RelayCommand]
+    public void InitializeDeleteMode()
+    {
+        foreach (var mitarbeiter in MitarbeiterListe)
+        {
+            mitarbeiter.DeleteModeActivated = true;
+        }
+
+        // Force the DataGrid to refresh by reassigning the FilteredMitarbeiterListe
+        FilteredMitarbeiterListe = new ObservableCollection<Mitarbeiter>(MitarbeiterListe);
+        OnPropertyChanged(nameof(FilteredMitarbeiterListe));
+
+        // Trigger UI refresh for DataGrid columns
+        OnPropertyChanged(nameof(MitarbeiterListe));
+
+        Console.WriteLine("Delete mode initialized for all Mitarbeiter.");
+    }
+
+        // Basic ViewModel for MitarbeiterView
+    [RelayCommand]
+    public void ToHRView()
+    {
+        if (Parent is MainWindowViewModel mainVm)
+        {
+            mainVm.CurrentViewModel = new HRViewModel();
+        }
+    }
+
+    [RelayCommand]
+    public void ToNewMitarbeiterView()
+    {
+        if (Parent is MainWindowViewModel mainVm)
+        {
+            mainVm.CurrentViewModel = new NewMitarbeiterViewModel();
+        }
+    }
+
+    [RelayCommand]
+    public void ToEditMitarbeiterView(Mitarbeiter mitarbeiter)
+    {
+        if (Parent is MainWindowViewModel mainVm)
+        {
+            Console.WriteLine($"Switching to EditMitarbeiterView for Mitarbeiter: {mitarbeiter.Vorname} {mitarbeiter.Nachname} (ID: {mitarbeiter.Id})");
+            mainVm.CurrentViewModel = new EditMitarbeiterViewModel(mitarbeiter);
+        }
+    }
+
+    [RelayCommand]
+    public void RemoveDeletedMitarbeiter()
+    {
+        var deletedMitarbeiter = MitarbeiterListe.Where(m => m.IsDeleted).ToList();
+        foreach (var mitarbeiter in deletedMitarbeiter)
+        {
+            MitarbeiterListe.Remove(mitarbeiter);
+        }
+
+        // Refresh the FilteredMitarbeiterListe
+        FilteredMitarbeiterListe = new ObservableCollection<Mitarbeiter>(MitarbeiterListe);
+        OnPropertyChanged(nameof(FilteredMitarbeiterListe));
+        OnPropertyChanged(nameof(MitarbeiterListe));
+
+        Console.WriteLine("Deleted Mitarbeiter removed from the list.");
     }
 
 }

@@ -62,6 +62,13 @@
                         <DataGridTextColumn Header="Stadt" Binding="{Binding Stadt}" Width="Auto" />
                         <DataGridTextColumn Header="PLZ" Binding="{Binding PLZ}" Width="Auto" />
                         <DataGridTextColumn Header="Land" Binding="{Binding Land}" Width="Auto" />
+                          <DataGridTemplateColumn Width="Auto">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Content="Delete" Command="{Binding DeleteMitarbeiterAsync}" IsVisible="{Binding DeleteModeActivated}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
                     </DataGrid.Columns>
                 </DataGrid>
                 <!-- Adding a new control element below the DataGrid -->
