@@ -18,50 +18,55 @@
             <Button Content="Zurück" Command="{Binding ToHRViewCommand}" HorizontalAlignment="Left" FontSize="16" Margin="10" />
             <Button Content="Bearbeiten" Command="{Binding InitializeEditModeCommand}" Margin="10" HorizontalAlignment="Left" FontSize="16" />
             <Button Content="Neue/r Mitarbeiter/in" Command="{Binding ToNewMitarbeiterViewCommand}" FontSize="16" HorizontalAlignment="Right" Margin="10" />
+            <Button Content="Löschen" Command="{Binding InitializeDeleteModeCommand}" FontSize="16" HorizontalAlignment="Right" Margin="10" />
         </StackPanel>
 
         <!-- Überschrift Row -->
         <TextBlock Grid.Row="1" Text="Mitarbeiter Übersicht" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="10" />
 
-        <!-- Search and DataGrid Row -->
-        <StackPanel Grid.Row="2" Orientation="Vertical" Margin="10">
-            <TextBox Watermark="Search..." Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" Margin="10" />
-            <!-- DataGrid displaying all fields -->
-            <DataGrid ItemsSource="{Binding FilteredMitarbeiterListe}" AutoGenerateColumns="False" IsReadOnly="True" Name="MitarbeiterDataGrid">
-                <DataGrid.Columns>
-                  <DataGridTemplateColumn Width="Auto">
-                        <DataGridTemplateColumn.CellTemplate >
-                            <DataTemplate >
-                                <Button Content="Edit" Command="{Binding EditMitarbeiterCommand}" IsVisible="{Binding EditButtonVisible}"/>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                    <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="Auto" />
-                    <DataGridTextColumn Header="Vorname" Binding="{Binding Vorname}" Width="Auto" />
-                    <DataGridTextColumn Header="Nachname" Binding="{Binding Nachname}" Width="Auto"/>
-                    <DataGridTextColumn Header="Geburtsdatum" Binding="{Binding FormattedGeburtsdatum}" Width="Auto" />
-                    <DataGridTextColumn Header="Eintrittsdatum" Binding="{Binding FormattedEintrittsdatum}" Width="Auto" />
-                    <DataGridTextColumn Header="Position" Binding="{Binding PositionTitel}" Width="Auto" />
-                    <DataGridTextColumn Header="Telefon" Binding="{Binding Telefon}" Width="Auto" />
-                    <DataGridTextColumn Header="Email" Binding="{Binding Email}" Width="Auto" />
-                    <DataGridCheckBoxColumn Header="Aktiv" Binding="{Binding Aktiv}" Width="Auto" />
-                    <DataGridTemplateColumn Header="Notizen" Width="Auto">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <Expander>
-                                    <StackPanel>
-                                        <TextBlock Text="{Binding Notizen}" />
-                                    </StackPanel>
-                                </Expander>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                    <DataGridTextColumn Header="Straße" Binding="{Binding Strasse}" Width="Auto" />
-                    <DataGridTextColumn Header="Stadt" Binding="{Binding Stadt}" Width="Auto" />
-                    <DataGridTextColumn Header="PLZ" Binding="{Binding PLZ}" Width="Auto" />
-                    <DataGridTextColumn Header="Land" Binding="{Binding Land}" Width="Auto" />
-                </DataGrid.Columns>
-            </DataGrid>
-        </StackPanel>
+        <!-- Wrapping entire content in ScrollViewer -->
+        <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
+            <StackPanel Orientation="Vertical" Margin="10">
+                <TextBox Watermark="Search..." Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" Margin="10" />
+                <!-- Wrapping DataGrid in ScrollViewer -->
+                <DataGrid ItemsSource="{Binding FilteredMitarbeiterListe}" AutoGenerateColumns="False" IsReadOnly="True" Name="MitarbeiterDataGrid">
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn Width="Auto">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Content="Edit" Command="{Binding EditMitarbeiterCommand}" IsVisible="{Binding EditButtonVisible}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="Auto" />
+                        <DataGridTextColumn Header="Vorname" Binding="{Binding Vorname}" Width="Auto" />
+                        <DataGridTextColumn Header="Nachname" Binding="{Binding Nachname}" Width="Auto"/>
+                        <DataGridTextColumn Header="Geburtsdatum" Binding="{Binding FormattedGeburtsdatum}" Width="Auto" />
+                        <DataGridTextColumn Header="Eintrittsdatum" Binding="{Binding FormattedEintrittsdatum}" Width="Auto" />
+                        <DataGridTextColumn Header="Position" Binding="{Binding PositionTitel}" Width="Auto" />
+                        <DataGridTextColumn Header="Telefon" Binding="{Binding Telefon}" Width="Auto" />
+                        <DataGridTextColumn Header="Email" Binding="{Binding Email}" Width="Auto" />
+                        <DataGridCheckBoxColumn Header="Aktiv" Binding="{Binding Aktiv}" Width="Auto" />
+                        <DataGridTemplateColumn Header="Notizen" Width="Auto">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Expander>
+                                        <StackPanel>
+                                            <TextBlock Text="{Binding Notizen}" />
+                                        </StackPanel>
+                                    </Expander>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTextColumn Header="Straße" Binding="{Binding Strasse}" Width="Auto" />
+                        <DataGridTextColumn Header="Stadt" Binding="{Binding Stadt}" Width="Auto" />
+                        <DataGridTextColumn Header="PLZ" Binding="{Binding PLZ}" Width="Auto" />
+                        <DataGridTextColumn Header="Land" Binding="{Binding Land}" Width="Auto" />
+                    </DataGrid.Columns>
+                </DataGrid>
+                <!-- Adding a new control element below the DataGrid -->
+                <TextBlock Text="Ende der Liste" HorizontalAlignment="Center" FontSize="16" Margin="10" />
+            </StackPanel>
+        </ScrollViewer>
     </Grid>
 </UserControl>
