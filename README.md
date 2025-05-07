@@ -152,7 +152,7 @@ Dies ist ein Grundgerüst für die EnterpriseView die als Knotenpunkt für die E
   </tbody>
 </table>
 ![Screenshot from 2025-04-29 15-36-09](https://github.com/user-attachments/assets/ed8b7e75-b567-4169-9107-128b121b372d)
-
+random
 ### 🔐 Sicherheit
 
 - Login-System mit Benutzerrollen
