@@ -114,6 +114,7 @@ public partial class MitarbeiterViewModel : ViewModelBase
         OnPropertyChanged(nameof(FilteredMitarbeiterListe));
 
         SubscribeToMitarbeiterPropertyChanges();
+        SubscribeToIsDeletedChanges();
     }
 
     private void SubscribeToMitarbeiterPropertyChanges()
@@ -127,16 +128,38 @@ public partial class MitarbeiterViewModel : ViewModelBase
 
     private void Mitarbeiter_PropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (sender is Mitarbeiter mitarbeiter && e.PropertyName == nameof(Mitarbeiter.EditCandidate))
+        if (sender is Mitarbeiter mitarbeiter && e.PropertyName == nameof(Mitarbeiter.IsDeleted))
         {
-            Console.WriteLine($"EditCandidate changed for Mitarbeiter: {mitarbeiter.Vorname} {mitarbeiter.Nachname} (ID: {mitarbeiter.Id})");
-            if (mitarbeiter.EditCandidate)
+            Console.WriteLine($"PropertyChanged Event received: {e.PropertyName} for Mitarbeiter ID {mitarbeiter.Id}");
+            if (mitarbeiter.IsDeleted)
             {
-                ToEditMitarbeiterView(mitarbeiter);
+                RemoveDeletedMitarbeiter();
             }
         }
     }
 
+    private void SubscribeToIsDeletedChanges()
+    {
+        Console.WriteLine("Subscribing to IsDeleted changes for all Mitarbeiter.");
+        foreach (var mitarbeiter in MitarbeiterListe)
+        {
+            mitarbeiter.PropertyChanged -= Mitarbeiter_IsDeletedChanged;
+            mitarbeiter.PropertyChanged += Mitarbeiter_IsDeletedChanged;
+            Console.WriteLine($"Subscribed to IsDeleted changes for Mitarbeiter: {mitarbeiter.Vorname} {mitarbeiter.Nachname} (ID: {mitarbeiter.Id}).");
+        }
+    }
+
+    private void Mitarbeiter_IsDeletedChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (sender is Mitarbeiter mitarbeiter && e.PropertyName == nameof(Mitarbeiter.IsDeleted))
+        {
+            Console.WriteLine($"IsDeleted changed for Mitarbeiter: {mitarbeiter.Vorname} {mitarbeiter.Nachname} (ID: {mitarbeiter.Id})");
+            if (mitarbeiter.IsDeleted)
+            {
+                RemoveDeletedMitarbeiter();
+            }
+        }
+    }
 
     [RelayCommand]
     public void InitializeEditMode()

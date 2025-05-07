@@ -20,8 +20,19 @@ public partial class Mitarbeiter : ObservableObject
     [ObservableProperty]
     private bool deleteModeActivated;
 
-    [ObservableProperty]
-    private bool isDeleted;
+    private bool _isDeleted;
+    public bool IsDeleted
+    {
+        get => _isDeleted;
+        set
+        {
+            if (_isDeleted != value)
+            {
+                _isDeleted = value;
+                OnPropertyChanged(nameof(IsDeleted));
+            }
+        }
+    }
 
     public int Id { get; set; }
     public string? Vorname { get; set; }
@@ -62,8 +73,12 @@ public partial class Mitarbeiter : ObservableObject
     {
         try
         {
+            // Set IsDeleted to true before deleting from the database
+            IsDeleted = true;
+
             var databaseService = new MitarbeiterDatabaseService();
             await databaseService.DeleteMitarbeiterAsync(Id);
+
             Console.WriteLine($"Mitarbeiter with ID {Id} has been deleted from the database.");
         }
         catch (Exception ex)
