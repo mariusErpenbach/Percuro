@@ -20,10 +20,8 @@
             <Button Content="Neue/r Mitarbeiter/in" Command="{Binding ToNewMitarbeiterViewCommand}" FontSize="16" HorizontalAlignment="Right" Margin="10" />
             <Button Content="Löschen" Command="{Binding InitializeDeleteModeCommand}" FontSize="16" HorizontalAlignment="Right" Margin="10" />
         </StackPanel>
-
         <!-- Überschrift Row -->
         <TextBlock Grid.Row="1" Text="Mitarbeiter Übersicht" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="10" />
-
         <!-- Wrapping entire content in ScrollViewer -->
         <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
             <StackPanel Orientation="Vertical" Margin="10">
@@ -31,10 +29,17 @@
                 <!-- Wrapping DataGrid in ScrollViewer -->
                 <DataGrid ItemsSource="{Binding FilteredMitarbeiterListe}" AutoGenerateColumns="False" IsReadOnly="True" Name="MitarbeiterDataGrid">
                     <DataGrid.Columns>
+                            <DataGridTemplateColumn Width="Auto">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Content="Delete" Command="{Binding DeleteMitarbeiterAsync}"  IsVisible="{Binding DeleteModeActivated}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
                         <DataGridTemplateColumn Width="Auto">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Button Content="Edit" Command="{Binding EditMitarbeiterCommand}" IsVisible="{Binding EditButtonVisible}"/>
+                                    <Button Content="Edit" Command="{Binding EditMitarbeiterCommand}" CommandParameter="{Binding}" IsVisible="{Binding EditButtonVisible}"/>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
@@ -62,13 +67,7 @@
                         <DataGridTextColumn Header="Stadt" Binding="{Binding Stadt}" Width="Auto" />
                         <DataGridTextColumn Header="PLZ" Binding="{Binding PLZ}" Width="Auto" />
                         <DataGridTextColumn Header="Land" Binding="{Binding Land}" Width="Auto" />
-                          <DataGridTemplateColumn Width="Auto">
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <Button Content="Delete" Command="{Binding DeleteMitarbeiterAsync}" IsVisible="{Binding DeleteModeActivated}"/>
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
+                      
                     </DataGrid.Columns>
                 </DataGrid>
                 <!-- Adding a new control element below the DataGrid -->

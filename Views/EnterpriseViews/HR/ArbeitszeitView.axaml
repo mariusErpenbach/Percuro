@@ -3,14 +3,41 @@
              xmlns:vm="using:Percuro.ViewModels.EnterpriseViewModels.HR"
              x:Class="Percuro.Views.EnterpriseViews.HR.ArbeitszeitView"
              x:DataType="vm:ArbeitszeitViewModel">
-
     <Grid>
         <!-- To HR Button -->
         <Button Content="To HR" Command="{Binding ToHRView}"
                 Width="150" Height="50" Margin="10"
                 HorizontalAlignment="Left" VerticalAlignment="Top"
                 HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-
+        <!-- Date Pickers for Start and End Date -->
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,80,0,0" Spacing="10">
+            <TextBlock Text="Zeitraum:" VerticalAlignment="Center"/>
+            <!-- Start Date Dropdowns -->
+            <ComboBox Width="75" ItemsSource="{Binding StartTage}" SelectedItem="{Binding SelectedStartDay}"/>
+            <ComboBox Width="120" ItemsSource="{Binding StartMonate}" SelectedItem="{Binding SelectedStartMonth}"/>
+            <ComboBox Width="80" ItemsSource="{Binding Jahre}" SelectedItem="{Binding SelectedStartYear}"/>
+            <TextBlock Text="bis" VerticalAlignment="Center"/>
+            <!-- End Date Dropdowns -->
+            <ComboBox Width="75" ItemsSource="{Binding EndTage}" SelectedItem="{Binding SelectedEndDay}"/>
+            <ComboBox Width="120" ItemsSource="{Binding EndMonate}" SelectedItem="{Binding SelectedEndMonth}"/>
+            <ComboBox Width="80" ItemsSource="{Binding Jahre}" SelectedItem="{Binding SelectedEndYear}"/>
+        </StackPanel>
+        <!-- Search and Employee Selection -->
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,130,0,0" Spacing="10" IsVisible="{Binding DateInputCompleted}">
+            <TextBlock Text="Mitarbeiter:" VerticalAlignment="Center"/>
+            <TextBox Width="180" Watermark="Name suchen..." Text="{Binding MitarbeiterSuche, UpdateSourceTrigger=PropertyChanged}"/>
+            <ComboBox Width="220"
+                      ItemsSource="{Binding MitarbeiterNamen}"
+                      SelectedItem="{Binding AusgewaehlterMitarbeiter}"/>
+        </StackPanel>
+        <!-- Loading Indicator -->
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,180,0,0" IsVisible="{Binding IsLoading}">
+            <Ellipse Width="50" Height="50" Fill="Gray">
+                <Ellipse.RenderTransform>
+                    <RotateTransform Angle="0"/>
+                </Ellipse.RenderTransform>
+            </Ellipse>
+        </StackPanel>
         <!-- Placeholder Content -->
         <TextBlock Text="Arbeitszeit View" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20"/>
     </Grid>

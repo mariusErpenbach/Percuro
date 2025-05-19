@@ -17,7 +17,7 @@
                 HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
 
     
-        <TextBlock Text="NewMitarbeiter View" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20" Margin="0,60,0,10"/>
+        <TextBlock Text="Neue/r Mitarbeiter/in" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20" Margin="0,60,0,10"/>
         <!-- Input Form -->
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" IsVisible="{Binding IsInputFormVisible}" HorizontalAlignment="Stretch">
             <Grid HorizontalAlignment="Center" Width="800">

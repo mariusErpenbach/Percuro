@@ -113,8 +113,10 @@ public partial class MitarbeiterViewModel : ViewModelBase
         FilteredMitarbeiterListe = new ObservableCollection<Mitarbeiter>(MitarbeiterListe);
         OnPropertyChanged(nameof(FilteredMitarbeiterListe));
 
+        // Subscribe to property changes immediately after loading
         SubscribeToMitarbeiterPropertyChanges();
         SubscribeToIsDeletedChanges();
+        SubscribeToEditCandidateChanges();
     }
 
     private void SubscribeToMitarbeiterPropertyChanges()
@@ -161,6 +163,27 @@ public partial class MitarbeiterViewModel : ViewModelBase
         }
     }
 
+    private void SubscribeToEditCandidateChanges()
+    {
+        foreach (var mitarbeiter in MitarbeiterListe)
+        {
+            mitarbeiter.PropertyChanged -= Mitarbeiter_EditCandidateChanged;
+            mitarbeiter.PropertyChanged += Mitarbeiter_EditCandidateChanged;
+        }
+    }
+
+    private void Mitarbeiter_EditCandidateChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (sender is Mitarbeiter mitarbeiter && e.PropertyName == nameof(Mitarbeiter.EditCandidate))
+        {
+            Console.WriteLine($"EditCandidate changed for Mitarbeiter: {mitarbeiter.Vorname} {mitarbeiter.Nachname} (ID: {mitarbeiter.Id})");
+            if (mitarbeiter.EditCandidate)
+            {
+                ToEditMitarbeiterView(mitarbeiter);
+            }
+        }
+    }
+
     [RelayCommand]
     public void InitializeEditMode()
     {
@@ -168,13 +191,6 @@ public partial class MitarbeiterViewModel : ViewModelBase
         {
             mitarbeiter.EditButtonVisible = true;
         }
-
-        // Force the DataGrid to refresh by reassigning the FilteredMitarbeiterListe
-        FilteredMitarbeiterListe = new ObservableCollection<Mitarbeiter>(MitarbeiterListe);
-        OnPropertyChanged(nameof(FilteredMitarbeiterListe));
-
-        // Trigger UI refresh for DataGrid columns
-        OnPropertyChanged(nameof(MitarbeiterListe));
 
         Console.WriteLine("Edit mode initialized for all Mitarbeiter.");
     }
@@ -201,11 +217,7 @@ public partial class MitarbeiterViewModel : ViewModelBase
             mitarbeiter.DeleteModeActivated = true;
         }
 
-        // Force the DataGrid to refresh by reassigning the FilteredMitarbeiterListe
-        FilteredMitarbeiterListe = new ObservableCollection<Mitarbeiter>(MitarbeiterListe);
-        OnPropertyChanged(nameof(FilteredMitarbeiterListe));
-
-        // Trigger UI refresh for DataGrid columns
+        // No need to reassign FilteredMitarbeiterListe
         OnPropertyChanged(nameof(MitarbeiterListe));
 
         Console.WriteLine("Delete mode initialized for all Mitarbeiter.");
@@ -241,6 +253,16 @@ public partial class MitarbeiterViewModel : ViewModelBase
     }
 
     [RelayCommand]
+    public void EditMitarbeiter(Mitarbeiter mitarbeiter)
+    {
+        if (Parent is MainWindowViewModel mainVm)
+        {
+            Console.WriteLine($"Switching to EditMitarbeiterView for Mitarbeiter: {mitarbeiter.Vorname} {mitarbeiter.Nachname} (ID: {mitarbeiter.Id})");
+            mainVm.CurrentViewModel = new EditMitarbeiterViewModel(mitarbeiter);
+        }
+    }
+
+    [RelayCommand]
     public void RemoveDeletedMitarbeiter()
     {
         var deletedMitarbeiter = MitarbeiterListe.Where(m => m.IsDeleted).ToList();
@@ -255,6 +277,18 @@ public partial class MitarbeiterViewModel : ViewModelBase
         OnPropertyChanged(nameof(MitarbeiterListe));
 
         Console.WriteLine("Deleted Mitarbeiter removed from the list.");
+    }
+
+    private void UpdateEditColumnVisibility()
+    {
+        var editColumnVisible = FilteredMitarbeiterListe.Any(m => m.EditButtonVisible);
+
+        foreach (var mitarbeiter in FilteredMitarbeiterListe)
+        {
+            mitarbeiter.EditButtonVisible = !editColumnVisible;
+        }
+
+        OnPropertyChanged(nameof(FilteredMitarbeiterListe));
     }
 
 }
