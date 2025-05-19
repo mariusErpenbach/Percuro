@@ -153,7 +153,6 @@ public partial class ArbeitszeitViewModel : ViewModelBase
         {
             SetProperty(ref _selectedStartDay, value);
             UpdateStartDate();
-            UpdateEmployeeSelectionVisibility();
         }
     }
 
@@ -165,7 +164,6 @@ public partial class ArbeitszeitViewModel : ViewModelBase
         {
             SetProperty(ref _selectedStartMonth, value);
             UpdateStartDate();
-            UpdateEmployeeSelectionVisibility();
         }
     }
 
@@ -177,7 +175,6 @@ public partial class ArbeitszeitViewModel : ViewModelBase
         {
             SetProperty(ref _selectedStartYear, value);
             UpdateStartDate();
-            UpdateEmployeeSelectionVisibility();
         }
     }
 
@@ -189,7 +186,6 @@ public partial class ArbeitszeitViewModel : ViewModelBase
         {
             SetProperty(ref _selectedEndDay, value);
             UpdateEndDate();
-            UpdateEmployeeSelectionVisibility();
         }
     }
 
@@ -201,7 +197,6 @@ public partial class ArbeitszeitViewModel : ViewModelBase
         {
             SetProperty(ref _selectedEndMonth, value);
             UpdateEndDate();
-            UpdateEmployeeSelectionVisibility();
         }
     }
 
@@ -213,7 +208,6 @@ public partial class ArbeitszeitViewModel : ViewModelBase
         {
             SetProperty(ref _selectedEndYear, value);
             UpdateEndDate();
-            UpdateEmployeeSelectionVisibility();
         }
     }
 
@@ -260,21 +254,18 @@ public partial class ArbeitszeitViewModel : ViewModelBase
         }
     }
 
-    private void UpdateEmployeeSelectionVisibility()
+    private ObservableCollection<MitarbeiterNameWithId> _mitarbeiterNamenWithIds = new ObservableCollection<MitarbeiterNameWithId>();
+    public ObservableCollection<MitarbeiterNameWithId> MitarbeiterNamenWithIds
     {
-        DateInputCompleted = SelectedStartDay != null && SelectedStartMonth != null && SelectedStartYear != null &&
-                             SelectedEndDay != null && SelectedEndMonth != null && SelectedEndYear != null;
+        get => _mitarbeiterNamenWithIds;
+        set => SetProperty(ref _mitarbeiterNamenWithIds, value);
     }
 
-    private ObservableCollection<string> _mitarbeiterNamen = new ObservableCollection<string>();
-    public ObservableCollection<string> MitarbeiterNamen
+    private MitarbeiterNameWithId? _selectedMitarbeiterWithId;
+    public MitarbeiterNameWithId? SelectedMitarbeiterWithId
     {
-        get => _mitarbeiterNamen;
-        set
-        {
-            SetProperty(ref _mitarbeiterNamen, value);
-            _alleMitarbeiterNamen = value.ToList(); // Keep the original list updated
-        }
+        get => _selectedMitarbeiterWithId;
+        set => SetProperty(ref _selectedMitarbeiterWithId, value);
     }
 
     private bool _isLoading;
@@ -284,24 +275,25 @@ public partial class ArbeitszeitViewModel : ViewModelBase
         set => SetProperty(ref _isLoading, value);
     }
 
+    private readonly ZeiterfassungsService _zeiterfassungsService = new ZeiterfassungsService();
+
     private async void FetchMitarbeiterNamen()
     {
-        if (DateInputCompleted)
-        {
-            IsLoading = true;
-            var zeiterfassungsService = new ZeiterfassungsService();
-            await zeiterfassungsService.GetMitarbeiterZeitkontoImZeitraumAsync(StartDate?.DateTime, EndDate?.DateTime);
-            var namen = zeiterfassungsService.GetMitarbeiterNamenImZeitraum();
-            MitarbeiterNamen = new ObservableCollection<string>(namen);
-            IsLoading = false;
+        IsLoading = true;
 
-            // Debugging: Log the fetched names
-            Console.WriteLine("Fetched Mitarbeiter Namen:");
-            foreach (var name in namen)
-            {
-                Console.WriteLine(name);
-            }
-        }
+        // Clear the existing list to avoid duplicates
+        MitarbeiterNamenWithIds.Clear();
+
+        await _zeiterfassungsService.GetMitarbeiterZeitkontoImZeitraumAsync(StartDate?.DateTime, EndDate?.DateTime);
+        var zeitkontoEntries = _zeiterfassungsService.GetZeitkontoEntries();
+
+        // Populate MitarbeiterNamenWithIds with unique tuples of names and IDs
+        MitarbeiterNamenWithIds = new ObservableCollection<MitarbeiterNameWithId>(
+            zeitkontoEntries.DistinctBy(entry => entry.MitarbeiterId).Select(entry => new MitarbeiterNameWithId(
+                $"{entry.MitarbeiterId:D2} {entry.MitarbeiterVorname[0]}. {entry.MitarbeiterNachname}", entry.MitarbeiterId))
+        );
+
+        IsLoading = false;
     }
 
     private string _lastSearchInput = string.Empty;
@@ -325,5 +317,72 @@ public partial class ArbeitszeitViewModel : ViewModelBase
 
         // Select the best match if available
         AusgewaehlterMitarbeiter = bestMatch;
+    }
+
+    private ObservableCollection<ZeitkontoModel> _zeitkontoEntries = new ObservableCollection<ZeitkontoModel>();
+    public ObservableCollection<ZeitkontoModel> ZeitkontoEntries
+    {
+        get => _zeitkontoEntries;
+        set => SetProperty(ref _zeitkontoEntries, value);
+    }
+
+    private bool _isMitarbeiterSelected;
+    public bool IsMitarbeiterSelected
+    {
+        get => _isMitarbeiterSelected;
+        set => SetProperty(ref _isMitarbeiterSelected, value);
+    }
+
+    private string? _displayedMitarbeiterName;
+    public string? DisplayedMitarbeiterName
+    {
+        get => _displayedMitarbeiterName;
+        set => SetProperty(ref _displayedMitarbeiterName, value);
+    }
+
+    [RelayCommand]
+    public void ZeigeEintraege()
+    {
+        if (SelectedMitarbeiterWithId != null)
+        {
+            var eintraege = _zeiterfassungsService.GetZeitkontoEntries()
+                .Where(entry => entry.MitarbeiterId == SelectedMitarbeiterWithId.Id)
+                .ToList();
+
+            ZeitkontoEntries = new ObservableCollection<ZeitkontoModel>(eintraege);
+            IsMitarbeiterSelected = eintraege.Any();
+            DisplayedMitarbeiterName = SelectedMitarbeiterWithId.Name;
+        }
+        else
+        {
+            IsMitarbeiterSelected = false;
+            DisplayedMitarbeiterName = null;
+        }
+    }
+
+    [RelayCommand]
+    public void CheckDateInput()
+    {
+        if (!SelectedStartDay.HasValue || string.IsNullOrEmpty(SelectedStartMonth) || !SelectedStartYear.HasValue ||
+            !SelectedEndDay.HasValue || string.IsNullOrEmpty(SelectedEndMonth) || !SelectedEndYear.HasValue)
+        {
+            Console.WriteLine("Bitte füllen Sie alle Felder aus.");
+            DateInputCompleted = false;
+            return;
+        }
+
+        var startDate = new DateTime(SelectedStartYear.Value, Array.IndexOf(StartMonate.ToArray(), SelectedStartMonth) + 1, SelectedStartDay.Value);
+        var endDate = new DateTime(SelectedEndYear.Value, Array.IndexOf(EndMonate.ToArray(), SelectedEndMonth) + 1, SelectedEndDay.Value);
+
+        if (startDate > endDate)
+        {
+            Console.WriteLine("Das Startdatum darf nicht nach dem Enddatum liegen.");
+            DateInputCompleted = false;
+            return;
+        }
+
+        Console.WriteLine("Eingaben sind gültig. Mitarbeiterdaten werden geladen...");
+        DateInputCompleted = true;
+        FetchMitarbeiterNamen();
     }
 }

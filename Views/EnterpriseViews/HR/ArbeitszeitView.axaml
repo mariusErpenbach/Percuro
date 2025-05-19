@@ -4,41 +4,66 @@
              x:Class="Percuro.Views.EnterpriseViews.HR.ArbeitszeitView"
              x:DataType="vm:ArbeitszeitViewModel">
     <Grid>
-        <!-- To HR Button -->
-        <Button Content="To HR" Command="{Binding ToHRView}"
-                Width="150" Height="50" Margin="10"
-                HorizontalAlignment="Left" VerticalAlignment="Top"
-                HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-        <!-- Date Pickers for Start and End Date -->
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,80,0,0" Spacing="10">
-            <TextBlock Text="Zeitraum:" VerticalAlignment="Center"/>
-            <!-- Start Date Dropdowns -->
-            <ComboBox Width="75" ItemsSource="{Binding StartTage}" SelectedItem="{Binding SelectedStartDay}"/>
-            <ComboBox Width="120" ItemsSource="{Binding StartMonate}" SelectedItem="{Binding SelectedStartMonth}"/>
-            <ComboBox Width="80" ItemsSource="{Binding Jahre}" SelectedItem="{Binding SelectedStartYear}"/>
-            <TextBlock Text="bis" VerticalAlignment="Center"/>
-            <!-- End Date Dropdowns -->
-            <ComboBox Width="75" ItemsSource="{Binding EndTage}" SelectedItem="{Binding SelectedEndDay}"/>
-            <ComboBox Width="120" ItemsSource="{Binding EndMonate}" SelectedItem="{Binding SelectedEndMonth}"/>
-            <ComboBox Width="80" ItemsSource="{Binding Jahre}" SelectedItem="{Binding SelectedEndYear}"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Header Section -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
+            <Button Content="To HR" Command="{Binding ToHRView}" Width="150" Height="40" Margin="5"/>
         </StackPanel>
-        <!-- Search and Employee Selection -->
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,130,0,0" Spacing="10" IsVisible="{Binding DateInputCompleted}">
+
+        <!-- Date Selection Section -->
+        <StackPanel Grid.Row="1" Orientation="Vertical" HorizontalAlignment="Center" Margin="10" Spacing="10">
+            <TextBlock Text="Zeitraum auswählen:" FontWeight="Bold" FontSize="16" HorizontalAlignment="Center"/>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="10">
+                <ComboBox Width="75" ItemsSource="{Binding StartTage}" SelectedItem="{Binding SelectedStartDay}"/>
+                <ComboBox Width="120" ItemsSource="{Binding StartMonate}" SelectedItem="{Binding SelectedStartMonth}"/>
+                <ComboBox Width="80" ItemsSource="{Binding Jahre}" SelectedItem="{Binding SelectedStartYear}"/>
+                <TextBlock Text="bis" VerticalAlignment="Center"/>
+                <ComboBox Width="75" ItemsSource="{Binding EndTage}" SelectedItem="{Binding SelectedEndDay}"/>
+                <ComboBox Width="120" ItemsSource="{Binding EndMonate}" SelectedItem="{Binding SelectedEndMonth}"/>
+                <ComboBox Width="80" ItemsSource="{Binding Jahre}" SelectedItem="{Binding SelectedEndYear}"/>
+            </StackPanel>
+            <Button Content="Check" Command="{Binding CheckDateInputCommand}" Width="100" Height="30" HorizontalAlignment="Center"/>
+        </StackPanel>
+
+        <!-- Employee Selection Section -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="10" Spacing="10" IsVisible="{Binding DateInputCompleted}">
             <TextBlock Text="Mitarbeiter:" VerticalAlignment="Center"/>
-            <TextBox Width="180" Watermark="Name suchen..." Text="{Binding MitarbeiterSuche, UpdateSourceTrigger=PropertyChanged}"/>
-            <ComboBox Width="220"
-                      ItemsSource="{Binding MitarbeiterNamen}"
-                      SelectedItem="{Binding AusgewaehlterMitarbeiter}"/>
+            <TextBox Width="200" Height="40" Watermark="Name suchen..." Text="{Binding MitarbeiterSuche, UpdateSourceTrigger=PropertyChanged}"/>
+            <ComboBox Width="250" Height="40" ItemsSource="{Binding MitarbeiterNamenWithIds}" SelectedItem="{Binding SelectedMitarbeiterWithId}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Name}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+            <Button Content="Zeige Einträge" Command="{Binding ZeigeEintraegeCommand}" Width="115" Height="40" VerticalContentAlignment="Center"/>
         </StackPanel>
-        <!-- Loading Indicator -->
-        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,180,0,0" IsVisible="{Binding IsLoading}">
-            <Ellipse Width="50" Height="50" Fill="Gray">
-                <Ellipse.RenderTransform>
-                    <RotateTransform Angle="0"/>
-                </Ellipse.RenderTransform>
-            </Ellipse>
+
+        <!-- Zeitkonto Entries Display Section -->
+        <StackPanel Grid.Row="3" Margin="10" IsVisible="{Binding IsMitarbeiterSelected}">
+            <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Zeitkonto von: "/>
+                       <TextBlock Text="{Binding DisplayedMitarbeiterName}" FontWeight="Bold" FontSize="16" Margin="0,0,0,10"/>
+                </StackPanel>
+     
+            <Border BorderBrush="Gray" BorderThickness="1" CornerRadius="5" Padding="10">
+                <DataGrid ItemsSource="{Binding ZeitkontoEntries}" AutoGenerateColumns="False" HeadersVisibility="Column" GridLinesVisibility="Horizontal">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Check Type" Binding="{Binding CheckType}" Width="*"/>
+                        <DataGridTextColumn Header="Datum" Binding="{Binding CheckDateTime}" Width="*"/>
+                        <DataGridTextColumn Header="Ort" Binding="{Binding CheckLocation}" Width="*"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Border>
         </StackPanel>
-        <!-- Placeholder Content -->
-        <TextBlock Text="Arbeitszeit View" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20"/>
     </Grid>
 </UserControl>

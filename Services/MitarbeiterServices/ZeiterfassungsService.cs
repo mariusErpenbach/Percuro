@@ -25,8 +25,7 @@ namespace Percuro.Services.MitarbeiterServices
         public List<string> GetMitarbeiterNamenImZeitraum()
         {
             return _zeitkontoCache
-                .Select(z => $"{z.MitarbeiterVorname[0]}. {z.MitarbeiterNachname}")
-                .Distinct()
+                .Select(z => $"{z.MitarbeiterId:D2} {z.MitarbeiterVorname[0]}. {z.MitarbeiterNachname}")
                 .OrderBy(name => name)
                 .ToList();
         }
@@ -34,6 +33,11 @@ namespace Percuro.Services.MitarbeiterServices
         public void ClearCache()
         {
             _zeitkontoCache.Clear();
+        }
+
+        public List<ZeitkontoModel> GetZeitkontoEntries()
+        {
+            return _zeitkontoCache;
         }
     }
 }
