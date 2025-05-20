@@ -24,18 +24,37 @@ public partial class ArbeitszeitViewModel : ViewModelBase
         }
     }
 
-    private DateTimeOffset? _startDate = DateTimeOffset.Now.AddDays(-7);
+    private string _timeSpan = string.Empty;
+    public string TimeSpan
+    {
+        get => _timeSpan;
+        set => SetProperty(ref _timeSpan, value);
+    }
+
+    private DateTimeOffset? _startDate;
     public DateTimeOffset? StartDate
     {
         get => _startDate;
-        set => SetProperty(ref _startDate, value);
+        set
+        {
+            if (SetProperty(ref _startDate, value))
+            {
+                UpdateTimeSpan();
+            }
+        }
     }
 
-    private DateTimeOffset? _endDate = DateTimeOffset.Now;
+    private DateTimeOffset? _endDate;
     public DateTimeOffset? EndDate
     {
         get => _endDate;
-        set => SetProperty(ref _endDate, value);
+        set
+        {
+            if (SetProperty(ref _endDate, value))
+            {
+                UpdateTimeSpan();
+            }
+        }
     }
 
     private ObservableCollection<Mitarbeiter> _alleMitarbeiter = new();
@@ -56,11 +75,11 @@ public partial class ArbeitszeitViewModel : ViewModelBase
 
     private List<string> _alleMitarbeiterNamen = new();
 
-    private string? _ausgewaehlterMitarbeiter;
+    private string? _ausgewaehltterMitarbeiter;
     public string? AusgewaehlterMitarbeiter
     {
-        get => _ausgewaehlterMitarbeiter;
-        set => SetProperty(ref _ausgewaehlterMitarbeiter, value);
+        get => _ausgewaehltterMitarbeiter;
+        set => SetProperty(ref _ausgewaehltterMitarbeiter, value);
     }
 
     public async Task LadeMitarbeiterAsync()
@@ -215,13 +234,7 @@ public partial class ArbeitszeitViewModel : ViewModelBase
     public bool DateInputCompleted
     {
         get => _dateInputCompleted;
-        set
-        {
-            if (SetProperty(ref _dateInputCompleted, value) && value)
-            {
-                FetchMitarbeiterNamen();
-            }
-        }
+        set => SetProperty(ref _dateInputCompleted, value);
     }
 
     private void UpdateStartDate()
@@ -254,6 +267,18 @@ public partial class ArbeitszeitViewModel : ViewModelBase
         }
     }
 
+    private void UpdateTimeSpan()
+    {
+        if (StartDate.HasValue && EndDate.HasValue)
+        {
+            TimeSpan = $"{StartDate.Value:dd.MM.yyyy HH:mm} Uhr - {EndDate.Value:dd.MM.yyyy HH:mm} Uhr";
+        }
+        else
+        {
+            TimeSpan = string.Empty;
+        }
+    }
+
     private ObservableCollection<MitarbeiterNameWithId> _mitarbeiterNamenWithIds = new ObservableCollection<MitarbeiterNameWithId>();
     public ObservableCollection<MitarbeiterNameWithId> MitarbeiterNamenWithIds
     {
@@ -265,7 +290,35 @@ public partial class ArbeitszeitViewModel : ViewModelBase
     public MitarbeiterNameWithId? SelectedMitarbeiterWithId
     {
         get => _selectedMitarbeiterWithId;
-        set => SetProperty(ref _selectedMitarbeiterWithId, value);
+        set
+        {
+            if (SetProperty(ref _selectedMitarbeiterWithId, value))
+            {
+                IsMitarbeiterSelected = value != null;
+
+                if (value != null)
+                {
+                    // Check the cache for the number of entries for the selected employee
+                    var count = _zeiterfassungsService.GetZeitkontoEntries()
+                        .Count(entry => entry.MitarbeiterId == value.Id);
+
+                    // Update EntriesPerMitarbeiter dictionary
+                    if (EntriesPerMitarbeiter.ContainsKey(value.Id))
+                    {
+                        EntriesPerMitarbeiter[value.Id] = count;
+                    }
+                    else
+                    {
+                        EntriesPerMitarbeiter.Add(value.Id, count);
+                    }
+
+                    // Update the display string
+                    UpdateEntriesPerMitarbeiterDisplay();
+
+                    Console.WriteLine($"Updated EntriesPerMitarbeiter for MitarbeiterId {value.Id}: {count}");
+                }
+            }
+        }
     }
 
     private bool _isLoading;
@@ -277,7 +330,31 @@ public partial class ArbeitszeitViewModel : ViewModelBase
 
     private readonly ZeiterfassungsService _zeiterfassungsService = new ZeiterfassungsService();
 
-    private async void FetchMitarbeiterNamen()
+    public ArbeitszeitViewModel()
+    {
+        _zeiterfassungsService.ZeitkontoCacheUpdated += OnZeitkontoCacheUpdated;
+        Console.WriteLine("ArbeitszeitViewModel initialized and subscribed to ZeitkontoCacheUpdated.");
+    }
+
+    private void OnZeitkontoCacheUpdated()
+    {
+        Console.WriteLine("ZeitkontoCacheUpdated event triggered.");
+        if (SelectedMitarbeiterWithId != null)
+        {
+            var count = _zeiterfassungsService.GetZeitkontoEntries()
+                .Count(entry => entry.MitarbeiterId == SelectedMitarbeiterWithId.Id);
+            Console.WriteLine($"Number of entries for MitarbeiterId {SelectedMitarbeiterWithId.Id}: {count}");
+            NumberOfEntriesFound = count;
+        }
+        else
+        {
+            var totalEntries = _zeiterfassungsService.GetZeitkontoEntries().Count;
+            Console.WriteLine($"No Mitarbeiter selected. Total entries in cache: {totalEntries}");
+            NumberOfEntriesFound = totalEntries;
+        }
+    }
+
+    private async Task FetchMitarbeiterNamenAsync()
     {
         IsLoading = true;
 
@@ -295,8 +372,6 @@ public partial class ArbeitszeitViewModel : ViewModelBase
 
         IsLoading = false;
     }
-
-    private string _lastSearchInput = string.Empty;
 
     private void FilterAndSelectMitarbeiter()
     {
@@ -340,6 +415,40 @@ public partial class ArbeitszeitViewModel : ViewModelBase
         set => SetProperty(ref _displayedMitarbeiterName, value);
     }
 
+    private bool _isAllEntriesVisible;
+    public bool IsAllEntriesVisible
+    {
+        get => _isAllEntriesVisible;
+        set => SetProperty(ref _isAllEntriesVisible, value);
+    }
+
+    private int _numberOfEntriesFound;
+    public int NumberOfEntriesFound
+    {
+        get => _numberOfEntriesFound;
+        set => SetProperty(ref _numberOfEntriesFound, value);
+    }
+
+    private Dictionary<int, int> _entriesPerMitarbeiter = new();
+    public Dictionary<int, int> EntriesPerMitarbeiter
+    {
+        get => _entriesPerMitarbeiter;
+        set => SetProperty(ref _entriesPerMitarbeiter, value);
+    }
+
+    private string _entriesPerMitarbeiterDisplay = string.Empty;
+    public string EntriesPerMitarbeiterDisplay
+    {
+        get => _entriesPerMitarbeiterDisplay;
+        private set => SetProperty(ref _entriesPerMitarbeiterDisplay, value);
+    }
+
+    private void UpdateEntriesPerMitarbeiterDisplay()
+    {
+        EntriesPerMitarbeiterDisplay = string.Join(", ", EntriesPerMitarbeiter.Select(kvp => $"{kvp.Value} Einträge gefunden"));
+        Console.WriteLine($"Updated EntriesPerMitarbeiterDisplay: {EntriesPerMitarbeiterDisplay}");
+    }
+
     [RelayCommand]
     public void ZeigeEintraege()
     {
@@ -350,18 +459,28 @@ public partial class ArbeitszeitViewModel : ViewModelBase
                 .ToList();
 
             ZeitkontoEntries = new ObservableCollection<ZeitkontoModel>(eintraege);
+            NumberOfEntriesFound = eintraege.Count;
             IsMitarbeiterSelected = eintraege.Any();
             DisplayedMitarbeiterName = SelectedMitarbeiterWithId.Name;
+            IsAllEntriesVisible = true;
+
+            // Update the dictionary with counts for all employees in the selected time range
+            EntriesPerMitarbeiter = _zeiterfassungsService.GetZeitkontoEntries()
+                .GroupBy(entry => entry.MitarbeiterId)
+                .ToDictionary(group => group.Key, group => group.Count());
         }
         else
         {
             IsMitarbeiterSelected = false;
             DisplayedMitarbeiterName = null;
+            IsAllEntriesVisible = false;
+            NumberOfEntriesFound = 0;
+            EntriesPerMitarbeiter.Clear(); // Clear the dictionary if no entries are loaded
         }
     }
 
     [RelayCommand]
-    public void CheckDateInput()
+    public async Task CheckDateInputAsync()
     {
         if (!SelectedStartDay.HasValue || string.IsNullOrEmpty(SelectedStartMonth) || !SelectedStartYear.HasValue ||
             !SelectedEndDay.HasValue || string.IsNullOrEmpty(SelectedEndMonth) || !SelectedEndYear.HasValue)
@@ -383,6 +502,8 @@ public partial class ArbeitszeitViewModel : ViewModelBase
 
         Console.WriteLine("Eingaben sind gültig. Mitarbeiterdaten werden geladen...");
         DateInputCompleted = true;
-        FetchMitarbeiterNamen();
+
+        // Fetch MitarbeiterNamen and update cache
+        await FetchMitarbeiterNamenAsync();
     }
 }

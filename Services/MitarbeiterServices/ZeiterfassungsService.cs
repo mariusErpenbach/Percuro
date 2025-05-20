@@ -9,6 +9,9 @@ namespace Percuro.Services.MitarbeiterServices
     public class ZeiterfassungsService
     {
         private readonly ZeiterfassungsDatabaseService _databaseService;
+
+        public event Action? ZeitkontoCacheUpdated;
+
         private List<ZeitkontoModel> _zeitkontoCache = new List<ZeitkontoModel>();
 
         public ZeiterfassungsService()
@@ -19,6 +22,7 @@ namespace Percuro.Services.MitarbeiterServices
         public async Task<List<ZeitkontoModel>> GetMitarbeiterZeitkontoImZeitraumAsync(DateTime? startdatum, DateTime? enddatum)
         {
             _zeitkontoCache = await _databaseService.FetchMitarbeiterZeitkontoImZeitraumAsync(startdatum, enddatum);
+            ZeitkontoCacheUpdated?.Invoke(); // Notify subscribers about the update
             return _zeitkontoCache;
         }
 

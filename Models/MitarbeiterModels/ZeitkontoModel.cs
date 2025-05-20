@@ -11,5 +11,8 @@ namespace Percuro.Models.MitarbeiterModels
         public string? CheckLocation { get; set; }
         public string MitarbeiterVorname { get; set; } = string.Empty;
         public string MitarbeiterNachname { get; set; } = string.Empty;
+
+        public string CheckDate => CheckDateTime.ToString("yyyy-MM-dd");
+        public string CheckTime => CheckDateTime.ToString("HH:mm:ss");
     }
 }

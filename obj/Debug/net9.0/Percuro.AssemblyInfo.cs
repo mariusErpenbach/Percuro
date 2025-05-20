@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Percuro")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7092f007e8196ab3f33df9b5bf3c39b6f972ee91")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8b5eead31564f9545faafa2ac17337fbd7795239")]
 [assembly: System.Reflection.AssemblyProductAttribute("Percuro")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Percuro")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
