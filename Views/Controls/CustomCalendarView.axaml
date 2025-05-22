@@ -1,0 +1,61 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:Percuro.ViewModels.ControlsViewModels"
+             xmlns:converters="using:Percuro.Converters"
+             mc:Ignorable="d" d:DesignWidth="300" d:DesignHeight="300"
+             x:Class="Percuro.Views.Controls.CustomCalendarView"
+             x:DataType="vm:CustomCalendarViewModel">
+
+    <UserControl.Resources>
+        <converters:BooleanToOpacityConverter x:Key="BooleanToOpacityConverter"/>
+        <converters:HasEntryToBrushConverter x:Key="HasEntryToBrushConverter"/>
+    </UserControl.Resources>
+
+    <StackPanel Orientation="Vertical" HorizontalAlignment="Center" Spacing="5">
+        <!-- Month Navigation -->
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="10" Margin="0,0,0,10">
+            <Button Content="&lt;" Command="{Binding PreviousMonthCommand}" Width="40" Height="30"/>
+            <TextBlock Text="{Binding CurrentMonthYearDisplay}" FontWeight="Bold" FontSize="16" VerticalAlignment="Center"/>
+            <Button Content="&gt;" Command="{Binding NextMonthCommand}" Width="40" Height="30"/>
+        </StackPanel>
+
+        <!-- Day of Week Headers -->
+        <ItemsControl ItemsSource="{Binding DayNames}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <UniformGrid Rows="1" Columns="7"/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding}" HorizontalAlignment="Center" FontWeight="SemiBold" Margin="2"/>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
+        <!-- Calendar Days -->
+        <ItemsControl ItemsSource="{Binding CalendarDays}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <UniformGrid Columns="7" Rows="6"/> <!-- Assuming max 6 rows for a month view -->
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Border BorderBrush="LightGray" BorderThickness="1" Width="40" Height="40" Margin="1"
+                            Background="{Binding HasEntry, Converter={StaticResource HasEntryToBrushConverter}}">
+                        <Border.Styles>
+                            <Style Selector="Border:pointerover">
+                                <Setter Property="Background" Value="LightBlue"/>
+                            </Style>
+                        </Border.Styles>
+                        <TextBlock Text="{Binding DayNumber}" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                   Opacity="{Binding IsCurrentMonth, Converter={StaticResource BooleanToOpacityConverter}}"/>
+                    </Border>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </StackPanel>
+</UserControl>

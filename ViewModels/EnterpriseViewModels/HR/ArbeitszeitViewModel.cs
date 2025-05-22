@@ -7,6 +7,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Percuro.Models.MitarbeiterModels;
 using Percuro.Services.MitarbeiterServices;
+using Percuro.ViewModels.ControlsViewModels;
 
 namespace Percuro.ViewModels.EnterpriseViewModels.HR;
 
@@ -295,6 +296,8 @@ public partial class ArbeitszeitViewModel : ViewModelBase
             if (SetProperty(ref _selectedMitarbeiterWithId, value))
             {
                 IsMitarbeiterSelected = value != null;
+                // The IsVisible for the calendar section is already bound to IsMitarbeiterSelected in XAML.
+                // So, no need for a separate IsCalendarVisible property if they have the same condition.
 
                 if (value != null)
                 {
@@ -314,8 +317,12 @@ public partial class ArbeitszeitViewModel : ViewModelBase
 
                     // Update the display string
                     UpdateEntriesPerMitarbeiterDisplay();
-
-                    Console.WriteLine($"Updated EntriesPerMitarbeiter for MitarbeiterId {value.Id}: {count}");
+                    UpdateCalendarDayEntries(); // Make sure to update calendar when employee changes
+                }
+                else
+                {
+                    // Clear calendar highlights if no employee is selected
+                    ClearCalendarHighlights();
                 }
             }
         }
@@ -330,10 +337,39 @@ public partial class ArbeitszeitViewModel : ViewModelBase
 
     private readonly ZeiterfassungsService _zeiterfassungsService = new ZeiterfassungsService();
 
+    [ObservableProperty]
+    private CustomCalendarViewModel _myCalendarViewModel;
+
+    [ObservableProperty]
+    private bool _isTagessatzModus = true; // Default to Tagessatz
+
+    [ObservableProperty]
+    private bool _isWochenberichtModus = false;
+
     public ArbeitszeitViewModel()
     {
+        // Initialize other properties and services as before
+        _zeiterfassungsService = new ZeiterfassungsService();
         _zeiterfassungsService.ZeitkontoCacheUpdated += OnZeitkontoCacheUpdated;
-        Console.WriteLine("ArbeitszeitViewModel initialized and subscribed to ZeitkontoCacheUpdated.");
+
+        // Initialize the CustomCalendarViewModel
+        MyCalendarViewModel = new CustomCalendarViewModel();
+        MyCalendarViewModel.CurrentSelectionMode = CalendarSelectionMode.Day; // Default selection mode
+
+        // Initialize date selectors to default values or load from settings
+        SelectedStartYear = DateTime.Today.Year;
+        SelectedStartMonth = DateTime.Today.ToString("MMMM");
+        SelectedStartDay = 1;
+
+        SelectedEndYear = DateTime.Today.Year;
+        SelectedEndMonth = DateTime.Today.ToString("MMMM");
+        SelectedEndDay = DateTime.DaysInMonth(DateTime.Today.Year, DateTime.Today.Month); // Last day of current month
+
+        UpdateStartDate();
+        UpdateEndDate();
+        // Load initial data if necessary, or wait for user interaction
+        // For example, you might want to load data for the current month by default
+        // CheckDateInputCommand.Execute(null);
     }
 
     private void OnZeitkontoCacheUpdated()
@@ -505,5 +541,72 @@ public partial class ArbeitszeitViewModel : ViewModelBase
 
         // Fetch MitarbeiterNamen and update cache
         await FetchMitarbeiterNamenAsync();
+    }
+
+    [RelayCommand]
+    private void ToggleTagessatzModus()
+    {
+        IsTagessatzModus = true;
+        IsWochenberichtModus = false;
+        MyCalendarViewModel.CurrentSelectionMode = CalendarSelectionMode.Day;
+        // Add any other logic needed when switching to Tagessatz modus
+    }
+
+    [RelayCommand]
+    private void ToggleWochenberichtModus()
+    {
+        IsWochenberichtModus = true;
+        IsTagessatzModus = false;
+        MyCalendarViewModel.CurrentSelectionMode = CalendarSelectionMode.Week;
+        // Add any other logic needed when switching to Wochenbericht modus
+    }
+
+    private void ClearCalendarHighlights()
+    {
+        if (MyCalendarViewModel != null)
+        {
+            foreach (var dayVM in MyCalendarViewModel.CalendarDays)
+            {
+                dayVM.HasEntry = false; // Or any other property used for highlighting
+            }
+        }
+    }
+
+    private void UpdateCalendarDayEntries()
+    {
+        if (SelectedMitarbeiterWithId == null || MyCalendarViewModel == null)
+        {
+            if (MyCalendarViewModel != null)
+            {
+                foreach (var dayVM in MyCalendarViewModel.CalendarDays)
+                {
+                    dayVM.HasEntry = false;
+                }
+            }
+            return;
+        }
+
+        var mitarbeiterId = SelectedMitarbeiterWithId.Id;
+        var allEntries = _zeiterfassungsService.GetZeitkontoEntries(); 
+
+        var employeeEntriesForMonth = allEntries
+            .Where(e => e.MitarbeiterId == mitarbeiterId &&
+                        e.CheckDateTime.Year == MyCalendarViewModel.CurrentDisplayMonth.Year &&
+                        e.CheckDateTime.Month == MyCalendarViewModel.CurrentDisplayMonth.Month)
+            .Select(e => e.CheckDateTime.Date)
+            .Distinct()
+            .ToHashSet();
+
+        foreach (var dayVM in MyCalendarViewModel.CalendarDays)
+        {
+            if (dayVM.IsCurrentMonth)
+            {
+                dayVM.HasEntry = employeeEntriesForMonth.Contains(dayVM.Date.Date);
+            }
+            else
+            {
+                dayVM.HasEntry = false;
+            }
+        }
     }
 }
