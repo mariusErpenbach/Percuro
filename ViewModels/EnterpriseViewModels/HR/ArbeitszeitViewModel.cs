@@ -19,8 +19,8 @@ public partial class ArbeitszeitViewModel : ViewModelBase
     {
         if (Parent is MainWindowViewModel mainVm)
         {
-            var zeiterfassungsService = new ZeiterfassungsService();
-            zeiterfassungsService.ClearCache(); // Clear the cache before switching views
+            var zeiterfassungsungsService = new ZeiterfassungsService();
+            zeiterfassungsungsService.ClearCache(); // Clear the cache before switching views
             mainVm.CurrentViewModel = new HRViewModel();
         }
     }
@@ -75,13 +75,6 @@ public partial class ArbeitszeitViewModel : ViewModelBase
     }
 
     private List<string> _alleMitarbeiterNamen = new();
-
-    private string? _ausgewaehltterMitarbeiter;
-    public string? AusgewaehlterMitarbeiter
-    {
-        get => _ausgewaehltterMitarbeiter;
-        set => SetProperty(ref _ausgewaehltterMitarbeiter, value);
-    }
 
     public async Task LadeMitarbeiterAsync()
     {
@@ -287,47 +280,6 @@ public partial class ArbeitszeitViewModel : ViewModelBase
         set => SetProperty(ref _mitarbeiterNamenWithIds, value);
     }
 
-    private MitarbeiterNameWithId? _selectedMitarbeiterWithId;
-    public MitarbeiterNameWithId? SelectedMitarbeiterWithId
-    {
-        get => _selectedMitarbeiterWithId;
-        set
-        {
-            if (SetProperty(ref _selectedMitarbeiterWithId, value))
-            {
-                IsMitarbeiterSelected = value != null;
-                // The IsVisible for the calendar section is already bound to IsMitarbeiterSelected in XAML.
-                // So, no need for a separate IsCalendarVisible property if they have the same condition.
-
-                if (value != null)
-                {
-                    // Check the cache for the number of entries for the selected employee
-                    var count = _zeiterfassungsService.GetZeitkontoEntries()
-                        .Count(entry => entry.MitarbeiterId == value.Id);
-
-                    // Update EntriesPerMitarbeiter dictionary
-                    if (EntriesPerMitarbeiter.ContainsKey(value.Id))
-                    {
-                        EntriesPerMitarbeiter[value.Id] = count;
-                    }
-                    else
-                    {
-                        EntriesPerMitarbeiter.Add(value.Id, count);
-                    }
-
-                    // Update the display string
-                    UpdateEntriesPerMitarbeiterDisplay();
-                    UpdateCalendarDayEntries(); // Make sure to update calendar when employee changes
-                }
-                else
-                {
-                    // Clear calendar highlights if no employee is selected
-                    ClearCalendarHighlights();
-                }
-            }
-        }
-    }
-
     private bool _isLoading;
     public bool IsLoading
     {
@@ -346,66 +298,73 @@ public partial class ArbeitszeitViewModel : ViewModelBase
     [ObservableProperty]
     private bool _isWochenberichtModus = false;
 
+    private bool _isAlleEintraegeModus = false;
+    public bool IsAlleEintraegeModus
+    {
+        get => _isAlleEintraegeModus;
+        set => SetProperty(ref _isAlleEintraegeModus, value);
+    }
+
+    [ObservableProperty]
+    private ArbeitszeitNavigatorSectionViewModel arbeitszeitNavigatorSectionViewModel = new ArbeitszeitNavigatorSectionViewModel();
+
     public ArbeitszeitViewModel()
     {
-        // Initialize other properties and services as before
+        arbeitszeitNavigatorSectionViewModel = new ArbeitszeitNavigatorSectionViewModel();
         _zeiterfassungsService = new ZeiterfassungsService();
-        _zeiterfassungsService.ZeitkontoCacheUpdated += OnZeitkontoCacheUpdated;
-
-        // Initialize the CustomCalendarViewModel
         MyCalendarViewModel = new CustomCalendarViewModel();
-        MyCalendarViewModel.CurrentSelectionMode = CalendarSelectionMode.Day; // Default selection mode
-
-        // Initialize date selectors to default values or load from settings
+        MyCalendarViewModel.CurrentSelectionMode = CalendarSelectionMode.Day;
         SelectedStartYear = DateTime.Today.Year;
         SelectedStartMonth = DateTime.Today.ToString("MMMM");
         SelectedStartDay = 1;
-
         SelectedEndYear = DateTime.Today.Year;
         SelectedEndMonth = DateTime.Today.ToString("MMMM");
-        SelectedEndDay = DateTime.DaysInMonth(DateTime.Today.Year, DateTime.Today.Month); // Last day of current month
-
+        SelectedEndDay = DateTime.DaysInMonth(DateTime.Today.Year, DateTime.Today.Month);
         UpdateStartDate();
         UpdateEndDate();
-        // Load initial data if necessary, or wait for user interaction
-        // For example, you might want to load data for the current month by default
-        // CheckDateInputCommand.Execute(null);
+        // PropertyChanged-Subscription für SelectedMitarbeiterWithId im Child-ViewModel
+        arbeitszeitNavigatorSectionViewModel.PropertyChanged += ArbeitszeitNavigatorSectionViewModel_PropertyChanged;
     }
 
-    private void OnZeitkontoCacheUpdated()
+    // Property-Weiterleitung für die aktuelle Auswahl
+    // public MitarbeiterNameWithId? SelectedMitarbeiterWithId => ArbeitszeitNavigatorSectionViewModel.SelectedMitarbeiterWithId;
+
+    private void ArbeitszeitNavigatorSectionViewModel_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
     {
-        Console.WriteLine("ZeitkontoCacheUpdated event triggered.");
-        if (SelectedMitarbeiterWithId != null)
+        if (e.PropertyName == nameof(ArbeitszeitNavigatorSectionViewModel.SelectedMitarbeiterWithId))
         {
-            var count = _zeiterfassungsService.GetZeitkontoEntries()
-                .Count(entry => entry.MitarbeiterId == SelectedMitarbeiterWithId.Id);
-            Console.WriteLine($"Number of entries for MitarbeiterId {SelectedMitarbeiterWithId.Id}: {count}");
-            NumberOfEntriesFound = count;
+            // Sichtbarkeit des Buttons steuern
+            IsZeigeEintraegeButtonVisible = ArbeitszeitNavigatorSectionViewModel.SelectedMitarbeiterWithId != null;
+            OnPropertyChanged(nameof(ArbeitszeitNavigatorSectionViewModel.SelectedMitarbeiterWithId));
         }
-        else
+        else if (e.PropertyName == nameof(ArbeitszeitNavigatorSectionViewModel.SelectedStartDate))
         {
-            var totalEntries = _zeiterfassungsService.GetZeitkontoEntries().Count;
-            Console.WriteLine($"No Mitarbeiter selected. Total entries in cache: {totalEntries}");
-            NumberOfEntriesFound = totalEntries;
+            SelectedStartDate = ArbeitszeitNavigatorSectionViewModel.SelectedStartDate;
+            OnPropertyChanged(nameof(SelectedStartDate));
+        }
+        else if (e.PropertyName == nameof(ArbeitszeitNavigatorSectionViewModel.SelectedEndDate))
+        {
+            SelectedEndDate = ArbeitszeitNavigatorSectionViewModel.SelectedEndDate;
+            OnPropertyChanged(nameof(SelectedEndDate));
         }
     }
 
     private async Task FetchMitarbeiterNamenAsync()
     {
         IsLoading = true;
-
-        // Clear the existing list to avoid duplicates
         MitarbeiterNamenWithIds.Clear();
 
         await _zeiterfassungsService.GetMitarbeiterZeitkontoImZeitraumAsync(StartDate?.DateTime, EndDate?.DateTime);
-        var zeitkontoEntries = _zeiterfassungsService.GetZeitkontoEntries();
-
-        // Populate MitarbeiterNamenWithIds with unique tuples of names and IDs
-        MitarbeiterNamenWithIds = new ObservableCollection<MitarbeiterNameWithId>(
-            zeitkontoEntries.DistinctBy(entry => entry.MitarbeiterId).Select(entry => new MitarbeiterNameWithId(
-                $"{entry.MitarbeiterId:D2} {entry.MitarbeiterVorname[0]}. {entry.MitarbeiterNachname}", entry.MitarbeiterId))
-        );
-
+        var eintraege = _zeiterfassungsService.GetZeitkontoEntries();
+        var mitarbeiterGruppiert = eintraege
+            .GroupBy(e => new { e.MitarbeiterId, e.MitarbeiterVorname, e.MitarbeiterNachname })
+            .Select(g => new MitarbeiterNameWithId($"{g.Key.MitarbeiterId:D2} {g.Key.MitarbeiterVorname[0]}. {g.Key.MitarbeiterNachname}", g.Key.MitarbeiterId))
+            .OrderBy(m => m.Name)
+            .ToList();
+        foreach (var m in mitarbeiterGruppiert)
+        {
+            MitarbeiterNamenWithIds.Add(m);
+        }
         IsLoading = false;
     }
 
@@ -413,21 +372,32 @@ public partial class ArbeitszeitViewModel : ViewModelBase
     {
         if (string.IsNullOrWhiteSpace(MitarbeiterSuche))
         {
-            // Clear the selection if the search input is empty
-            AusgewaehlterMitarbeiter = null;
+            // If search text is cleared, current selection remains.
+            // If you'd prefer to clear the selection, you could set:
+            // if (SelectedMitarbeiterWithId != null) SelectedMitarbeiterWithId = null;
             return;
         }
 
-        // Normalize the search input by replacing 'ø' with 'o'
-        var normalizedSearch = MitarbeiterSuche.Replace("ø", "o", StringComparison.OrdinalIgnoreCase);
+        // Find the first item in MitarbeiterNamenWithIds whose Name contains the search text.
+        // This assumes MitarbeiterNameWithId has a public string property named 'Name'.
+        var bestMatch = MitarbeiterNamenWithIds
+            .FirstOrDefault(m => m.Name != null &&
+                                   m.Name.IndexOf(MitarbeiterSuche, StringComparison.OrdinalIgnoreCase) >= 0);
 
-        // Find the best-matching name by normalizing names in the list
-        var bestMatch = _alleMitarbeiterNamen
-            .FirstOrDefault(name => name.Replace("ø", "o", StringComparison.OrdinalIgnoreCase)
-                                        .Contains(normalizedSearch, StringComparison.OrdinalIgnoreCase));
-
-        // Select the best match if available
-        AusgewaehlterMitarbeiter = bestMatch;
+        if (bestMatch != null)
+        {
+            // Update SelectedMitarbeiterWithId only if it's a new selection.
+            // if (SelectedMitarbeiterWithId != bestMatch)
+            // {
+            //     SelectedMitarbeiterWithId = bestMatch;
+            // }
+        }
+        else
+        {
+            // No match found. Current selection remains.
+            // If you'd prefer to clear selection when no match is found:
+            // if (SelectedMitarbeiterWithId != null) SelectedMitarbeiterWithId = null;
+        }
     }
 
     private ObservableCollection<ZeitkontoModel> _zeitkontoEntries = new ObservableCollection<ZeitkontoModel>();
@@ -437,11 +407,11 @@ public partial class ArbeitszeitViewModel : ViewModelBase
         set => SetProperty(ref _zeitkontoEntries, value);
     }
 
-    private bool _isMitarbeiterSelected;
-    public bool IsMitarbeiterSelected
+    private bool _isCustomCalendarVisible;
+    public bool IsCustomCalendarVisible
     {
-        get => _isMitarbeiterSelected;
-        set => SetProperty(ref _isMitarbeiterSelected, value);
+        get => _isCustomCalendarVisible;
+        set => SetProperty(ref _isCustomCalendarVisible, value);
     }
 
     private string? _displayedMitarbeiterName;
@@ -481,43 +451,70 @@ public partial class ArbeitszeitViewModel : ViewModelBase
 
     private void UpdateEntriesPerMitarbeiterDisplay()
     {
-        EntriesPerMitarbeiterDisplay = string.Join(", ", EntriesPerMitarbeiter.Select(kvp => $"{kvp.Value} Einträge gefunden"));
+        // Only show the currently selected Mitarbeiter, not all
+        if (ArbeitszeitNavigatorSectionViewModel.SelectedMitarbeiterWithId != null && EntriesPerMitarbeiter.TryGetValue(ArbeitszeitNavigatorSectionViewModel.SelectedMitarbeiterWithId.Id, out var count))
+        {
+            EntriesPerMitarbeiterDisplay = $"{count} Einträge gefunden";
+        }
+        else
+        {
+            EntriesPerMitarbeiterDisplay = string.Empty;
+        }
         Console.WriteLine($"Updated EntriesPerMitarbeiterDisplay: {EntriesPerMitarbeiterDisplay}");
     }
 
     [RelayCommand]
-    public void ZeigeEintraege()
+    public async Task ZeigeEintraegeAsync()
     {
-        if (SelectedMitarbeiterWithId != null)
+        var selectedMitarbeiter = ArbeitszeitNavigatorSectionViewModel.SelectedMitarbeiterWithId;
+        var startDate = ArbeitszeitNavigatorSectionViewModel.SelectedStartDate;
+        var endDate = ArbeitszeitNavigatorSectionViewModel.SelectedEndDate;
+
+        Console.WriteLine($"[ZeigeEintraegeAsync] SelectedMitarbeiterWithId: {selectedMitarbeiter?.Name} (Id: {selectedMitarbeiter?.Id})");
+        Console.WriteLine($"[ZeigeEintraegeAsync] Zeitraum: {startDate} bis {endDate}");
+
+        if (selectedMitarbeiter != null && startDate != null && endDate != null)
         {
-            var eintraege = _zeiterfassungsService.GetZeitkontoEntries()
-                .Where(entry => entry.MitarbeiterId == SelectedMitarbeiterWithId.Id)
-                .ToList();
-
+            await _zeiterfassungsService.GetMitarbeiterZeitkontoImZeitraumAsync(startDate.Value, endDate.Value);
+            var eintraege = _zeiterfassungsService.GetAllEntriesForDataGrid(selectedMitarbeiter.Id);
+            Console.WriteLine($"[ZeigeEintraegeAsync] GetAllEntriesForDataGrid returned {eintraege.Count} entries for Id {selectedMitarbeiter.Id}");
             ZeitkontoEntries = new ObservableCollection<ZeitkontoModel>(eintraege);
-            NumberOfEntriesFound = eintraege.Count;
-            IsMitarbeiterSelected = eintraege.Any();
-            DisplayedMitarbeiterName = SelectedMitarbeiterWithId.Name;
-            IsAllEntriesVisible = true;
-
-            // Update the dictionary with counts for all employees in the selected time range
-            EntriesPerMitarbeiter = _zeiterfassungsService.GetZeitkontoEntries()
-                .GroupBy(entry => entry.MitarbeiterId)
-                .ToDictionary(group => group.Key, group => group.Count());
+            IsAllEntriesVisible = eintraege.Count > 0;
         }
         else
         {
-            IsMitarbeiterSelected = false;
-            DisplayedMitarbeiterName = null;
+            ZeitkontoEntries.Clear();
             IsAllEntriesVisible = false;
-            NumberOfEntriesFound = 0;
-            EntriesPerMitarbeiter.Clear(); // Clear the dictionary if no entries are loaded
         }
+        Console.WriteLine($"[ZeigeEintraegeAsync] ZeitkontoEntries.Count: {ZeitkontoEntries.Count}");
+    }
+
+    // CommunityToolkit.Mvvm generiert automatisch eine Property ZeigeEintraegeAsyncCommand für das [RelayCommand] public async Task ZeigeEintraegeAsync().
+    // Falls das Binding im XAML nicht funktioniert, kann man die Property explizit deklarieren:
+    public IAsyncRelayCommand ZeigeEintraegeAsyncCommand => new AsyncRelayCommand(ZeigeEintraegeAsync);
+
+    [RelayCommand]
+    private void ToggleTagessatzModus()
+    {
+        IsTagessatzModus = true;
+        IsWochenberichtModus = false;
+        IsAlleEintraegeModus = false;
+        MyCalendarViewModel.CurrentSelectionMode = CalendarSelectionMode.Day;
     }
 
     [RelayCommand]
-    public async Task CheckDateInputAsync()
+    private void ToggleWochenberichtModus()
     {
+        IsWochenberichtModus = true;
+        IsTagessatzModus = false;
+        IsAlleEintraegeModus = false;
+        MyCalendarViewModel.CurrentSelectionMode = CalendarSelectionMode.Week;
+    }
+
+    [RelayCommand]
+    public async Task CheckDateInputCommand()
+    {
+        // Validate all fields before using them
         if (!SelectedStartDay.HasValue || string.IsNullOrEmpty(SelectedStartMonth) || !SelectedStartYear.HasValue ||
             !SelectedEndDay.HasValue || string.IsNullOrEmpty(SelectedEndMonth) || !SelectedEndYear.HasValue)
         {
@@ -526,39 +523,29 @@ public partial class ArbeitszeitViewModel : ViewModelBase
             return;
         }
 
-        var startDate = new DateTime(SelectedStartYear.Value, Array.IndexOf(StartMonate.ToArray(), SelectedStartMonth) + 1, SelectedStartDay.Value);
-        var endDate = new DateTime(SelectedEndYear.Value, Array.IndexOf(EndMonate.ToArray(), SelectedEndMonth) + 1, SelectedEndDay.Value);
-
-        if (startDate > endDate)
+        try
         {
-            Console.WriteLine("Das Startdatum darf nicht nach dem Enddatum liegen.");
-            DateInputCompleted = false;
-            return;
+            var startDate = new DateTime(SelectedStartYear.Value, Array.IndexOf(StartMonate.ToArray(), SelectedStartMonth) + 1, SelectedStartDay.Value);
+            var endDate = new DateTime(SelectedEndYear.Value, Array.IndexOf(EndMonate.ToArray(), SelectedEndMonth) + 1, SelectedEndDay.Value);
+
+            if (startDate > endDate)
+            {
+                Console.WriteLine("Das Startdatum darf nicht nach dem Enddatum liegen.");
+                DateInputCompleted = false;
+                return;
+            }
+
+            Console.WriteLine("Eingaben sind gültig. Mitarbeiterdaten werden geladen...");
+            DateInputCompleted = true;
+
+            // Fetch MitarbeiterNamen and update cache
+            await FetchMitarbeiterNamenAsync();
         }
-
-        Console.WriteLine("Eingaben sind gültig. Mitarbeiterdaten werden geladen...");
-        DateInputCompleted = true;
-
-        // Fetch MitarbeiterNamen and update cache
-        await FetchMitarbeiterNamenAsync();
-    }
-
-    [RelayCommand]
-    private void ToggleTagessatzModus()
-    {
-        IsTagessatzModus = true;
-        IsWochenberichtModus = false;
-        MyCalendarViewModel.CurrentSelectionMode = CalendarSelectionMode.Day;
-        // Add any other logic needed when switching to Tagessatz modus
-    }
-
-    [RelayCommand]
-    private void ToggleWochenberichtModus()
-    {
-        IsWochenberichtModus = true;
-        IsTagessatzModus = false;
-        MyCalendarViewModel.CurrentSelectionMode = CalendarSelectionMode.Week;
-        // Add any other logic needed when switching to Wochenbericht modus
+        catch (ArgumentOutOfRangeException ex)
+        {
+            Console.WriteLine($"Ungültiges Datum: {ex.Message}");
+            DateInputCompleted = false;
+        }
     }
 
     private void ClearCalendarHighlights()
@@ -574,7 +561,7 @@ public partial class ArbeitszeitViewModel : ViewModelBase
 
     private void UpdateCalendarDayEntries()
     {
-        if (SelectedMitarbeiterWithId == null || MyCalendarViewModel == null)
+        if (ArbeitszeitNavigatorSectionViewModel.SelectedMitarbeiterWithId == null || MyCalendarViewModel == null)
         {
             if (MyCalendarViewModel != null)
             {
@@ -586,7 +573,7 @@ public partial class ArbeitszeitViewModel : ViewModelBase
             return;
         }
 
-        var mitarbeiterId = SelectedMitarbeiterWithId.Id;
+        var mitarbeiterId = ArbeitszeitNavigatorSectionViewModel.SelectedMitarbeiterWithId.Id;
         var allEntries = _zeiterfassungsService.GetZeitkontoEntries(); 
 
         var employeeEntriesForMonth = allEntries
@@ -608,5 +595,26 @@ public partial class ArbeitszeitViewModel : ViewModelBase
                 dayVM.HasEntry = false;
             }
         }
+    }
+
+    private bool _isZeigeEintraegeButtonVisible;
+    public bool IsZeigeEintraegeButtonVisible
+    {
+        get => _isZeigeEintraegeButtonVisible;
+        set => SetProperty(ref _isZeigeEintraegeButtonVisible, value);
+    }
+
+    private DateTime? _selectedStartDate;
+    public DateTime? SelectedStartDate
+    {
+        get => _selectedStartDate;
+        set => SetProperty(ref _selectedStartDate, value);
+    }
+
+    private DateTime? _selectedEndDate;
+    public DateTime? SelectedEndDate
+    {
+        get => _selectedEndDate;
+        set => SetProperty(ref _selectedEndDate, value);
     }
 }

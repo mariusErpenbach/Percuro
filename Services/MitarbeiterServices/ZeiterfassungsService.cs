@@ -43,5 +43,20 @@ namespace Percuro.Services.MitarbeiterServices
         {
             return _zeitkontoCache;
         }
+
+        public List<ZeitkontoModel> GetAllEntriesForDataGrid(int mitarbeiterId)
+        {
+            Console.WriteLine($"[GetAllEntriesForDataGrid] Suche nach MitarbeiterId: {mitarbeiterId}");
+            Console.WriteLine($"[GetAllEntriesForDataGrid] _zeitkontoCache.Count: {_zeitkontoCache.Count}");
+            foreach (var entry in _zeitkontoCache)
+            {
+                Console.WriteLine($"  [CacheEntry] Id: {entry.Id}, MitarbeiterId: {entry.MitarbeiterId}, CheckType: {entry.CheckType}, CheckDateTime: {entry.CheckDateTime}, CheckLocation: {entry.CheckLocation}, Vorname: {entry.MitarbeiterVorname}, Nachname: {entry.MitarbeiterNachname}");
+            }
+            var allIds = _zeitkontoCache.Select(e => e.MitarbeiterId).Distinct().ToList();
+            Console.WriteLine($"[GetAllEntriesForDataGrid] IDs im Cache: {string.Join(", ", allIds)}");
+            var result = _zeitkontoCache.Where(e => e.MitarbeiterId == mitarbeiterId).ToList();
+            Console.WriteLine($"[GetAllEntriesForDataGrid] Treffer: {result.Count}");
+            return result;
+        }
     }
 }

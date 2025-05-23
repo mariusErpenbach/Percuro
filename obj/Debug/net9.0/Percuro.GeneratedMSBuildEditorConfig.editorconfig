@@ -60,6 +60,9 @@ build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 [/home/dci/Desktop/Github/Percuro/Views/EnterpriseViews/FinanceView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
+[/home/dci/Desktop/Github/Percuro/Views/EnterpriseViews/HR/ArbeitszeitNavigatorSectionView.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
 [/home/dci/Desktop/Github/Percuro/Views/EnterpriseViews/HR/ArbeitszeitView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
