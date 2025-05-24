@@ -44,6 +44,7 @@
   </ItemGroup>
   <ImportGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
     <Import Project="$(NuGetPackageRoot)skiasharp.nativeassets.webassembly/2.88.8/buildTransitive/netstandard1.0/SkiaSharp.NativeAssets.WebAssembly.props" Condition="Exists('$(NuGetPackageRoot)skiasharp.nativeassets.webassembly/2.88.8/buildTransitive/netstandard1.0/SkiaSharp.NativeAssets.WebAssembly.props')" />
+    <Import Project="$(NuGetPackageRoot)microsoft.extensions.configuration.usersecrets/10.0.0-preview.4.25258.110/buildTransitive/net8.0/Microsoft.Extensions.Configuration.UserSecrets.props" Condition="Exists('$(NuGetPackageRoot)microsoft.extensions.configuration.usersecrets/10.0.0-preview.4.25258.110/buildTransitive/net8.0/Microsoft.Extensions.Configuration.UserSecrets.props')" />
     <Import Project="$(NuGetPackageRoot)hotavalonia.fody/3.0.0/build/HotAvalonia.Fody.props" Condition="Exists('$(NuGetPackageRoot)hotavalonia.fody/3.0.0/build/HotAvalonia.Fody.props')" />
     <Import Project="$(NuGetPackageRoot)hotavalonia.extensions/3.0.0/build/HotAvalonia.Extensions.props" Condition="Exists('$(NuGetPackageRoot)hotavalonia.extensions/3.0.0/build/HotAvalonia.Extensions.props')" />
     <Import Project="$(NuGetPackageRoot)avalonia/11.2.8/buildTransitive/Avalonia.props" Condition="Exists('$(NuGetPackageRoot)avalonia/11.2.8/buildTransitive/Avalonia.props')" />

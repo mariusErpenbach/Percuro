@@ -72,7 +72,7 @@ public partial class LoginViewModel : ViewModelBase
                 Console.WriteLine("Login successful!");
                 var session = UserSession.Current;
                 session.Username = Username;
-                session.Role = SelectedRole;
+                session.Role = user.Role; // <-- Rolle aus DB, nicht aus UI
 
                 // Clear the password from memory
                 Password = "";
