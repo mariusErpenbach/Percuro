@@ -26,12 +26,15 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <!-- Buttons -->
-            <Button Content="Finance" Command="{Binding ToFinanceView}" Grid.Row="0" Grid.Column="0" Width="150" Height="50" Margin="10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-            <Button Content="HR" Command="{Binding ToHRView}" Grid.Row="0" Grid.Column="1" Width="150" Height="50" Margin="10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-            <Button Content="Production" Command="{Binding ToProductionView}" Grid.Row="1" Grid.Column="0" Width="150" Height="50" Margin="10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-            <Button Content="Sales and CRM" Command="{Binding ToSalesAndCRMView}" Grid.Row="1" Grid.Column="1" Width="150" Height="50" Margin="10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-            <Button Content="Analytics" Command="{Binding ToAnalyticsView}" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Width="150" Height="50" Margin="10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Center"/>
+            <!-- Erste Reihe -->
+            <Button Content="FRM" Command="{Binding ToFRMView}" Grid.Row="0" Grid.Column="0" Width="150" Height="50" Margin="10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+            <Button Content="HRM" Command="{Binding ToHRView}" Grid.Row="0" Grid.Column="1" Width="150" Height="50" Margin="10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+            <!-- Zweite Reihe -->
+            <Button Content="MRP" Command="{Binding ToMRPView}" Grid.Row="1" Grid.Column="0" Width="150" Height="50" Margin="10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+            <Button Content="CRM" Command="{Binding ToSalesAndCRMView}" Grid.Row="1" Grid.Column="1" Width="150" Height="50" Margin="10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+            <!-- Dritte Reihe -->
+            <Button Content="Analytics" Command="{Binding ToAnalyticsView}" Grid.Row="2" Grid.Column="0" Width="150" Height="50" Margin="10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+            <Button Content="SCM" Command="{Binding ToSCMView}" Grid.Row="2" Grid.Column="1" Width="150" Height="50" Margin="10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
         </Grid>
     </Grid>
 

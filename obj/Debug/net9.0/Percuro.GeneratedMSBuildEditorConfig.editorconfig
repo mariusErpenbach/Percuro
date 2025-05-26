@@ -15,101 +15,107 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = Percuro
-build_property.ProjectDir = /home/dci/Desktop/Github/Percuro/
+build_property.ProjectDir = D:\github\Percuro\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.EffectiveAnalysisLevelStyle = 9.0
 build_property.EnableCodeStyleSeverity = 
 
-[/home/dci/Desktop/Github/Percuro/App.axaml]
+[D:/github/Percuro/App.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[/home/dci/Desktop/Github/Percuro/Views/Controls/CustomCalendarView.axaml]
+[D:/github/Percuro/Views/Controls/CustomCalendarView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[/home/dci/Desktop/Github/Percuro/Views/DashboardView.axaml]
+[D:/github/Percuro/Views/DashboardView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[/home/dci/Desktop/Github/Percuro/Views/EnterpriseView.axaml]
+[D:/github/Percuro/Views/EnterpriseView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[/home/dci/Desktop/Github/Percuro/Views/EnterpriseViews/Analytics/AnalysenView.axaml]
+[D:/github/Percuro/Views/EnterpriseViews/AnalyticsView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[/home/dci/Desktop/Github/Percuro/Views/EnterpriseViews/Analytics/ReportsView.axaml]
+[D:/github/Percuro/Views/EnterpriseViews/Analytics/AnalysenView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[/home/dci/Desktop/Github/Percuro/Views/EnterpriseViews/Analytics/StatistikenView.axaml]
+[D:/github/Percuro/Views/EnterpriseViews/Analytics/ReportsView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[/home/dci/Desktop/Github/Percuro/Views/EnterpriseViews/AnalyticsView.axaml]
+[D:/github/Percuro/Views/EnterpriseViews/Analytics/StatistikenView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[/home/dci/Desktop/Github/Percuro/Views/EnterpriseViews/Finance/BilanzView.axaml]
+[D:/github/Percuro/Views/EnterpriseViews/CRMView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[/home/dci/Desktop/Github/Percuro/Views/EnterpriseViews/Finance/BuchhaltungView.axaml]
+[D:/github/Percuro/Views/EnterpriseViews/CRM/CustomerManagementView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[/home/dci/Desktop/Github/Percuro/Views/EnterpriseViews/Finance/BudgetPlanningView.axaml]
+[D:/github/Percuro/Views/EnterpriseViews/CRM/SalesManagementView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[/home/dci/Desktop/Github/Percuro/Views/EnterpriseViews/Finance/RechnungenView.axaml]
+[D:/github/Percuro/Views/EnterpriseViews/FRMView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[/home/dci/Desktop/Github/Percuro/Views/EnterpriseViews/FinanceView.axaml]
+[D:/github/Percuro/Views/EnterpriseViews/FRM/BilanzView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[/home/dci/Desktop/Github/Percuro/Views/EnterpriseViews/HR/ArbeitszeitNavigatorSectionView.axaml]
+[D:/github/Percuro/Views/EnterpriseViews/FRM/BuchhaltungView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[/home/dci/Desktop/Github/Percuro/Views/EnterpriseViews/HR/ArbeitszeitView.axaml]
+[D:/github/Percuro/Views/EnterpriseViews/FRM/BudgetPlanningView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[/home/dci/Desktop/Github/Percuro/Views/EnterpriseViews/HR/GehaltsabrechnungView.axaml]
+[D:/github/Percuro/Views/EnterpriseViews/FRM/RechnungenView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[/home/dci/Desktop/Github/Percuro/Views/EnterpriseViews/HR/MitarbeiterNS/EditMitarbeiterView.axaml]
+[D:/github/Percuro/Views/EnterpriseViews/HRView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[/home/dci/Desktop/Github/Percuro/Views/EnterpriseViews/HR/MitarbeiterNS/NewMitarbeiterView.axaml]
+[D:/github/Percuro/Views/EnterpriseViews/HR/ArbeitszeitNavigatorSectionView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[/home/dci/Desktop/Github/Percuro/Views/EnterpriseViews/HR/MitarbeiterView.axaml]
+[D:/github/Percuro/Views/EnterpriseViews/HR/ArbeitszeitView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[/home/dci/Desktop/Github/Percuro/Views/EnterpriseViews/HR/RecruitingView.axaml]
+[D:/github/Percuro/Views/EnterpriseViews/HR/GehaltsabrechnungView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[/home/dci/Desktop/Github/Percuro/Views/EnterpriseViews/HRView.axaml]
+[D:/github/Percuro/Views/EnterpriseViews/HR/MitarbeiterNS/EditMitarbeiterView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[/home/dci/Desktop/Github/Percuro/Views/EnterpriseViews/Production/EinkaufView.axaml]
+[D:/github/Percuro/Views/EnterpriseViews/HR/MitarbeiterNS/NewMitarbeiterView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[/home/dci/Desktop/Github/Percuro/Views/EnterpriseViews/Production/InventoryView.axaml]
+[D:/github/Percuro/Views/EnterpriseViews/HR/MitarbeiterView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[/home/dci/Desktop/Github/Percuro/Views/EnterpriseViews/Production/ProduktionsPlanungView.axaml]
+[D:/github/Percuro/Views/EnterpriseViews/HR/RecruitingView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[/home/dci/Desktop/Github/Percuro/Views/EnterpriseViews/ProductionView.axaml]
+[D:/github/Percuro/Views/EnterpriseViews/MRPView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[/home/dci/Desktop/Github/Percuro/Views/EnterpriseViews/SalesAndCRM/CustomerManagementView.axaml]
+[D:/github/Percuro/Views/EnterpriseViews/MRP/EinkaufView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[/home/dci/Desktop/Github/Percuro/Views/EnterpriseViews/SalesAndCRM/SalesManagementView.axaml]
+[D:/github/Percuro/Views/EnterpriseViews/MRP/InventoryView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[/home/dci/Desktop/Github/Percuro/Views/EnterpriseViews/SalesAndCRMView.axaml]
+[D:/github/Percuro/Views/EnterpriseViews/MRP/ProductionView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[/home/dci/Desktop/Github/Percuro/Views/LoginView.axaml]
+[D:/github/Percuro/Views/EnterpriseViews/MRP/ProduktionsPlanungView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[/home/dci/Desktop/Github/Percuro/Views/MainWindow.axaml]
+[D:/github/Percuro/Views/EnterpriseViews/SCMView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[/home/dci/Desktop/Github/Percuro/Views/WelcomeView.axaml]
+[D:/github/Percuro/Views/LoginView.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[D:/github/Percuro/Views/MainWindow.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[D:/github/Percuro/Views/WelcomeView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml

@@ -1,0 +1,13 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:Percuro.ViewModels.EnterpriseViewModels"
+             x:Class="Percuro.Views.EnterpriseViews.SCMView"
+             x:DataType="vm:SCMViewModel">
+    <Grid>
+        <Button Content="Zurück zu Enterprise" Command="{Binding ToEnterpriseView}"
+                Width="200" Height="50" Margin="10"
+                HorizontalAlignment="Left" VerticalAlignment="Top"
+                HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+        <TextBlock Text="SCM" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="32"/>
+    </Grid>
+</UserControl>

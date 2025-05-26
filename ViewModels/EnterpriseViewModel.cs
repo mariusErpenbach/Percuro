@@ -12,11 +12,11 @@ public partial class EnterpriseViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    public void ToFinanceView()
+    public void ToFRMView()
     {
         if (Parent is MainWindowViewModel mainVm)
         {
-            mainVm.CurrentViewModel = new FinanceViewModel();
+            mainVm.CurrentViewModel = new FRMViewModel();
         }
     }
 
@@ -34,7 +34,7 @@ public partial class EnterpriseViewModel : ViewModelBase
     {
         if (Parent is MainWindowViewModel mainVm)
         {
-            mainVm.CurrentViewModel = new ProductionViewModel();
+            mainVm.CurrentViewModel = new MRPViewModel();
         }
     }
 
@@ -43,7 +43,7 @@ public partial class EnterpriseViewModel : ViewModelBase
     {
         if (Parent is MainWindowViewModel mainVm)
         {
-            mainVm.CurrentViewModel = new SalesAndCRMViewModel();
+            mainVm.CurrentViewModel = new CRMViewModel();
         }
     }
 
@@ -62,6 +62,24 @@ public partial class EnterpriseViewModel : ViewModelBase
         if (Parent is MainWindowViewModel mainVm)
         {
             mainVm.CurrentViewModel = new DashboardViewModel();
+        }
+    }
+
+    [RelayCommand]
+    public void ToMRPView()
+    {
+        if (Parent is MainWindowViewModel mainVm)
+        {
+            mainVm.CurrentViewModel = new MRPViewModel();
+        }
+    }
+
+    [RelayCommand]
+    public void ToSCMView()
+    {
+        if (Parent is MainWindowViewModel mainVm)
+        {
+            mainVm.CurrentViewModel = new SCMViewModel();
         }
     }
 }

@@ -1,0 +1,37 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:Percuro.ViewModels.EnterpriseViewModels"
+             x:Class="Percuro.Views.EnterpriseViews.MRPView"
+             x:DataType="vm:MRPViewModel">
+
+    <Grid>
+        <!-- To Enterprise Button -->
+        <Button Content="To Enterprise" Command="{Binding ToEnterpriseView}" 
+                Width="150" Height="50" Margin="10" 
+                HorizontalAlignment="Left" VerticalAlignment="Top" 
+                HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+
+        <!-- Main Content -->
+        <Grid>
+            <!-- Buttons in a Grid -->
+            <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Button Content="Einkauf" Command="{Binding ToEinkaufView}" Grid.Row="0" Grid.Column="0" Width="150" Height="50" Margin="10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                <Button Content="Inventory" Command="{Binding ToInventoryView}" Grid.Row="0" Grid.Column="1" Width="150" Height="50" Margin="10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                <Button Content="ProduktionsPlan" Command="{Binding ToProduktionsPlanungView}" Grid.Row="1" Grid.Column="0" Width="150" Height="50" Margin="10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+            </Grid>
+
+            <!-- Placeholder Content -->
+            <!-- Überschrift -->
+            <TextBlock Text="MRP" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,20,0,0" FontSize="24"/>
+        </Grid>
+    </Grid>
+</UserControl>

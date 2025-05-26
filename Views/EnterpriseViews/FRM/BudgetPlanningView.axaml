@@ -1,0 +1,19 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:Percuro.ViewModels.EnterpriseViewModels.FRM"
+             x:Class="Percuro.Views.EnterpriseViews.FRM.BudgetPlanningView"
+             x:DataType="vm:BudgetPlanningViewModel">
+    <Grid>
+        <!-- To FRM Button -->
+        <Button Content="To FRM" Command="{Binding ToFRMView}" 
+                Width="150" Height="50" Margin="10" 
+                HorizontalAlignment="Left" VerticalAlignment="Top"
+                HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+
+        <!-- Überschrift -->
+        <TextBlock Text="Budget Planning View" 
+                   HorizontalAlignment="Center" 
+                   VerticalAlignment="Center" 
+                   FontSize="20" />
+    </Grid>
+</UserControl>
