@@ -30,14 +30,12 @@ namespace Percuro.ViewModels.EnterpriseViewModels.HRM
             {
                 mainVm.CurrentViewModel = new GehaltsabrechnungViewModel();
             }
-        }
-
-        [RelayCommand]
-        public void ToMitarbeiterView()
+        }        [RelayCommand]
+        public void ToMitarbeiterverwaltungView()
         {
             if (Parent is MainWindowViewModel mainVm)
             {
-                mainVm.CurrentViewModel = new MitarbeiterViewModel();
+                mainVm.CurrentViewModel = new MitarbeiterverwaltungViewModel();
             }
         }
 

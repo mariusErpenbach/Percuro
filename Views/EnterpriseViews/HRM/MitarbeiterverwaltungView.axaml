@@ -4,8 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:Percuro.ViewModels.EnterpriseViewModels.HRM"
              mc:Ignorable="d"
-             x:Class="Percuro.Views.EnterpriseViews.HRM.MitarbeiterView"
-             x:DataType="vm:MitarbeiterViewModel">
+             x:Class="Percuro.Views.EnterpriseViews.HRM.MitarbeiterverwaltungView"
+             x:DataType="vm:MitarbeiterverwaltungViewModel">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />

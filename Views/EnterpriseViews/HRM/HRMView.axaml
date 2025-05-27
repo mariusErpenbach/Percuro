@@ -23,11 +23,9 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
-
-            <Button Content="Arbeitszeit" Command="{Binding ToArbeitszeitViewCommand}" Grid.Row="0" Grid.Column="0" Width="150" Height="50" Margin="10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+            </Grid.RowDefinitions>            <Button Content="Arbeitszeit" Command="{Binding ToArbeitszeitViewCommand}" Grid.Row="0" Grid.Column="0" Width="150" Height="50" Margin="10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
             <Button Content="Gehaltsabrechnung" Command="{Binding ToGehaltsabrechnungViewCommand}" Grid.Row="0" Grid.Column="1" Width="150" Height="50" Margin="10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-            <Button Content="Mitarbeiter" Command="{Binding ToMitarbeiterViewCommand}" Grid.Row="1" Grid.Column="0" Width="150" Height="50" Margin="10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+            <Button Content="Mitarbeiter" Command="{Binding ToMitarbeiterverwaltungViewCommand}" Grid.Row="1" Grid.Column="0" Width="150" Height="50" Margin="10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
             <Button Content="Recruiting" Command="{Binding ToRecruitingViewCommand}" Grid.Row="1" Grid.Column="1" Width="150" Height="50" Margin="10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
         </Grid>
     </Grid>

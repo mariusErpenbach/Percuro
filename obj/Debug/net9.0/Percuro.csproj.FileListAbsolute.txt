@@ -274,5 +274,3 @@ D:\github\Percuro\obj\Debug\net9.0\refint\Avalonia\Percuro.dll
 D:\github\Percuro\obj\Debug\net9.0\Percuro.csproj.Up2Date
 D:\github\Percuro\obj\Debug\net9.0\Percuro.genruntimeconfig.cache
 D:\github\Percuro\obj\Debug\net9.0\ref\Percuro.dll
-D:\github\Percuro\obj\Debug\net9.0\Percuro.csproj.Fody.CopyLocal.cache
-D:\github\Percuro\obj\Debug\net9.0\Percuro.csproj.Fody.RuntimeCopyLocal.cache

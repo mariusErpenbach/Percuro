@@ -12,7 +12,7 @@ using Percuro.ViewModels.EnterpriseViewModels.HRM.MitarbeiterNS;
 
 namespace Percuro.ViewModels.EnterpriseViewModels.HRM;
 
-public partial class MitarbeiterViewModel : ViewModelBase
+public partial class MitarbeiterverwaltungViewModel : ViewModelBase
 {
     private readonly MitarbeiterDatabaseService _mitarbeiterService;
 
@@ -68,9 +68,7 @@ public partial class MitarbeiterViewModel : ViewModelBase
              
             });
         }
-    }
-
-    public MitarbeiterViewModel()
+    }    public MitarbeiterverwaltungViewModel()
     {
         _mitarbeiterService = new MitarbeiterDatabaseService();
         LoadMitarbeiterListe();

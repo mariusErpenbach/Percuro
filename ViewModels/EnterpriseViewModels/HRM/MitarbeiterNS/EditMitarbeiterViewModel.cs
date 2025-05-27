@@ -223,12 +223,10 @@ public partial class EditMitarbeiterViewModel : ViewModelBase
         {
             Console.WriteLine("UpdateError is true. The error message should be visible.");
         }
-    }
-
-    [RelayCommand]
+    }    [RelayCommand]
     public void Cancel()
     {
-ToMitarbeiterView();
+ToMitarbeiterverwaltungView();
     }
 
     [ObservableProperty]
@@ -324,14 +322,12 @@ ToMitarbeiterView();
     }
 
     [ObservableProperty]
-    private bool saveSuccess = false;
-
-        [RelayCommand]
-    public void ToMitarbeiterView()
+    private bool saveSuccess = false;        [RelayCommand]
+    public void ToMitarbeiterverwaltungView()
     {
         if (Parent is MainWindowViewModel mainVm)
         {
-            mainVm.CurrentViewModel = new MitarbeiterViewModel();
+            mainVm.CurrentViewModel = new MitarbeiterverwaltungViewModel();
         }
     }
 }

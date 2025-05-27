@@ -244,13 +244,12 @@ public partial class NewMitarbeiterViewModel : ViewModelBase
         {
             Console.WriteLine($"Fehler beim Speichern des Mitarbeiters: {ex.Message}");
         }
-    }
-    [RelayCommand]
-    public void ToMitarbeiterView()
+    }    [RelayCommand]
+    public void ToMitarbeiterverwaltungView()
     {
         if (Parent is MainWindowViewModel mainVm)
         {
-            mainVm.CurrentViewModel = new MitarbeiterViewModel();
+            mainVm.CurrentViewModel = new MitarbeiterverwaltungViewModel();
         }
     }
 

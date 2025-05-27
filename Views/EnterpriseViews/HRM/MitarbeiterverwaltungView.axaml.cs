@@ -2,9 +2,9 @@ using Avalonia.Controls;
 
 namespace Percuro.Views.EnterpriseViews.HRM
 {
-    public partial class MitarbeiterView : UserControl
+    public partial class MitarbeiterverwaltungView : UserControl
     {
-        public MitarbeiterView()
+        public MitarbeiterverwaltungView()
         {
             InitializeComponent();
         }

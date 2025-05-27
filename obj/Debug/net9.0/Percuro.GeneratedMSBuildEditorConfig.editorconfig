@@ -87,7 +87,7 @@ build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 [D:/github/Percuro/Views/EnterpriseViews/HRM/MitarbeiterNS/NewMitarbeiterView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[D:/github/Percuro/Views/EnterpriseViews/HRM/MitarbeiterView.axaml]
+[D:/github/Percuro/Views/EnterpriseViews/HRM/MitarbeiterverwaltungView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
 [D:/github/Percuro/Views/EnterpriseViews/HRM/RecruitingView.axaml]
