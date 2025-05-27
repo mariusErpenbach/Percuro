@@ -7,7 +7,7 @@ using CommunityToolkit.Mvvm.Input;
 using Percuro.Models.MitarbeiterModels;
 using Percuro.Services.MitarbeiterServices;
 
-namespace Percuro.ViewModels.EnterpriseViewModels.HRM;
+namespace Percuro.ViewModels.EnterpriseViewModels.HRM.Arbeitszeit;
 
 public partial class ArbeitszeitNavigatorSectionViewModel : ObservableObject
 {
@@ -34,6 +34,23 @@ public partial class ArbeitszeitNavigatorSectionViewModel : ObservableObject
     [ObservableProperty] private bool dateInputCompleted;
 
     private readonly ZeiterfassungsService _zeiterfassungsService = new ZeiterfassungsService();
+
+    // TimeSpan property for displaying the selected date range
+    public string TimeSpan
+    {
+        get
+        {
+            var startDate = SelectedStartDate;
+            var endDate = SelectedEndDate;
+            
+            if (startDate.HasValue && endDate.HasValue)
+            {
+                return $"{startDate.Value:dd.MM.yyyy} - {endDate.Value:dd.MM.yyyy}";
+            }
+            
+            return string.Empty;
+        }
+    }
 
     [RelayCommand]
     public async Task CheckDateInputAsync()
@@ -167,30 +184,34 @@ public partial class ArbeitszeitNavigatorSectionViewModel : ObservableObject
             }
             return null;
         }
-    }
-
-    partial void OnSelectedStartDayChanged(int? value)
+    }    partial void OnSelectedStartDayChanged(int? value)
     {
         OnPropertyChanged(nameof(SelectedStartDate));
+        OnPropertyChanged(nameof(TimeSpan));
     }
     partial void OnSelectedStartMonthChanged(string value)
     {
         OnPropertyChanged(nameof(SelectedStartDate));
+        OnPropertyChanged(nameof(TimeSpan));
     }
     partial void OnSelectedStartYearChanged(int? value)
     {
         OnPropertyChanged(nameof(SelectedStartDate));
+        OnPropertyChanged(nameof(TimeSpan));
     }
     partial void OnSelectedEndDayChanged(int? value)
     {
         OnPropertyChanged(nameof(SelectedEndDate));
+        OnPropertyChanged(nameof(TimeSpan));
     }
     partial void OnSelectedEndMonthChanged(string value)
     {
         OnPropertyChanged(nameof(SelectedEndDate));
+        OnPropertyChanged(nameof(TimeSpan));
     }
     partial void OnSelectedEndYearChanged(int? value)
     {
         OnPropertyChanged(nameof(SelectedEndDate));
+        OnPropertyChanged(nameof(TimeSpan));
     }
 }

@@ -1,9 +1,9 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:converters="using:Percuro.Converters"
-             x:Class="Percuro.Views.EnterpriseViews.HRM.ArbeitszeitNavigatorSectionView"
+             x:Class="Percuro.Views.EnterpriseViews.HRM.Arbeitszeit.ArbeitszeitNavigatorSectionView"
              x:DataType="vm:ArbeitszeitNavigatorSectionViewModel"
-             xmlns:vm="using:Percuro.ViewModels.EnterpriseViewModels.HRM"
+             xmlns:vm="using:Percuro.ViewModels.EnterpriseViewModels.HRM.Arbeitszeit"
              xmlns:models="using:Percuro.Models.MitarbeiterModels">
     <UserControl.Resources>
         <converters:BooleanToOpacityConverter x:Key="BooleanToOpacityConverter"/>

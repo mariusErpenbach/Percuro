@@ -72,10 +72,10 @@ build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 [D:/github/Percuro/Views/EnterpriseViews/HRMView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[D:/github/Percuro/Views/EnterpriseViews/HRM/ArbeitszeitNavigatorSectionView.axaml]
+[D:/github/Percuro/Views/EnterpriseViews/HRM/ArbeitszeitView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[D:/github/Percuro/Views/EnterpriseViews/HRM/ArbeitszeitView.axaml]
+[D:/github/Percuro/Views/EnterpriseViews/HRM/Arbeitszeit/ArbeitszeitNavigatorSectionView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
 [D:/github/Percuro/Views/EnterpriseViews/HRM/GehaltsabrechnungView.axaml]
