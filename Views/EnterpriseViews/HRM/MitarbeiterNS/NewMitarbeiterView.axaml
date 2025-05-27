@@ -1,7 +1,7 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:vm="using:Percuro.ViewModels.EnterpriseViewModels.HR.MitarbeiterNS"
-             x:Class="Percuro.Views.EnterpriseViews.HR.MitarbeiterNS.NewMitarbeiterView"
+             xmlns:vm="using:Percuro.ViewModels.EnterpriseViewModels.HRM.MitarbeiterNS"
+             x:Class="Percuro.Views.EnterpriseViews.HRM.MitarbeiterNS.NewMitarbeiterView"
              x:DataType="vm:NewMitarbeiterViewModel">
 
     <Grid>

@@ -1,6 +1,6 @@
 using Avalonia.Controls;
 
-namespace Percuro.Views.EnterpriseViews.HR
+namespace Percuro.Views.EnterpriseViews.HRM
 {
     public partial class RecruitingView : UserControl
     {

@@ -7,9 +7,10 @@ using Percuro.Models.HRModels;
 using Percuro.Models.MitarbeiterModels;
 using Percuro.Services;
 using Percuro.Services.MitarbeiterServices;
+using Percuro.ViewModels.EnterpriseViewModels.HRM;
 
 
-namespace Percuro.ViewModels.EnterpriseViewModels.HR.MitarbeiterNS;
+namespace Percuro.ViewModels.EnterpriseViewModels.HRM.MitarbeiterNS;
 
 public partial class NewMitarbeiterViewModel : ViewModelBase
 {

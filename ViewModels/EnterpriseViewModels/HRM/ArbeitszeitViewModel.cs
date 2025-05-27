@@ -8,8 +8,9 @@ using CommunityToolkit.Mvvm.Input;
 using Percuro.Models.MitarbeiterModels;
 using Percuro.Services.MitarbeiterServices;
 using Percuro.ViewModels.ControlsViewModels;
+using Percuro.ViewModels.EnterpriseViewModels.HRM;
 
-namespace Percuro.ViewModels.EnterpriseViewModels.HR;
+namespace Percuro.ViewModels.EnterpriseViewModels.HRM;
 
 public partial class ArbeitszeitViewModel : ViewModelBase
 {
@@ -21,7 +22,7 @@ public partial class ArbeitszeitViewModel : ViewModelBase
         {
             var zeiterfassungsungsService = new ZeiterfassungsService();
             zeiterfassungsungsService.ClearCache(); // Clear the cache before switching views
-            mainVm.CurrentViewModel = new HRViewModel();
+            mainVm.CurrentViewModel = new HRMViewModel();
         }
     }
 

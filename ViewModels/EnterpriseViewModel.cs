@@ -2,6 +2,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Avalonia.Threading;
 using Percuro.ViewModels.EnterpriseViewModels;
+using Percuro.ViewModels.EnterpriseViewModels.HRM;
 
 namespace Percuro.ViewModels;
 public partial class EnterpriseViewModel : ViewModelBase
@@ -25,7 +26,7 @@ public partial class EnterpriseViewModel : ViewModelBase
     {
         if (Parent is MainWindowViewModel mainVm)
         {
-            mainVm.CurrentViewModel = new HRViewModel();
+            mainVm.CurrentViewModel = new HRMViewModel();
         }
     }
 

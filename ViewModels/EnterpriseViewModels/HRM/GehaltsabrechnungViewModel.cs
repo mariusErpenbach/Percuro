@@ -1,7 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
-namespace Percuro.ViewModels.EnterpriseViewModels.HR;
+namespace Percuro.ViewModels.EnterpriseViewModels.HRM;
 
 public partial class GehaltsabrechnungViewModel : ViewModelBase
 {
@@ -11,7 +11,7 @@ public partial class GehaltsabrechnungViewModel : ViewModelBase
     {
         if (Parent is MainWindowViewModel mainVm)
         {
-            mainVm.CurrentViewModel = new HRViewModel();
+            mainVm.CurrentViewModel = new HRMViewModel();
         }
     }
 }

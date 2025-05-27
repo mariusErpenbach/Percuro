@@ -1,8 +1,8 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:vm="clr-namespace:Percuro.ViewModels.EnterpriseViewModels"
-             x:Class="Percuro.Views.EnterpriseViews.HRView"
-             x:DataType="vm:HRViewModel">
+             xmlns:vm="using:Percuro.ViewModels.EnterpriseViewModels.HRM"
+             x:Class="Percuro.Views.EnterpriseViews.HRM.HRMView"
+             x:DataType="vm:HRMViewModel">
 
     <Grid>
         <!-- Title -->

@@ -7,7 +7,7 @@ using CommunityToolkit.Mvvm.Input;
 using Percuro.Models.MitarbeiterModels;
 using Percuro.Services.MitarbeiterServices;
 
-namespace Percuro.ViewModels.EnterpriseViewModels.HR;
+namespace Percuro.ViewModels.EnterpriseViewModels.HRM;
 
 public partial class ArbeitszeitNavigatorSectionViewModel : ObservableObject
 {

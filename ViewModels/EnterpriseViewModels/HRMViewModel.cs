@@ -1,13 +1,19 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Avalonia.Controls;
-using System;
-using Percuro.ViewModels.EnterpriseViewModels.HR;
 
-namespace Percuro.ViewModels.EnterpriseViewModels
+namespace Percuro.ViewModels.EnterpriseViewModels.HRM
 {
-    public partial class HRViewModel : ViewModelBase
+    public partial class HRMViewModel : ViewModelBase
     {
+        [RelayCommand]
+        public void ToEnterpriseView()
+        {
+            if (Parent is MainWindowViewModel mainVm)
+            {
+                mainVm.CurrentViewModel = new EnterpriseViewModel();
+            }
+        }
+
         [RelayCommand]
         public void ToArbeitszeitView()
         {
@@ -41,15 +47,6 @@ namespace Percuro.ViewModels.EnterpriseViewModels
             if (Parent is MainWindowViewModel mainVm)
             {
                 mainVm.CurrentViewModel = new RecruitingViewModel();
-            }
-        }
-
-        [RelayCommand]
-        public void ToEnterpriseView()
-        {
-            if (Parent is MainWindowViewModel mainVm)
-            {
-                mainVm.CurrentViewModel = new EnterpriseViewModel();
             }
         }
     }

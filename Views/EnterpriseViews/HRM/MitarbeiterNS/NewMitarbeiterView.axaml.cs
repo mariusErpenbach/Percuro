@@ -1,8 +1,8 @@
 using System;
 using Avalonia.Controls;
-using Percuro.ViewModels.EnterpriseViewModels.HR;
+using Percuro.ViewModels.EnterpriseViewModels.HRM;
 
-namespace Percuro.Views.EnterpriseViews.HR.MitarbeiterNS
+namespace Percuro.Views.EnterpriseViews.HRM.MitarbeiterNS
 {
     public partial class NewMitarbeiterView : UserControl
     {

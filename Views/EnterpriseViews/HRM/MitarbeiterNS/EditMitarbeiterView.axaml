@@ -1,8 +1,8 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:vm="using:Percuro.ViewModels.EnterpriseViewModels.HR.MitarbeiterNS"
+             xmlns:vm="using:Percuro.ViewModels.EnterpriseViewModels.HRM.MitarbeiterNS"
              x:DataType="vm:EditMitarbeiterViewModel"
-             x:Class="Percuro.Views.EnterpriseViews.HR.MitarbeiterNS.EditMitarbeiterView">
+             x:Class="Percuro.Views.EnterpriseViews.HRM.MitarbeiterNS.EditMitarbeiterView">
     <DockPanel>
         <!-- Title -->
         <TextBlock Text="Mitarbeiter bearbeiten" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,20" DockPanel.Dock="Top" />

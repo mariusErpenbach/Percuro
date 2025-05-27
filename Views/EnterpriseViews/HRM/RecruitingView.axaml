@@ -1,8 +1,8 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:vm="using:Percuro.ViewModels.EnterpriseViewModels.HR"
-             x:Class="Percuro.Views.EnterpriseViews.HR.GehaltsabrechnungView"
-             x:DataType="vm:GehaltsabrechnungViewModel">
+             xmlns:vm="using:Percuro.ViewModels.EnterpriseViewModels.HRM"
+             x:Class="Percuro.Views.EnterpriseViews.HRM.RecruitingView"
+             x:DataType="vm:RecruitingViewModel">
 
     <Grid>
         <!-- To HR Button -->
@@ -12,6 +12,6 @@
                 HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
 
         <!-- Placeholder Content -->
-        <TextBlock Text="Gehaltsabrechnung View" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20"/>
+        <TextBlock Text="Recruiting View" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20"/>
     </Grid>
 </UserControl>

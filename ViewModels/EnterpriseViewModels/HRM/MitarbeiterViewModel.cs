@@ -7,9 +7,10 @@ using Avalonia.Input;
 using CommunityToolkit.Mvvm.Input;
 using Percuro.Models.MitarbeiterModels;
 using Percuro.Services.MitarbeiterServices;
-using Percuro.ViewModels.EnterpriseViewModels.HR.MitarbeiterNS;
+using Percuro.ViewModels.EnterpriseViewModels.HRM;
+using Percuro.ViewModels.EnterpriseViewModels.HRM.MitarbeiterNS;
 
-namespace Percuro.ViewModels.EnterpriseViewModels.HR;
+namespace Percuro.ViewModels.EnterpriseViewModels.HRM;
 
 public partial class MitarbeiterViewModel : ViewModelBase
 {
@@ -229,7 +230,7 @@ public partial class MitarbeiterViewModel : ViewModelBase
     {
         if (Parent is MainWindowViewModel mainVm)
         {
-            mainVm.CurrentViewModel = new HRViewModel();
+            mainVm.CurrentViewModel = new HRMViewModel();
         }
     }
 
