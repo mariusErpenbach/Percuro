@@ -15,7 +15,7 @@
 
         <!-- Buttons Row -->
         <StackPanel Orientation="Horizontal" Grid.Row="0" HorizontalAlignment="Stretch" Margin="10">
-            <Button Content="Zurück" Command="{Binding ToHRViewCommand}" HorizontalAlignment="Left" FontSize="16" Margin="10" />
+            <Button Content="Zurück" Command="{Binding ToHRMViewCommand}" HorizontalAlignment="Left" FontSize="16" Margin="10" />
             <Button Content="Bearbeiten" Command="{Binding InitializeEditModeCommand}" Margin="10" HorizontalAlignment="Left" FontSize="16" />
             <Button Content="Neue/r Mitarbeiter/in" Command="{Binding ToNewMitarbeiterViewCommand}" FontSize="16" HorizontalAlignment="Right" Margin="10" />
             <Button Content="Löschen" Command="{Binding InitializeDeleteModeCommand}" FontSize="16" HorizontalAlignment="Right" Margin="10" />

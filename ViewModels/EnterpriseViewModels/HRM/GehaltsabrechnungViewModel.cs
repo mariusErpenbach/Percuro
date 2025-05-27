@@ -6,8 +6,9 @@ namespace Percuro.ViewModels.EnterpriseViewModels.HRM;
 public partial class GehaltsabrechnungViewModel : ViewModelBase
 {
     // Basic ViewModel for GehaltsabrechnungView
+    
     [RelayCommand]
-    public void ToHRView()
+    public void ToHRMView()
     {
         if (Parent is MainWindowViewModel mainVm)
         {

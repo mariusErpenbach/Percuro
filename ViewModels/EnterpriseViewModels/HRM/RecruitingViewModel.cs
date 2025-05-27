@@ -6,8 +6,9 @@ namespace Percuro.ViewModels.EnterpriseViewModels.HRM;
 public partial class RecruitingViewModel : ViewModelBase
 {
     // Basic ViewModel for RecruitingView
+    
     [RelayCommand]
-    public void ToHRView()
+    public void ToHRMView()
     {
         if (Parent is MainWindowViewModel mainVm)
         {

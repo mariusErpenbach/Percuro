@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using System;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Percuro.Services;
 
@@ -6,12 +7,17 @@ namespace Percuro.ViewModels;
 public partial class MainWindowViewModel : ViewModelBase
 {
     private ViewModelBase? _currentViewModel;
-    
-    public ViewModelBase? CurrentViewModel
+      public ViewModelBase? CurrentViewModel
     {
         get => _currentViewModel;
         set
         {
+            // Dispose previous ViewModel if it implements IDisposable
+            if (_currentViewModel is IDisposable disposable)
+            {
+                disposable.Dispose();
+            }
+            
             _currentViewModel = value;
             
             // Automatisch Parent setzen bei jedem Wechsel

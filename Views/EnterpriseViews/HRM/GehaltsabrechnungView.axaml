@@ -6,7 +6,7 @@
 
     <Grid>
         <!-- To HR Button -->
-        <Button Content="To HR" Command="{Binding ToHRView}"
+        <Button Content="To HR" Command="{Binding ToHRMViewCommand}"
                 Width="150" Height="50" Margin="10"
                 HorizontalAlignment="Left" VerticalAlignment="Top"
                 HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>

@@ -8,15 +8,16 @@ using CommunityToolkit.Mvvm.Input;
 using Percuro.Models.MitarbeiterModels;
 using Percuro.Services.MitarbeiterServices;
 using Percuro.ViewModels.ControlsViewModels;
-using Percuro.ViewModels.EnterpriseViewModels.HRM;
+using Percuro.ViewModels.EnterpriseViewModels;
 
 namespace Percuro.ViewModels.EnterpriseViewModels.HRM;
 
 public partial class ArbeitszeitViewModel : ViewModelBase
 {
     // Basic ViewModel for ArbeitszeitView
+    
     [RelayCommand]
-    public void ToHRView()
+    public void ToHRMView()
     {
         if (Parent is MainWindowViewModel mainVm)
         {

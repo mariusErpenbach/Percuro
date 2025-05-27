@@ -24,7 +24,7 @@
 
             <!-- Header Section -->
             <StackPanel Orientation="Vertical" Grid.Row="0" Margin="10 10 10 10">
-                <Button Content="To HR" Command="{Binding ToHRView}" Width="150" Height="40" Margin="5" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" />
+                <Button Content="To HR" Command="{Binding ToHRMViewCommand}" Width="150" Height="40" Margin="5" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" />
                 <TextBlock Text="ArbeitszeitView"  FontWeight="Bold" FontSize="16" HorizontalAlignment="Center"/>
             </StackPanel>
 

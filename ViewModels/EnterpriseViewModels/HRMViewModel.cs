@@ -1,7 +1,8 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Percuro.ViewModels.EnterpriseViewModels.HRM;
 
-namespace Percuro.ViewModels.EnterpriseViewModels.HRM
+namespace Percuro.ViewModels.EnterpriseViewModels
 {
     public partial class HRMViewModel : ViewModelBase
     {

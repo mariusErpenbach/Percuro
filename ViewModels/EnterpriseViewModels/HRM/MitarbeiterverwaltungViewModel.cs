@@ -7,12 +7,12 @@ using Avalonia.Input;
 using CommunityToolkit.Mvvm.Input;
 using Percuro.Models.MitarbeiterModels;
 using Percuro.Services.MitarbeiterServices;
-using Percuro.ViewModels.EnterpriseViewModels.HRM;
+using Percuro.ViewModels.EnterpriseViewModels;
 using Percuro.ViewModels.EnterpriseViewModels.HRM.MitarbeiterNS;
 
 namespace Percuro.ViewModels.EnterpriseViewModels.HRM;
 
-public partial class MitarbeiterverwaltungViewModel : ViewModelBase
+public partial class MitarbeiterverwaltungViewModel : ViewModelBase, IDisposable
 {
     private readonly MitarbeiterDatabaseService _mitarbeiterService;
 
@@ -217,14 +217,9 @@ public partial class MitarbeiterverwaltungViewModel : ViewModelBase
         }
 
         // No need to reassign FilteredMitarbeiterListe
-        OnPropertyChanged(nameof(MitarbeiterListe));
-
-        Console.WriteLine("Delete mode initialized for all Mitarbeiter.");
-    }
-
-        // Basic ViewModel for MitarbeiterView
-    [RelayCommand]
-    public void ToHRView()
+        OnPropertyChanged(nameof(MitarbeiterListe));        Console.WriteLine("Delete mode initialized for all Mitarbeiter.");
+    }    [RelayCommand]
+    public void ToHRMView()
     {
         if (Parent is MainWindowViewModel mainVm)
         {
@@ -290,4 +285,48 @@ public partial class MitarbeiterverwaltungViewModel : ViewModelBase
         OnPropertyChanged(nameof(FilteredMitarbeiterListe));
     }
 
+    #region IDisposable Implementation
+
+    private bool _disposed = false;
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!_disposed)
+        {
+            if (disposing)
+            {
+                // Unsubscribe from all Mitarbeiter events
+                UnsubscribeFromAllMitarbeiterEvents();
+            }
+            _disposed = true;
+        }
+    }
+
+    private void UnsubscribeFromAllMitarbeiterEvents()
+    {
+        Console.WriteLine("Unsubscribing from all Mitarbeiter events...");
+        
+        foreach (var mitarbeiter in MitarbeiterListe)
+        {
+            mitarbeiter.PropertyChanged -= Mitarbeiter_PropertyChanged;
+            mitarbeiter.PropertyChanged -= Mitarbeiter_IsDeletedChanged;
+            mitarbeiter.PropertyChanged -= Mitarbeiter_EditCandidateChanged;
+            Console.WriteLine($"Unsubscribed from events for Mitarbeiter: {mitarbeiter.Vorname} {mitarbeiter.Nachname} (ID: {mitarbeiter.Id})");
+        }
+        
+        Console.WriteLine("All Mitarbeiter event subscriptions removed.");
+    }
+
+    ~MitarbeiterverwaltungViewModel()
+    {
+        Dispose(false);
+    }
+
+    #endregion
 }

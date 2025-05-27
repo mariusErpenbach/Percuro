@@ -1,6 +1,6 @@
 using System;
 using Avalonia.Controls;
-using Percuro.ViewModels.EnterpriseViewModels.HRM;
+using Percuro.ViewModels.EnterpriseViewModels;
 
 namespace Percuro.Views.EnterpriseViews.HRM.MitarbeiterNS
 {
